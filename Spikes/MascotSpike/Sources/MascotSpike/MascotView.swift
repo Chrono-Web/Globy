@@ -32,6 +32,8 @@ final class MascotModel: ObservableObject {
     @Published private(set) var animating = false
     /// Cornice della finestra in coordinate schermo, per orientare lo sguardo.
     var windowFrame: () -> CGRect = { .zero }
+    /// Geometria locale aggiornata dalla finestra quando globo o fumetto si spostano.
+    @Published var placement = MascotPlacement.empty
     let gaze = GazeTracker()
     private(set) var blinkStart: TimeInterval = -.infinity
     private(set) var doubleBlink = false
@@ -39,6 +41,7 @@ final class MascotModel: ObservableObject {
     private var generation = 0
     private var activeUntil: TimeInterval = 0
     private var sleepWork: DispatchWorkItem?
+    private var collapseWork: DispatchWorkItem?
     private var blinkTimer: Timer?
     private var blinkCount = 0
     private var mouseMonitors: [Any] = []
@@ -65,10 +68,17 @@ final class MascotModel: ObservableObject {
         let pop = 0.35
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
             guard let self, self.generation == current, self.phase != .hidden else { return }
+            self.collapseWork?.cancel()
             self.typingStart = Date.timeIntervalSinceReferenceDate + pop
-            withAnimation(.spring(response: 0.45, dampingFraction: 0.78)) { self.reading = layout }
-            self.onCardChange()
-            self.wake(for: pop + layout.typingDuration + Self.lookAtViewer + 0.8)
+            // Prima la geometria (senza animazione), poi il fumetto: altrimenti globo e
+            // finestra finiscono nella molla del pop e si spostano.
+            self.onReserveCardHeight?(layout.height)
+            DispatchQueue.main.async { [weak self] in
+                guard let self, self.generation == current, self.phase != .hidden else { return }
+                withAnimation(.spring(response: 0.45, dampingFraction: 0.78)) { self.reading = layout }
+                self.onCardChange()
+                self.wake(for: pop + layout.typingDuration + Self.lookAtViewer + 0.8)
+            }
         }
         return delay + pop + layout.typingDuration + Self.lookAtViewer
     }
@@ -92,13 +102,24 @@ final class MascotModel: ObservableObject {
     }
 
     func dismissVox() {
+        collapseWork?.cancel()
         withAnimation(.easeOut(duration: 0.3)) { reading = nil }
         onCardChange()
+        let token = generation
+        let work = DispatchWorkItem { [weak self] in
+            guard let self, self.generation == token, self.reading == nil else { return }
+            self.onReserveCardHeight?(nil)
+        }
+        collapseWork = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.34, execute: work)
     }
 
     /// Chiusura dal pulsante sulla card: la finestra decide se nascondere anche il globo.
     var onUserDismiss: () -> Void = {}
+    /// Il fumetto è comparso o scomparso: aggiornare X e frecce, senza cambiare la riserva.
     var onCardChange: () -> Void = {}
+    /// Altezza da riservare nella finestra. `nil` dopo l'uscita del fumetto, così il globo non salta.
+    var onReserveCardHeight: ((CGFloat?) -> Void)?
 
     enum GazeTarget { case cursor, viewer, point(CGPoint) }
 
@@ -116,22 +137,24 @@ final class MascotModel: ObservableObject {
 
     var globeCenter: CGPoint {
         let f = windowFrame()
-        return CGPoint(x: f.maxX - MascotWindowController.globeArea.width / 2,
-                       y: f.minY + MascotWindowController.globeArea.height / 2)
+        let globe = placement.globe
+        return CGPoint(x: f.minX + globe.midX, y: f.minY + globe.midY)
     }
 
-    /// Stessa geometria di `MascotView`: fumetto allineato a destra, sopra il globo.
+    /// Caret nel fumetto, nella posa corrente (sopra o sotto il globo).
     private func caretOnScreen(_ layout: VoxLayout, count: Int) -> CGPoint {
         let f = windowFrame()
         let caret = layout.caret(after: count)
-        let cardMinX = f.maxX - MascotWindowController.cardTrailing - VoxLayout.width
-        let cardTop = f.minY + MascotWindowController.globeArea.height + MascotWindowController.cardGap + layout.height
+        guard let card = placement.card else { return globeCenter }
+        let cardMinX = f.minX + card.minX
+        let cardTop = f.minY + card.maxY
         return CGPoint(x: cardMinX + VoxLayout.padding + caret.x,
                        y: cardTop - VoxLayout.padding - VoxLayout.headerHeight - VoxLayout.spacing - caret.y)
     }
 
     func leave(completion: @escaping () -> Void) {
         generation += 1
+        collapseWork?.cancel()
         setSmiling(false)
         let current = generation
         withAnimation(.easeIn(duration: 0.35)) {
@@ -179,6 +202,7 @@ final class MascotModel: ObservableObject {
         mouseMonitors.forEach(NSEvent.removeMonitor)
         mouseMonitors = []
         sleepWork?.cancel()
+        collapseWork?.cancel()
         animating = false
     }
 
@@ -255,17 +279,21 @@ struct MascotView: View {
     private var visible: Bool { model.phase == .idle }
 
     var body: some View {
-        VStack(alignment: .trailing, spacing: MascotWindowController.cardGap) {
-            if let reading = model.reading {
+        let p = model.placement
+        ZStack {
+            if let reading = model.reading, let card = p.card {
                 VoxCard(layout: reading, typingStart: model.typingStart, animating: model.animating,
                         surface: model.surface, remaining: model.remaining, previous: model.previous)
-                    .padding(.trailing, MascotWindowController.cardTrailing)
-                    .transition(reduceMotion ? .opacity : .scale(scale: 0.8, anchor: .bottomTrailing).combined(with: .opacity))
+                    .frame(width: card.width, height: card.height)
+                    .position(p.swiftUICenter(of: card))
+                    .transition(reduceMotion ? .opacity : .scale(scale: 0.8, anchor: p.cardAbove ? .bottom : .top).combined(with: .opacity))
             }
             globe
+                .position(p.swiftUICenter(of: p.globe))
         }
-        .frame(width: MascotWindowController.size.width, height: MascotWindowController.size.height,
-               alignment: .bottomTrailing)
+        .frame(width: max(p.size.width, 1), height: max(p.size.height, 1))
+        // Geometria della finestra: mai nella molla di comparsa/uscita del fumetto.
+        .animation(nil, value: p)
     }
 
     private var globe: some View {
@@ -287,10 +315,9 @@ struct MascotView: View {
             GlobeSheen()
         }
         .frame(width: 116, height: 116)
-        .frame(width: MascotWindowController.globeArea.width, height: MascotWindowController.globeArea.height)
+        .frame(width: MascotLayout.globeArea.width, height: MascotLayout.globeArea.height)
         .opacity(visible ? 1 : 0)
-        .scaleEffect(reduceMotion || visible ? 1 : 0.7, anchor: .bottom)
-        .offset(y: reduceMotion || visible ? 0 : 40)
+        .scaleEffect(reduceMotion || visible ? 1 : 0.72, anchor: .center)
         .accessibilityLabel("Globy")
     }
 

@@ -1,6 +1,6 @@
 # Trappole
 
-- Aggiornato: 2026-09-16
+- Aggiornato: 2026-09-17
 - Vale per: tutta la repository
 - Risponde a: che cosa sembra vero e non lo è
 
@@ -55,7 +55,9 @@ provati sul target macOS scelto. Non promettere ricezione persistente senza il t
 
 Dock, area visibile, più monitor, ridimensionamento e coordinate AppKit cambiano il
 punto corretto. Posizionare il globo con numeri riferiti allo schermo principale lo può
-far apparire fuori posto o fuori schermo.
+far apparire fuori posto o fuori schermo. Globo e fumetto devono restare nella
+`visibleFrame`: il fumetto segue il globo (sopra e centrato se c'è spazio, sotto
+se il globo è in alto) e si sposta se altrimenti verrebbe tagliato.
 
 ## 10. Trasparente non significa click-through
 

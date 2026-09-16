@@ -4,19 +4,13 @@ import SwiftUI
 /// Finestra trasparente, non attivante, presente su tutti gli Space e sopra il fullscreen.
 @MainActor
 final class MascotWindowController {
-    /// Finestra: globo nell'angolo in basso a destra, fumetto della VOX sopra.
-    static let size = CGSize(width: 360, height: 512)
-    static let globeArea = CGSize(width: 160, height: 160)
-    static let globeDrawn: CGFloat = 116
-    /// Distanza del fumetto dal bordo destro e dal riquadro del globo (negativa: il globo
-    /// disegnato è più piccolo del suo riquadro).
-    static let cardTrailing: CGFloat = 12
-    static let cardGap: CGFloat = -12
+    static let globeArea = MascotLayout.globeArea
+    static let globeDrawn = MascotLayout.globeDrawn
+    static let margin = MascotLayout.margin
     /// Quanto resta a schermo il fumetto dopo che il globo ha finito di leggere.
     static let voxLinger: TimeInterval = 6
     static let queuePause: TimeInterval = 1
     static let dragGrace: TimeInterval = 5
-    static let margin: CGFloat = 16
 
     private let panel: NSPanel
     private let model = MascotModel()
@@ -34,6 +28,10 @@ final class MascotWindowController {
     /// Fumetto di saluto: non è in coda e non è una VOX.
     private var showingGreeting = false
     private var movedThisAppearance = false
+    /// Centro del disco disegnato, in coordinate schermo. Resta fisso mentre la finestra si adatta al fumetto.
+    private var globeCenterScreen: CGPoint?
+    /// Altezza del fumetto da tenere nella finestra anche mentre compare o scompare.
+    private var layoutCardHeight: CGFloat?
 
     var surface: Surface {
         get { model.surface }
@@ -63,7 +61,7 @@ final class MascotWindowController {
     }
 
     init() {
-        panel = NSPanel(contentRect: CGRect(origin: .zero, size: Self.size),
+        panel = NSPanel(contentRect: CGRect(origin: .zero, size: Self.globeArea),
                         styleMask: [.borderless, .nonactivatingPanel],
                         backing: .buffered, defer: true)
         panel.isOpaque = false
@@ -78,7 +76,7 @@ final class MascotWindowController {
 
         model.windowFrame = { [unowned panel] in panel.frame }
 
-        let root = NSView(frame: CGRect(origin: .zero, size: Self.size))
+        let root = NSView(frame: CGRect(origin: .zero, size: Self.globeArea))
         let host = NSHostingView(rootView: MascotView(model: model))
         host.frame = root.bounds
         host.autoresizingMask = [.width, .height]
@@ -103,6 +101,10 @@ final class MascotWindowController {
 
         model.onUserDismiss = { [weak self] in self?.closeVoxOnly() }
         model.onCardChange = { [weak self] in self?.syncCornerButtons() }
+        model.onReserveCardHeight = { [weak self] height in
+            self?.layoutCardHeight = height
+            self?.applyLayout()
+        }
 
         startMouseTracking()
         NotificationCenter.default.addObserver(forName: NSApplication.didChangeScreenParametersNotification,
@@ -301,6 +303,7 @@ final class MascotWindowController {
     private func show() -> Bool {
         let entering = model.phase == .hidden || model.phase == .leaving
         if entering {
+            layoutCardHeight = nil
             reposition()
             panel.orderFrontRegardless()
             model.enter()
@@ -311,6 +314,7 @@ final class MascotWindowController {
     private func dismiss() {
         history.removeAll()
         model.leave { [weak self] in
+            self?.layoutCardHeight = nil
             self?.panel.orderOut(nil)
             self?.movedThisAppearance = false
         }
@@ -318,46 +322,62 @@ final class MascotWindowController {
 
     private func drag(with event: NSEvent) {
         movedThisAppearance = true
-        var origin = panel.frame.origin
-        origin.x += event.deltaX
-        origin.y -= event.deltaY
-        panel.setFrameOrigin(origin)
+        let current = globeCenterScreen ?? CGPoint(x: panel.frame.midX, y: panel.frame.midY)
+        globeCenterScreen = CGPoint(x: current.x + event.deltaX, y: current.y - event.deltaY)
+        applyLayout()
     }
 
     /// Angolo inferiore destro dell'area visibile dello schermo su cui si trova il puntatore.
     private func reposition() {
-        let mouse = NSEvent.mouseLocation
-        let screen = NSScreen.screens.first { $0.frame.contains(mouse) } ?? NSScreen.main
-        guard let visible = screen?.visibleFrame else { return }
-        let origin = CGPoint(x: visible.maxX - Self.size.width - Self.margin,
-                             y: visible.minY + Self.margin)
-        panel.setFrameOrigin(origin)
-        syncCornerButtons()
+        let visible = visibleFrame(containing: NSEvent.mouseLocation)
+        guard visible.width > 0 else { return }
+        globeCenterScreen = MascotLayout.defaultGlobeCenter(in: visible)
+        applyLayout()
     }
 
     private func repositionIfNeeded() {
-        guard !movedThisAppearance, model.phase != .hidden else { return }
-        reposition()
+        guard model.phase != .hidden else { return }
+        if movedThisAppearance {
+            applyLayout()
+        } else {
+            reposition()
+        }
+    }
+
+    private func visibleFrame(containing point: CGPoint) -> CGRect {
+        let screens = NSScreen.screens
+        if let screen = screens.first(where: { $0.frame.contains(point) }) { return screen.visibleFrame }
+        if let screen = screens.first(where: { $0.visibleFrame.contains(point) }) { return screen.visibleFrame }
+        return NSScreen.main?.visibleFrame ?? .zero
+    }
+
+    /// Ricalcola fumetto e finestra intorno al globo, senza farlo uscire dalla `visibleFrame`.
+    private func applyLayout() {
+        let seed = globeCenterScreen ?? NSEvent.mouseLocation
+        let visible = visibleFrame(containing: seed)
+        guard visible.width > 0, visible.height > 0 else { return }
+        let requested = globeCenterScreen ?? MascotLayout.defaultGlobeCenter(in: visible)
+        let result = MascotLayout.placement(globeCenter: requested, cardHeight: layoutCardHeight, visible: visible)
+        globeCenterScreen = result.center
+        panel.setFrame(result.window, display: true, animate: false)
+        if let root = panel.contentView {
+            root.setFrameSize(result.window.size)
+        }
+        var transaction = Transaction()
+        transaction.disablesAnimations = true
+        withTransaction(transaction) {
+            model.placement = result.placement
+        }
+        syncCornerButtons()
     }
 
     private func globeRect() -> CGRect {
         let inset = (Self.globeArea.width - Self.globeDrawn) / 2
-        return CGRect(
-            x: Self.size.width - Self.globeArea.width + inset,
-            y: inset,
-            width: Self.globeDrawn,
-            height: Self.globeDrawn
-        )
+        return model.placement.globe.insetBy(dx: inset, dy: inset)
     }
 
     private func cardRect() -> CGRect? {
-        guard let reading = model.reading else { return nil }
-        return CGRect(
-            x: Self.size.width - Self.cardTrailing - VoxLayout.width,
-            y: Self.globeArea.height + Self.cardGap,
-            width: VoxLayout.width,
-            height: reading.height
-        )
+        model.placement.card
     }
 
     private func isInteractive(at point: CGPoint) -> Bool {
@@ -368,7 +388,7 @@ final class MascotWindowController {
 
     /// Bersagli di clic allineati a X, successiva (basso a destra) e precedente (basso a sinistra).
     private func syncCornerButtons() {
-        guard let reading = model.reading else {
+        guard model.reading != nil, let card = model.placement.card else {
             closeButton.isHidden = true
             nextButton.isHidden = true
             backButton.isHidden = true
@@ -377,10 +397,10 @@ final class MascotWindowController {
         }
         let size = VoxCornerButton.size
         let outset = VoxCornerButton.outset
-        let cardRight = Self.size.width - Self.cardTrailing
-        let cardLeft = cardRight - VoxLayout.width
-        let cardBottom = Self.globeArea.height + Self.cardGap
-        let cardTop = cardBottom + reading.height
+        let cardRight = card.maxX
+        let cardLeft = card.minX
+        let cardBottom = card.minY
+        let cardTop = card.maxY
         closeButton.frame = CGRect(
             x: cardRight - size + outset,
             y: cardTop - size + outset,

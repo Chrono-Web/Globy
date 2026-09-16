@@ -1,6 +1,6 @@
 # Prodotto
 
-- Aggiornato: 2026-09-16
+- Aggiornato: 2026-09-17
 - Stato: bozza; le domande che bloccavano il progetto Xcode sono chiuse il 2026-09-16
 - Risponde a: che cosa è Globy, per chi esiste e dove finisce la prima versione
 
@@ -50,6 +50,10 @@ La mascotte è un avviso visivo transitorio, non il motore del prodotto.
   restano chiusi come a metà battito, verso chi guarda).
 - Entra nell'angolo inferiore destro della `visibleFrame` dello schermo col
   puntatore (margine 16 pt, Dock escluso) e si nasconde automaticamente.
+  Globo e fumetto restano interamente in quell'area: il globo non esce dal
+  margine; il fumetto sta di preferenza sopra il globo e centrato in
+  orizzontale, e passa sotto se in alto non c'è spazio. Se il bordo dello
+  schermo lo taglierebbe, si sposta (non resta ancorato in alto a sinistra).
 - È transitoria: non resta sul desktop. Si può disabilitare senza interrompere
   la sincronizzazione.
 - Paralleli, meridiani, occhi e animazioni appartengono allo stesso corpo visivo.
@@ -73,6 +77,7 @@ Decisioni di comportamento chiuse il 2026-09-16 (ADR 0003 per il motore):
   distanza dagli angoli che ha la X in alto a destra): indietro e avanti;
   i numeretti indicano quante ce ne sono da quella parte.
 - Trascinabile mentre è visibile; al richiamo successivo torna in basso a destra.
+  Durante lo spostamento globo e fumetto non escono dalla `visibleFrame`.
   Permanenza disattivata (default): dopo un trascinamento restano 5 s in più, poi
   scompare anche il globo. Permanenza attivabile dal menu: il globo resta a schermo
   anche senza fumetto; la X chiude solo il fumetto.

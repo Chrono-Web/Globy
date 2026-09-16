@@ -1,6 +1,6 @@
 # Roadmap
 
-- Aggiornato: 2026-09-16
+- Aggiornato: 2026-09-17
 - Risponde a: che cosa viene prima, quale prova chiude ogni fase e qual è lo stato reale
 
 ## Legenda
@@ -48,10 +48,13 @@ resta instabile per una release (manca un cursore dei cambiamenti).
 - [x] Provare Space e fullscreen. (più monitor: rimandato, non è un gate)
 - [x] Rispettare Reduce Motion.
 - [x] Consumo a riposo nel collaudo qualitativo; soglie Instruments restano per la release.
+- [x] Globo e fumetto restano nella `visibleFrame`: il fumetto sta sopra e centrato
+      se c'è spazio, sotto se il globo è in alto; le animazioni non spostano il globo.
 
 **Verifica:** il 2026-09-16 collaudo umano sul globo 2D. ADR 0003 accettato. Permanenza
 opzionale; senza permanenza il trascinamento aggiunge 5 s. Il multi-monitor non è
-stato provato e non blocca la fase.
+stato provato e non blocca la fase. Il 2026-09-17 collaudo umano sul vincolo a
+schermo: globo e fumetto non escono dall'area visibile durante lo spostamento.
 
 ## Fase 3 — MVP macOS
 

@@ -24,3 +24,6 @@ versionamento pubblico.
 
 - File di comunità e contratto API allineati a ciò che esiste oggi: niente canali,
   SLA o bug di un'app inesistente.
+- Spike mascotte: globo e fumetto restano nella `visibleFrame`; il fumetto si
+  centra sopra il globo e passa sotto se in alto non c'è spazio. Comparsa e
+  scomparsa non spostano più il globo.

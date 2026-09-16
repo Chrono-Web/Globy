@@ -1,6 +1,6 @@
 # Spike della mascotte (2D)
 
-- Aggiornato: 2026-09-16
+- Aggiornato: 2026-09-17
 - Stato: prototipo usa e getta; il motore è il 2D (ADR 0003)
 - Risponde a: il globo Canvas funziona come mascotte transitoria?
 
@@ -30,6 +30,9 @@ saluto a ogni cambio nei sorgenti, così non serve uscire e rilanciare a mano.
 
 - Transitoria: compare, legge, scompare.
 - Schermo del puntatore, angolo inferiore destro della `visibleFrame`, margine 16 pt.
+  Globo e fumetto restano interamente visibili: il fumetto sta sopra e centrato
+  sul globo se c'è spazio, sotto se il globo è in alto, e si sposta dal bordo
+  invece di uscire dallo schermo.
 - Tutti gli Space, sopra il fullscreen.
 - Fumetto con scrittura carattere per carattere; Reduce Motion: fade, testo già
   scritto, niente suono.
@@ -43,7 +46,8 @@ saluto a ogni cambio nei sorgenti, così non serve uscire e rilanciare a mano.
 - Saluto (⌘G): fumetto «Ciao, sono Globy…», occhi chiusi come a metà battito,
   sguardo verso chi guarda; non è una VOX e non apre Chronocol. Al primo avvio
   dello spike parte da solo.
-- Trascinabile mentre è visibile; al richiamo successivo torna in basso a destra.
+- Trascinabile mentre è visibile; globo e fumetto non escono dalla `visibleFrame`.
+  Al richiamo successivo torna in basso a destra.
 - Menu Permanenza: il globo resta a schermo, anche senza fumetto; X e frecce
   non lo nascondono. Senza permanenza, un trascinamento aggiunge 5 s e poi
   scompare anche il globo.
