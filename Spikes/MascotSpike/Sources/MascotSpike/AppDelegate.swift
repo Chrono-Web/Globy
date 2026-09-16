@@ -24,7 +24,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                                            accessibilityDescription: "Globy")
 
         let menu = NSMenu()
-        menu.addItem(withTitle: "Simula nuova VOX", action: #selector(summon), keyEquivalent: "n")
+        menu.addItem(withTitle: "Simula nuovo VOX", action: #selector(summon), keyEquivalent: "n")
         menu.addItem(withTitle: "Simula raffica (3 VOX)", action: #selector(summonBurst), keyEquivalent: "b")
         menu.addItem(withTitle: "Saluta", action: #selector(greet), keyEquivalent: "g")
         let surfaceMenu = NSMenu()

@@ -12,7 +12,7 @@ pubblici di Chronocol e conserva sul Mac soltanto lo stato necessario al funzion
 ## Dati conservati localmente
 
 - preferenze dell'app;
-- identificativi e metadati delle VOX mostrate;
+- identificativi e metadati dei VOX mostrati;
 - stato letto/non letto;
 - stato già notificato;
 - ultima sincronizzazione riuscita e cursore, se il contratto lo prevede;

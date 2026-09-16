@@ -12,13 +12,27 @@ versionamento pubblico.
 - Regole per agenti, contributi, sicurezza, privacy e distribuzione.
 - Roadmap verificabile e registro delle decisioni architetturali.
 - Spike usa e getta della mascotte 2D in `Spikes/MascotSpike/`.
+- Saluto di rientro a ogni avvio e risveglio: «non ti sei perso nulla» o i VOX
+  nuovi dietro la freccia.
+- Al primo avvio il globo chiede se mostrare gli ultimi 5 VOX pubblicati («Sì, partiamo»
+  / «No, grazie»); la fixture Debug ha 6 VOX per provarlo.
+- Il fumetto resta a schermo in base alla lunghezza del testo, non più 6 s fissi.
+- Preferenze «Dimensioni personalizzate» per testo e pulsanti del fumetto, con
+  anteprima dal vivo sul globo.
+- La Release legge Chronocol pubblico (solo GET); «Simula…» resta nella Debug.
+- L'archivio del primo avvio non conta più tra i non letti.
+- Checklist di collaudo della fase 3 in `docs/COLLAUDO_FASE3.md`.
+- Controllo periodico ogni 5 minuti mentre il Mac è acceso, con backoff sugli errori
+  e sync immediata al ritorno della rete.
 - Licenza GNU GPL versione 3.
 - Fase 0 chiusa: macOS 15, `com.chronocol.globy`, GitHub non firmato, ADR 0001 e 0002 accettati.
 - Spike di sincronizzazione in `Packages/GlobyCore/`: baseline, catch-up, hint SSE e
-  suite di 26 test senza rete.
+  suite di 29 test senza rete.
 - Spike mascotte 2D: coda, permanenza, frecce di coda, saluto di primo avvio
-  (fessura arcuata, non è una VOX). RealityKit scartato (ADR 0003). Fase 2 chiusa.
+  (fessura arcuata, non è un VOX). RealityKit scartato (ADR 0003). Fase 2 chiusa.
 - Store locale JSON dietro `ContentStore` (ADR 0004), con test di round-trip.
+- App macOS (`Globy.xcodeproj`): barra dei menu, store JSON, saluto, preferenze,
+  notifiche locali senza suono e mascotte sulle fixture in processo. Fase 3 `[~]`.
 
 ### Corretto
 

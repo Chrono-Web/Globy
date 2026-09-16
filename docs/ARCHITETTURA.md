@@ -1,7 +1,7 @@
 # Architettura
 
-- Aggiornato: 2026-09-16
-- Stato: proposta; il coordinatore esiste nello spike `Packages/GlobyCore/`, senza progetto Xcode
+- Aggiornato: 2026-09-17
+- Stato: coordinatore in `Packages/GlobyCore/`; shell macOS in `Globy.xcodeproj`
 - Risponde a: responsabilità interne, dipendenze e flusso dello stato
 
 ## Principio centrale
@@ -24,7 +24,7 @@ SSE può ridurre la latenza, ma l'assenza dello stream non deve cambiare la corr
 | Componente | Responsabilità | Non deve |
 |---|---|---|
 | `ChronocolClient` | Leggere feed, dettaglio e futuro cursore | Conservare stato UI |
-| `EventHintClient` | Ascoltare SSE e chiedere un catch-up | Dichiarare da solo una VOX nuova |
+| `EventHintClient` | Ascoltare SSE e chiedere un catch-up | Dichiarare da solo un VOX nuovo |
 | `SyncCoordinator` | Baseline, catch-up, dedupe, retry | Mostrare finestre o notifiche |
 | `ContentStore` | Persistenza di contenuti e versioni osservate | Conoscere SwiftUI |
 | `PreferenceStore` | Preferenze locali | Contenere segreti in chiaro |
@@ -37,7 +37,7 @@ I nomi sono descrittivi, non una struttura di cartelle già approvata.
 
 ## Modello locale minimo
 
-Per ogni VOX osservata servono almeno:
+Per ogni VOX osservato servono almeno:
 
 - `documentId`;
 - permalink;
@@ -49,8 +49,8 @@ Per ogni VOX osservata servono almeno:
 - `notifiedAt`, opzionale;
 - disponibilità corrente, per gestire un ritiro.
 
-`readAt` e `notifiedAt` non sono lo stesso fatto. Un aggiornamento di una VOX letta non
-la trasforma automaticamente in una nuova pubblicazione: la politica dipenderà dal
+`readAt` e `notifiedAt` non sono lo stesso fatto. Un aggiornamento di un VOX letto non
+lo trasforma automaticamente in una nuova pubblicazione: la politica dipenderà dal
 contratto incrementale.
 
 ## Ciclo di sincronizzazione
@@ -82,6 +82,12 @@ contratto incrementale.
 - una sola sincronizzazione in volo;
 - nessuna cancellazione dello stato valido per un errore temporaneo;
 - fallback a polling se SSE non è disponibile o risponde 503;
+- polling a macchina accesa: una sync ogni 5 minuti con jitter del 10%, ripianificata
+  dopo ogni sync qualunque ne sia la causa; gli errori consecutivi raddoppiano l'attesa
+  fino a 30 minuti (`PollingPolicy`). Fermo durante lo stop del Mac; al ritorno della
+  rete una sync immediata (`reconnect`). Valori provvisori (`docs/CONTRATTO_API.md`,
+  domanda 8);
+- una sync accorpata a quella già in volo non viene presentata una seconda volta;
 - distinzione tra offline, risposta non valida e contratto incompatibile.
 
 ## Concorrenza e isolamento
@@ -103,9 +109,9 @@ La mascotte è un globo 2D (ADR 0003). SwiftUI `Canvas` disegna sfera, meridiani
 occhi; AppKit adatta la finestra trasparente. RealityKit è stato confrontato nello
 spike e scartato.
 
-La finestra è un adattatore AppKit separato dal modello della mascotte. Due
-presentazioni distinte: il saluto di primo avvio (non è una VOX) e la conferma
-di una nuova VOX. Il coordinatore dell'interfaccia richiede una sola presentazione
+La finestra è un adattatore AppKit separato dal modello della mascotte. Tre
+presentazioni distinte: il saluto di primo avvio e il saluto di rientro (non sono
+VOX) e la conferma di un nuovo VOX. Il coordinatore dell'interfaccia richiede una sola presentazione
 in basso a destra; una raffica viene aggregata invece di sovrapporre più globi.
 Terminata l'animazione, la finestra si nasconde e rilascia o sospende le risorse
 grafiche senza fermare l'app. Le preferenze piccole (mascotte, permanenza, suono,

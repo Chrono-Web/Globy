@@ -54,7 +54,7 @@ struct CatchUpTests {
         #expect(snapshot.records["old-a"]?.isAvailable == true)
     }
 
-    @Test("una VOX assente dal solo RSS non è un ritiro")
+    @Test("un VOX assente dal solo RSS non è un ritiro")
     func missingFromRSSIsNotWithdrawal() async throws {
         let client = FakeChronocol()
         await client.setRSS([remote("keep", hours: -2), remote("drop-from-feed", hours: -1)])
@@ -71,7 +71,7 @@ struct CatchUpTests {
         #expect(report.notifications == [.newVox(documentId: "newer")])
     }
 
-    @Test("un aggiornamento di una VOX già letta non è una nuova pubblicazione")
+    @Test("un aggiornamento di un VOX già letto non è una nuova pubblicazione")
     func updateOfReadVoxIsNotNewPublication() async throws {
         let client = FakeChronocol()
         await client.setRSS([remote("vox", hours: -1, text: "versione 1")])

@@ -7,14 +7,14 @@
       <link>https://chronocol.test/it/vox/fixture-new</link>
       <guid isPermaLink="true">https://chronocol.test/it/vox/fixture-new</guid>
       <pubDate>Wed, 16 Sep 2026 12:00:00 GMT</pubDate>
-      <description>VOX sintetica recente per lo spike.</description>
+      <description>VOX sintetico recente per lo spike.</description>
     </item>
     <item>
       <title>Fixture coprente</title>
       <link>https://chronocol.test/it/vox/fixture-old</link>
       <guid isPermaLink="true">https://chronocol.test/it/vox/fixture-old</guid>
       <pubDate>Wed, 16 Sep 2026 08:00:00 GMT</pubDate>
-      <description>VOX sintetica abbastanza vecchia da coprire il cursore.</description>
+      <description>VOX sintetico abbastanza vecchia da coprire il cursore.</description>
     </item>
   </channel>
 </rss>

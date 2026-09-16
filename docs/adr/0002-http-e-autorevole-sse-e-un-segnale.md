@@ -24,8 +24,8 @@ Un'app desktop può restare connessa per molte ore e attraversa normalmente stop
 rete e deploy. Trattare lo stream come coda affidabile produrrebbe perdite silenziose;
 usarlo come unico trasporto consumerebbe inoltre il limite condiviso.
 
-Globy non è un browser dell'archivio: mostra le VOX recenti e, al massimo, quelle
-pubblicate da quando ha sincronizzato l'ultima volta. Il feed RSS pubblico è corto
+Globy non è un browser dell'archivio: mostra i VOX recenti e, al massimo, quelli
+pubblicati da quando ha sincronizzato l'ultima volta. Il feed RSS pubblico è corto
 (osservati 50 item; tetto 100 nel codice Chronocol) e non esprime i ritiri. L'elenco
 JSON è paginato e copre l'archivio.
 
@@ -38,16 +38,16 @@ disponibile.
 Il cursore locale è `lastSuccessfulSyncAt`: l'istante dell'ultimo catch-up riuscito.
 Copre avvio, stop, crash e Mac in sleep meglio di un diario accensione/spegnimento.
 
-Al risveglio Globy chiede le VOX con pubblicazione successiva a `lastSuccessfulSyncAt`:
+Al risveglio Globy chiede i VOX con pubblicazione successiva a `lastSuccessfulSyncAt`:
 
 1. legge il RSS;
 2. se l'item più vecchio del feed è anteriore o uguale a `lastSuccessfulSyncAt` (o
    il feed si sovrappone a VOX già in store), il buco è coperto dal RSS;
 3. altrimenti pagina l'elenco JSON finché non supera quell'orario;
-4. se non c'è nulla di nuovo, mostra l'ultima VOX già nota in locale, o l'ultima del
+4. se non c'è nulla di nuovo, mostra l'ultimo VOX già noto in locale, o l'ultimo del
    feed se lo store è vuoto.
 
-Il primo avvio costruisce la baseline dalle VOX recenti (il RSS basta) e non notifica
+Il primo avvio costruisce la baseline dai VOX recenti (il RSS basta) e non notifica
 l'archivio.
 
 Primo avvio, apertura dello stream, riconnessione, risveglio e ritorno online eseguono
@@ -75,7 +75,7 @@ sono state concordate e provate con Chronocol.
 - maggiore complessità nel coordinatore e nello store locale;
 - il RSS è la lettura ordinaria; il JSON è la rete di sicurezza quando il feed non
   arriva indietro abbastanza;
-- una VOX sparita dal solo RSS non è un ritiro: può essere soltanto uscita dalla
+- un VOX sparito dal solo RSS non è un ritiro: può essere soltanto uscita dalla
   finestra corta del feed;
 - la notifica può arrivare più tardi quando SSE non è disponibile;
 - la mascotte reagisce allo stato confermato, non al pacchetto ricevuto.

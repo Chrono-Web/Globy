@@ -13,9 +13,9 @@ struct Vox: Equatable {
     var permalink: URL
     var kind: Kind = .publication
 
-    /// Saluto di primo avvio: non è una VOX e non nasce dalla sincronizzazione.
+    /// Saluto di primo avvio: non è un VOX e non nasce dalla sincronizzazione.
     static let greeting = Vox(
-        text: "Ciao, sono Globy, la mascotte di Chronocol. Quando esce una nuova VOX vengo un attimo qui, in basso a destra.",
+        text: "Ciao, sono Globy, la mascotte di Chronocol. Quando esce un nuovo VOX vengo un attimo qui, in basso a destra.",
         permalink: URL(string: "https://chronocol.com/it")!,
         kind: .greeting
     )
@@ -32,12 +32,12 @@ struct Vox: Equatable {
     )
 
     static let sampleShortA = Vox(
-        text: "Prima VOX di coda (fixture). Se ce n'è un'altra, in basso a destra compare la freccia.",
+        text: "Primo VOX di coda (fixture). Se ce n'è un altro, in basso a destra compare la freccia.",
         permalink: URL(string: "https://chronocol.com/it")!
     )
 
     static let sampleShortB = Vox(
-        text: "Terza VOX di coda (fixture). La X chiude solo il fumetto; la freccia passa alla successiva.",
+        text: "Terzo VOX di coda (fixture). La X chiude solo il fumetto; la freccia passa al successivo.",
         permalink: URL(string: "https://chronocol.com/it")!
     )
 
@@ -117,7 +117,7 @@ struct VoxCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: VoxLayout.spacing) {
             HStack {
-                Text(layout.kind == .greeting ? "Globy" : "Nuova VOX")
+                Text(layout.kind == .greeting ? "Globy" : "Nuovo VOX")
                     .font(.system(size: 11, weight: .semibold))
                     .foregroundStyle(.secondary)
                 Spacer()

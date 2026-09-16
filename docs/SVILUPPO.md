@@ -1,7 +1,7 @@
 # Sviluppo
 
-- Aggiornato: 2026-09-16
-- Stato: bootstrap; l'app Xcode non esiste ancora
+- Aggiornato: 2026-09-17
+- Stato: progetto Xcode nativo; Debug usa fixture in processo, senza rete
 - Risponde a: come preparare, eseguire e verificare Globy in locale
 
 ## Scelte chiuse il 2026-09-16
@@ -14,63 +14,72 @@
 | Bundle identifier di sviluppo | `com.chronocol.globy.debug` |
 | Licenza | GNU GPL versione 3, file `LICENSE` |
 
-Restano da registrare, quando verificati: se il progetto dell'app è Xcode nativo o
-generato, dipendenze esterne ammesse.
+Il progetto dell'app è **Xcode nativo** (`Globy.xcodeproj`, cartelle sincronizzate sul
+filesystem). Nessun generatore esterno. Dipendenze: solo il package locale
+`Packages/GlobyCore/`.
 
-Toolchain verificata il 2026-09-16 sullo spike di sincronizzazione:
+Toolchain verificata il 2026-09-17:
 
 | Strumento | Valore |
 |---|---|
 | Xcode | 26.6 (build 17F113) |
 | Swift | 6.3.3 (`swiftlang-6.3.3.1.3`) |
-| Comando | `swift test --package-path Packages/GlobyCore` |
+| Comandi | sotto |
 
 ## Stato reale
 
-Non esiste ancora il `.xcodeproj` dell'app. Esistono due spike SwiftPM, nessuno dei
-due è Globy:
+Esistono:
 
+- `Globy.xcodeproj` — app macOS senza icona Dock (`LSUIElement`), Debug su fixture;
 - `Packages/GlobyCore/` — sincronizzazione verificabile senza UI;
-- `Spikes/MascotSpike/` — mascotte 2D usa e getta.
+- `Spikes/MascotSpike/` — prototipo usa e getta della mascotte (il codice vivo della
+  mascotte nell'app sta in `Globy/Mascot/`).
 
-Non inventare comandi di build dell'app finché quel progetto non esiste e i comandi
-non sono verificati qui.
+La Debug non contatta Chronocol, salvo `--live`. La Release legge Chronocol pubblico
+con sole GET, per poter collaudare l'app vera; le righe «Simula…» esistono solo in
+Debug con la fixture.
 
 ## Struttura
 
-La shell macOS arriverà con il progetto Xcode. La logica verificabile vive già nel
-package:
-
-```text
-Packages/GlobyCore/     # dominio, sincronizzazione, store in memoria, fixture
-Spikes/MascotSpike/     # prototipo usa e getta della mascotte
-docs/
-```
-
-La struttura prevista per l'app, quando esisterà:
-
 ```text
 Globy.xcodeproj
-Globy/                  # entry point, menu bar, finestre, asset, entitlement
-Packages/GlobyCore/
+Globy/                  # entry point, menu bar, mascotte, preferenze
 GlobyTests/
-GlobyUITests/
-Spikes/
+Packages/GlobyCore/
+Spikes/MascotSpike/
 docs/
 ```
 
 Le fixture HTTP e SSE dello spike stanno in `Packages/GlobyCore/Tests/GlobyCoreTests/Fixtures/`
-e sono sintetiche. Non creare cartelle vuote per simulare moduli.
+e sono sintetiche. L'app Debug usa `FixtureChronocol` in processo.
 
 ## Comandi verificati
 
 ```bash
 swift test --package-path Packages/GlobyCore
+xcodebuild -project Globy.xcodeproj -scheme Globy -destination 'platform=macOS' build
+xcodebuild -project Globy.xcodeproj -scheme Globy -destination 'platform=macOS' test
 cd Spikes/MascotSpike && swift run MascotSpike --snapshot globo.png
 cd Spikes/MascotSpike && swift run -c release MascotSpike --demo
 ```
 
-La suite di `GlobyCore` non apre connessioni di rete.
+Opzioni di avvio, solo in Debug, per provare l'app senza aspettare eventi reali
+(`Globy.app/Contents/MacOS/Globy <opzioni>`):
+
+| Opzione | Effetto |
+|---|---|
+| `--live` | legge Chronocol pubblico (solo GET) invece della fixture; dati in `content-live.json` |
+| `--open-menu` | apre il pannello della barra dei menu |
+| `--open-preferences` | apre la finestra delle Preferenze |
+| `--simulate-vox` | pubblica un VOX sulla fixture e sincronizza |
+| `--simulate-return N` | saluto di rientro con N VOX usciti mentre eri via |
+| `--poll-seconds S` | controllo periodico ogni S secondi invece di 5 minuti |
+| `--publish-silently` | pubblica un VOX senza sincronizzare: lo trova il controllo periodico |
+
+`swift test --package-path Packages/GlobyCore` il 2026-09-17 ha eseguito 34 test senza
+rete. `xcodebuild … test` ha eseguito `GlobyTests` sullo stesso toolchain.
+
+La suite automatica non apre connessioni di rete e non pubblica contenuti reali.
 
 ## Ambiente
 
@@ -95,7 +104,7 @@ fornire un file `.example` e ignorare la copia privata.
 - raffica di più elementi.
 
 La suite automatica non deve pubblicare o ritirare contenuti reali. Un server HTTP
-di sviluppo resta utile quando nascerà l'app, non per i test del core.
+di sviluppo servirà in fase 4; la Debug dell'app usa `FixtureChronocol` in processo.
 
 ## Strategia di test
 

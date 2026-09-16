@@ -26,7 +26,7 @@ Non ci sono percorsi filesystem di Chronocol da clonare insieme a Globy.
 | `GET` | `/api/voxes` | Elenco JSON paginato, senza autenticazione |
 | `GET` | `/api/voxes/:documentId` | Dettaglio JSON della stessa forma, senza autenticazione |
 | `GET` | `/api/voxes/stream` | `text/event-stream`; primo commento `: connected` |
-| `GET` | `/api/voxes/rss` | Feed RSS delle VOX, `text/xml` |
+| `GET` | `/api/voxes/rss` | Feed RSS dei VOX, `text/xml` |
 | `GET` | `/api/voxes/rss.xsl` | Foglio di stile per il browser, non dato applicativo |
 
 Esempi di produzione:
@@ -51,12 +51,12 @@ La paginazione accettata il 2026-09-16 usava `pagination[page]` e
 
 L'ordine predefinito dell'elenco **non** è per recenza: la pagina 1 partiva
 dall'inizio dell'archivio. Per il catch-up è stato osservato che
-`sort=createdAt:desc` allinea la pagina 1 alle VOX più recenti, nello stesso senso
+`sort=createdAt:desc` allinea la pagina 1 ai VOX più recenti, nello stesso senso
 del RSS. GlobyCore richiede sempre quel sort. Non è una garanzia di contratto:
 se Chronocol lo ritira, il JSON non copre più un buco in modo sicuro.
 
 Un dettaglio inesistente rispondeva HTTP 404 con `{ data: null, error }`. Nello
-spike un 404 su un `documentId` già in store è l'unico ritiro simulabile: una VOX
+spike un 404 su un `documentId` già in store è l'unico ritiro simulabile: un VOX
 assente dal solo RSS non è un ritiro.
 
 La risposta contiene anche campi che non servono a Globy. Non vanno copiati in
@@ -102,7 +102,7 @@ Dal codice di Chronocol il feed ha un tetto di 100 elementi e ordina per
 `createdAt` decrescente. Non rappresenta esplicitamente ritiri o cancellazioni.
 
 È adatto a fixture e alla lettura ordinaria di Globy. Non garantisce da solo un
-recupero del buco se, da `lastSuccessfulSyncAt`, sono uscite più VOX di quante il
+recupero del buco se, da `lastSuccessfulSyncAt`, sono usciti più VOX di quanti il
 feed ne tenga. In quel caso Globy pagina l'elenco JSON con `sort=createdAt:desc`,
 come in
 [`docs/adr/0002-http-e-autorevole-sse-e-un-segnale.md`](adr/0002-http-e-autorevole-sse-e-un-segnale.md).
@@ -122,10 +122,11 @@ risponda a queste domande:
 6. Qual è l'ordinamento totale quando due elementi hanno lo stesso timestamp?
 7. Quale compatibilità viene promessa ai client meno recenti?
 8. Quale frequenza di polling è accettabile, dato il limite osservato di 180
-   richieste al minuto?
+   richieste al minuto? In attesa di risposta Globy usa un valore prudente: una
+   sync ogni 5 minuti per Mac, con jitter e backoff fino a 30 minuti.
 
 La soluzione preferibile è un feed incrementale paginato con cursore opaco e tipo di
-cambiamento. Il dettaglio della VOX può restare nell'endpoint pubblico.
+cambiamento. Il dettaglio del VOX può restare nell'endpoint pubblico.
 
 ## Compatibilità e configurazione
 

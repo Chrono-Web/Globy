@@ -4,7 +4,7 @@ import Testing
 
 @Suite("Hint SSE")
 struct HintTests {
-    @Test("un evento SSE non è una VOX nuova se HTTP non la conferma")
+    @Test("un evento SSE non è un VOX nuovo se HTTP non lo conferma")
     func sseIsNotAuthoritative() async throws {
         let client = FakeChronocol()
         await client.setRSS([remote("known", hours: -1)])

@@ -13,8 +13,10 @@
 | **lastSuccessfulSyncAt** | Istante dell'ultimo catch-up riuscito; il buco da coprire parte da lì |
 | **diretta** | Cambiamento confermato mentre Globy era connesso; non è sinonimo di evento SSE |
 | **hint** | Segnale non autorevole, per esempio SSE, che richiede un catch-up |
-| **saluto** | Prima apparizione della mascotte al primo avvio; non è una VOX |
+| **saluto** | Prima apparizione della mascotte al primo avvio; non è un VOX. Può chiedere se mostrare gli ultimi 5 VOX come recenti |
+| **saluto di rientro** | Fumetto a ogni avvio o risveglio con l'esito della sincronizzazione; non è un VOX |
 | **onboarding** | Spiegazione al primo avvio dell'app: cosa legge, baseline, notifiche |
+| **non letto** | VOX arrivato dopo la baseline e mai aperto; l'archivio del primo avvio non lo è |
 | **letto** | Contenuto che la persona ha esplicitamente aperto o marcato come letto |
 | **notificato** | Contenuto per cui Globy ha già programmato o mostrato un avviso |
 | **ritirato** | Contenuto prima disponibile che la fonte autorevole non considera più pubblico |
@@ -23,5 +25,5 @@
 | **stream** | Connessione SSE pubblica di Chronocol; non è una coda durevole |
 | **polling** | Lettura HTTP periodica usata anche come fallback dello stream |
 
-`documentId` identifica una VOX, ma non una versione immutabile della VOX. “Nuovo”,
+`documentId` identifica un VOX, ma non una versione immutabile del VOX. “Nuovo”,
 “aggiornato”, “letto” e “notificato” non devono essere compressi in un solo booleano.

@@ -8,11 +8,11 @@ final class MascotModel: ObservableObject {
 
     @Published private(set) var phase: Phase = .hidden
     @Published var surface: Surface = .dark
-    /// VOX mostrata sopra il globo; `nil` quando il fumetto è nascosto.
+    /// VOX mostrato sopra il globo; `nil` quando il fumetto è nascosto.
     @Published private(set) var reading: VoxLayout?
     /// Quante VOX restano in coda dopo quella visibile.
     @Published var remaining = 0
-    /// Quante VOX già viste si possono riprendere con la freccia indietro.
+    /// Quanti VOX già visti si possono riprendere con la freccia indietro.
     @Published var previous = 0
     /// Saluto: occhi a fessura come a metà battito, un po' più lunghi in orizzontale.
     @Published private(set) var smiling = false
@@ -25,7 +25,7 @@ final class MascotModel: ObservableObject {
     private var smileTo: Double = 0
     private var smileStart: TimeInterval = -1e9
     private(set) var typingStart: TimeInterval = 0
-    /// Dopo aver scritto la VOX il globo guarda chi osserva, poi torna al puntatore.
+    /// Dopo aver scritto il VOX il globo guarda chi osserva, poi torna al puntatore.
     static let lookAtViewer: TimeInterval = 1.2
     /// Vero solo mentre qualcosa si muove: sguardo che insegue il puntatore, battito di ciglia.
     /// Da fermo il render loop è in pausa, anche con Globy sempre presente.
@@ -170,7 +170,7 @@ final class MascotModel: ObservableObject {
         }
     }
 
-    /// Reazione a una nuova VOX quando il globo è già a schermo: doppio battito.
+    /// Reazione a un nuovo VOX quando il globo è già a schermo: doppio battito.
     func greet() {
         blink(double: true)
     }

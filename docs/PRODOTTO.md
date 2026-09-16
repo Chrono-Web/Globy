@@ -7,9 +7,9 @@
 ## Promessa
 
 Globy è il compagno ufficiale macOS di Chronocol: porta i contenuti pubblici vicino
-senza chiedere di tenere il sito aperto. Il pulsante nella barra dei menu raccoglie le
-VOX recenti e ricorda che cosa è già stato visto. Quando arriva una nuova VOX
-confermata, un piccolo globo compare brevemente nell'angolo inferiore destro dello
+senza chiedere di tenere il sito aperto. Il pulsante nella barra dei menu raccoglie i
+VOX recenti e ricorda che cosa è già stato visto. Quando arriva un nuovo VOX
+confermato, un piccolo globo compare brevemente nell'angolo inferiore destro dello
 schermo e poi scompare.
 
 La presenza stabile è il pulsante nella barra dei menu. La mascotte è un richiamo
@@ -20,7 +20,7 @@ transitorio, non una finestra da tenere sempre sul desktop.
 La prima versione è per una persona che:
 
 - usa macOS 15 o successivo;
-- vuole seguire le VOX pubbliche di Chronocol;
+- vuole seguire i VOX pubblici di Chronocol;
 - accetta di lasciare una piccola utility in esecuzione nella barra dei menu;
 - non deve possedere un account Chronocol.
 
@@ -32,12 +32,14 @@ lettura completa.
 1. Al primo avvio Globy saluta una volta con la mascotte, poi spiega che cosa legge
    e quando può notificare. L'archivio non viene notificato.
 2. Costruisce una baseline locale senza notificare l'archivio.
-3. La barra dei menu mostra un pulsante persistente; un clic apre le VOX recenti e il
-   numero di non lette. Se non c'è nulla di nuovo, resta visibile l'ultima VOX nota.
+3. La barra dei menu mostra un pulsante persistente; un clic apre i VOX recenti e il
+   numero di non letti. Se non c'è nulla di nuovo, resta visibile l'ultimo VOX noto.
+   L'archivio trovato al primo avvio non conta tra i non letti e non ha etichetta:
+   non letto vuol dire arrivato dopo la baseline e mai aperto.
 4. Quando una nuova pubblicazione è stata verificata, il piccolo globo compare in basso
    a destra, richiama brevemente l'attenzione e si nasconde automaticamente.
 5. Globy può mostrare anche una notifica locale, secondo permessi e preferenze.
-6. Un clic su una VOX apre il permalink pubblico nel browser predefinito.
+6. Un clic su un VOX apre il permalink pubblico nel browser predefinito.
 7. Dopo rete assente, stop o riavvio, Globy recupera lo stato senza una raffica di
    notifiche.
 
@@ -45,9 +47,17 @@ lettura completa.
 
 La mascotte è un avviso visivo transitorio, non il motore del prodotto.
 
-- Compare dopo la conferma autorevole di una nuova VOX, con un'unica eccezione:
-  il saluto di primo avvio (non è una VOX, non apre un permalink; gli occhi
-  restano chiusi come a metà battito, verso chi guarda).
+- Compare dopo la conferma autorevole di un nuovo VOX, con due eccezioni che non
+  sono VOX e non aprono un permalink (occhi chiusi come a metà battito, verso chi
+  guarda):
+  - il saluto di primo avvio, una volta sola;
+  - il saluto di rientro, sempre, a ogni avvio successivo e a ogni risveglio del Mac
+    o dello schermo, dopo la sincronizzazione. Dice com'è andata: «non ti sei perso
+    nulla» se non ci sono VOX nuovi, oppure quanti ne sono usciti con la freccia e
+    il numerino per aprirli. Se la sincronizzazione fallisce non dice «nulla»: dice
+    che non lo sa ancora. La X vuol dire «dopo»; se nessuno usa la freccia il globo
+    se ne va e i VOX restano nel menu. Al posto della raffica, non in aggiunta.
+    Il testo sta in `WelcomePolicy` (GlobyCore).
 - Entra nell'angolo inferiore destro della `visibleFrame` dello schermo col
   puntatore (margine 16 pt, Dock escluso) e si nasconde automaticamente.
   Globo e fumetto restano interamente in quell'area: il globo non esce dal
@@ -68,14 +78,19 @@ Decisioni di comportamento chiuse il 2026-09-16 (ADR 0003 per il motore):
 - Motore: globo 2D (SwiftUI Canvas). RealityKit escluso dalla prima versione.
 - Fumetto in v1: il globo entra, poi il testo si scrive carattere per carattere;
   gli occhi seguono il carattere, poi chi osserva, poi il puntatore. Dopo la
-  lettura il fumetto resta 6 s. Reduce Motion: solo fade.
-- Più VOX: una coda, un globo solo. La freccia in basso a destra passa alla
-  successiva, quella in basso a sinistra torna alla precedente; senza
+  lettura il fumetto resta il tempo di leggerlo: circa 0,3 s per parola, tra 2 e
+  15 s (`ReadingPolicy`). Una domanda «Sì / No» resta circa 20 s. Reduce Motion:
+  solo fade.
+- Più VOX: una coda, un globo solo. La freccia in basso a destra passa al
+  successivo, quella in basso a sinistra torna al precedente; senza
   permanenza, dopo la lettura resta una pausa di circa 1 s.
-- Clic su globo o fumetto: apre la VOX visibile su Chronocol.
+- Clic su globo o fumetto: apre il VOX visibile su Chronocol.
 - La X chiude solo il fumetto. Con più VOX, due frecce in basso (stessa
   distanza dagli angoli che ha la X in alto a destra): indietro e avanti;
-  i numeretti indicano quante ce ne sono da quella parte.
+  i numeretti indicano quanti ce ne sono da quella parte.
+- Gli angoli del fumetto appartengono a X e frecce: testo, intestazione e pulsanti
+  interni non entrano mai in quelle zone (`VoxLayout.cornerClearance`), anche
+  quando le frecce non sono visibili.
 - Trascinabile mentre è visibile; al richiamo successivo torna in basso a destra.
   Durante lo spostamento globo e fumetto non escono dalla `visibleFrame`.
   Permanenza disattivata (default): dopo un trascinamento restano 5 s in più, poi
@@ -87,10 +102,16 @@ Decisioni di comportamento chiuse il 2026-09-16 (ADR 0003 per il motore):
 ## Primo avvio
 
 Il saluto della mascotte è il prototipo già collaudabile nello spike. Nell'app (fase 3)
-resta una sola apparizione, poi due fatti in un fumetto o in un foglio breve:
+resta una sola apparizione, dopo la baseline, poi tre fatti in un fumetto o in un foglio
+breve:
 
-1. Globy legge le VOX pubbliche di Chronocol;
-2. non notifica l'archivio; chiede il permesso notifiche solo dopo questa spiegazione.
+1. Globy legge i VOX pubblici di Chronocol;
+2. non notifica l'archivio; chiede il permesso notifiche solo dopo questa spiegazione;
+3. il fumetto di presentazione chiede «Partiamo con gli ultimi 5 VOX pubblicati?» con
+   «Sì, partiamo» e «No, grazie». Solo con «Sì» il globo li mostra in coda, dal più
+   recente, con l'etichetta «VOX recente · già uscito»: non sono notifiche, non
+   segnano `notifiedAt` e non producono banner. «No», la X o nessuna risposta entro
+   circa 20 s chiudono la presentazione. Se la baseline è vuota la domanda non c'è.
 
 Niente wizard a più schermate. Il permesso negato non è un errore: casa
 `docs/TRAPPOLE.md` e `docs/PRIVACY.md`.
@@ -102,6 +123,10 @@ Prima versione:
 - mascotte accesa o spenta (la sincronizzazione continua);
 - permanenza del globo;
 - suono della mascotte;
+- dimensioni personalizzate: interruttore più due cursori, testo del fumetto
+  (85–150%) e pulsanti X e frecce (80–160%). Spento, valgono le dimensioni standard
+  ma i valori scelti restano salvati. Finché le Preferenze sono aperte il globo
+  mostra un fumetto di anteprima con X e frecce finte, che cambia dal vivo;
 - pausa temporanea delle notifiche;
 - avvio al login;
 - azzeramento dei dati locali.
@@ -115,13 +140,13 @@ chat, account.
 Incluso:
 
 - app macOS nella barra dei menu;
-- elenco recente delle VOX;
+- elenco recente dei VOX;
 - conteggio e stato letto/non letto;
 - stato distinto di contenuto già notificato;
 - notifiche locali, inizialmente senza suono;
 - pausa temporanea delle notifiche;
 - avvio al login facoltativo;
-- recupero dopo interruzioni, limitato alle VOX uscite da `lastSuccessfulSyncAt`;
+- recupero dopo interruzioni, limitato ai VOX usciti da `lastSuccessfulSyncAt`;
 - mascotte transitoria in basso a destra e disattivabile;
 - indirizzo del servizio configurabile nelle build di sviluppo.
 

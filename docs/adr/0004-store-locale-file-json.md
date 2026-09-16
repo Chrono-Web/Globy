@@ -11,7 +11,7 @@
 
 ## Contesto
 
-Globy deve ricordare VOX osservate, `readAt`, `notifiedAt` e `lastSuccessfulSyncAt`
+Globy deve ricordare VOX osservati, `readAt`, `notifiedAt` e `lastSuccessfulSyncAt`
 tra un avvio e l'altro. Lo spike usava solo memoria. SwiftData e Core Data restano
 candidati, ma accoppiano facilmente le viste allo schema e complicano i test.
 

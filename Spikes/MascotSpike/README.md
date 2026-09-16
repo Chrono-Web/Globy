@@ -4,15 +4,16 @@
 - Stato: prototipo usa e getta; il motore è il 2D (ADR 0003)
 - Risponde a: il globo Canvas funziona come mascotte transitoria?
 
-Non contiene sincronizzazione: la VOX si simula dal menu. Il globo è disegnato dal
+Non contiene sincronizzazione: il VOX si simula dal menu. Il globo è disegnato dal
 codice, quindi non ci sono asset da registrare in `docs/ASSET.md`. Il suono è
 `Tink` di sistema. RealityKit è stato provato e rimosso dopo il collaudo visivo.
+L'app (`Globy.xcodeproj`) ha una copia del motore in `Globy/Mascot/`.
 
 ## Uso
 
 ```bash
 cd Spikes/MascotSpike
-swift run MascotSpike                         # menu: Simula nuova VOX (⌘N), raffica (⌘B), Saluta (⌘G)
+swift run MascotSpike                         # menu: Simula nuovo VOX (⌘N), raffica (⌘B), Saluta (⌘G)
 swift run MascotSpike --demo                  # un richiamo dopo 1 s
 swift run MascotSpike --burst                 # coda di 3 VOX
 swift run MascotSpike --greet                 # saluto, anche se già visto
@@ -39,12 +40,12 @@ saluto a ogni cambio nei sorgenti, così non serve uscire e rilanciare a mano.
 - Coda: un globo; in basso a destra si va avanti, in basso a sinistra si torna
   indietro. Senza permanenza, dopo la lettura c'è una pausa di 1 s e poi la
   VOX seguente.
-- Clic su globo o fumetto: apre la VOX visibile su Chronocol.
+- Clic su globo o fumetto: apre il VOX visibile su Chronocol.
 - X: chiude solo il fumetto, mai il globo.
 - Frecce in basso (stessa distanza dagli angoli che ha la X in alto a destra):
-  successiva e precedente; i numeretti sono quante VOX ci sono da quella parte.
+  successivo e precedente; i numeretti sono quanti VOX ci sono da quella parte.
 - Saluto (⌘G): fumetto «Ciao, sono Globy…», occhi chiusi come a metà battito,
-  sguardo verso chi guarda; non è una VOX e non apre Chronocol. Al primo avvio
+  sguardo verso chi guarda; non è un VOX e non apre Chronocol. Al primo avvio
   dello spike parte da solo.
 - Trascinabile mentre è visibile; globo e fumetto non escono dalla `visibleFrame`.
   Al richiamo successivo torna in basso a destra.

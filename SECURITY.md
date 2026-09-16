@@ -40,7 +40,7 @@ Una segnalazione utile contiene:
 
 Sono particolarmente rilevanti, quando esisterà codice:
 
-- esecuzione di contenuti non fidati provenienti dalle VOX;
+- esecuzione di contenuti non fidati provenienti dai VOX;
 - apertura di URL non validati;
 - esposizione di token o configurazioni di firma;
 - scrittura o lettura oltre il contenitore previsto dell'app;

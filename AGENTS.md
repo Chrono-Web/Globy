@@ -1,6 +1,6 @@
 # GLOBY — mappa del progetto per gli agenti
 
-- Aggiornato: 2026-09-16
+- Aggiornato: 2026-09-17
 - Vale per: tutta la repository `GLOBY/`
 - Ruolo: punto d'ingresso autorevole. Se un documento interno lo contraddice, vince
   questo file finché la contraddizione non viene corretta.
@@ -17,16 +17,15 @@ Leggi, nell'ordine:
 6. il documento specifico dell'area che stai modificando;
 7. gli ADR pertinenti in `docs/adr/`.
 
-Non dedurre l'esistenza dell'app dal piano: al 2026-09-16 il progetto Xcode non esiste.
-C'è `Packages/GlobyCore/` (spike di sincronizzazione) e `Spikes/MascotSpike/`
-(prototipo della mascotte); nessuno dei due è Globy.
+Non trattare gli spike come se fossero l'app: `Packages/GlobyCore/` e
+`Spikes/MascotSpike/` restano libreria e prototipo. L'app è `Globy.xcodeproj`.
 
 ## Identità del progetto
 
 Globy è il compagno ufficiale macOS di Chronocol, un'applicazione autonoma collegata
 ai contenuti pubblici. La barra dei menu è la sua presenza stabile: un clic apre
-l'elenco delle VOX recenti. La mascotte è un piccolo globo transitorio che compare
-nell'angolo inferiore destro quando viene confermata una nuova VOX e poi scompare.
+l'elenco dei VOX recenti. La mascotte è un piccolo globo transitorio che compare
+nell'angolo inferiore destro quando viene confermato un nuovo VOX e poi scompare.
 Mascotte e sincronizzazione devono restare indipendenti.
 
 La fonte autorevole dello stato è una lettura HTTP di Chronocol: RSS se copre il buco
@@ -48,6 +47,7 @@ degli eventi persi.
 | `docs/ASSET.md` | Provenienza, licenza e uso di grafica, font e suoni |
 | `docs/TRAPPOLE.md` | Errori ricorrenti e assunzioni vietate |
 | `docs/ROADMAP.md` | Stato reale e criteri di completamento |
+| `docs/COLLAUDO_FASE3.md` | Checklist del collaudo umano che chiude la fase 3 |
 | `docs/adr/` | Perché una decisione interna è stata presa |
 
 Un fatto deve avere una casa sola. Gli altri documenti lo collegano, non lo copiano.
@@ -55,14 +55,16 @@ Un fatto deve avere una casa sola. Gli altri documenti lo collegano, non lo copi
 ## Regole non negoziabili
 
 1. **Niente eventi inventati.** La mascotte compare dopo la conferma autorevole di
-   una nuova VOX; un pacchetto SSE non basta. Unica eccezione: il saluto di primo
-   avvio, che non è una VOX (casa: `docs/PRODOTTO.md`).
+   un nuovo VOX; un pacchetto SSE non basta. Eccezioni: il saluto di primo
+   avvio e il saluto di rientro, che non sono VOX (casa: `docs/PRODOTTO.md`).
+   **VOX è maschile**: il VOX, un nuovo VOX, i VOX non letti.
 2. **HTTP è autorevole, SSE è un indizio.** Ogni riconnessione, risveglio o evento SSE
    termina in una sincronizzazione idempotente. Il dettaglio è l'ADR 0002.
 3. **`documentId` identifica il contenuto, non la sua versione.** Letto, notificato,
    aggiornato e ritirato sono stati diversi.
 4. **Il primo avvio non notifica l'archivio.** Costruisce una baseline e informa la
-   persona soltanto degli arrivi successivi.
+   persona soltanto degli arrivi successivi. Può soltanto *chiedere* se mostrare gli
+   ultimi 5 VOX come «recenti», senza banner né `notifiedAt` (casa: `docs/PRODOTTO.md`).
 5. **Mai test distruttivi sulla produzione.** Pubblicazioni, ritiri e raffiche si
    provano con fixture o staging.
 6. **Nessun segreto nel bundle o nella repository.** Le letture pubbliche non devono
@@ -117,6 +119,7 @@ il passato: vengono sostituiti da un nuovo ADR.
 
 ## File generati e segreti
 
-Quando esisterà il progetto Xcode, non modificare a mano file generati da strumenti o
-build. Non versionare DerivedData, `.xcuserstate`, profili, certificati, chiavi,
+Quando esiste il progetto Xcode, non modificare a mano file generati da strumenti o
+build. Il `project.pbxproj` è mantenuto a mano (cartelle sincronizzate sul filesystem).
+Non versionare DerivedData, `.xcuserstate`, profili, certificati, chiavi,
 token, configurazioni personali o database reali.

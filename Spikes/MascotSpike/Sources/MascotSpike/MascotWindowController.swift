@@ -15,17 +15,17 @@ final class MascotWindowController {
     private let panel: NSPanel
     private let model = MascotModel()
     private let closeButton = VoxCornerButton(frame: .zero, tooltip: "Chiudi", accessibilityLabel: "Chiudi")
-    private let nextButton = VoxCornerButton(frame: .zero, tooltip: "VOX successiva", accessibilityLabel: "VOX successiva")
+    private let nextButton = VoxCornerButton(frame: .zero, tooltip: "VOX successivo", accessibilityLabel: "VOX successivo")
     private let backButton = VoxCornerButton(frame: .zero, tooltip: "VOX precedente", accessibilityLabel: "VOX precedente")
     private let hitView = MascotHitView(frame: .zero)
     private var hideWork: DispatchWorkItem?
     private var hideDeadline: TimeInterval?
     private var mouseMonitors: [Any] = []
     private var queue: [Vox] = []
-    /// VOX già mostrate in questa sessione, per la freccia indietro.
+    /// VOX già mostrati in questa sessione, per la freccia indietro.
     private var history: [Vox] = []
     private var current: Vox?
-    /// Fumetto di saluto: non è in coda e non è una VOX.
+    /// Fumetto di saluto: non è in coda e non è un VOX.
     private var showingGreeting = false
     private var movedThisAppearance = false
     /// Centro del disco disegnato, in coordinate schermo. Resta fisso mentre la finestra si adatta al fumetto.
@@ -113,7 +113,7 @@ final class MascotWindowController {
         }
     }
 
-    /// Accoda una VOX. Se il globo è nascosto, parte il richiamo; se sta già leggendo,
+    /// Accoda un VOX. Se il globo è nascosto, parte il richiamo; se sta già leggendo,
     /// le successive aspettano con una pausa di un secondo tra una e l'altra.
     func summon(vox: Vox) {
         queue.append(vox)
@@ -148,7 +148,7 @@ final class MascotWindowController {
         }
     }
 
-    /// Clic su globo o fumetto: apre la VOX visibile su Chronocol, senza cambiare coda.
+    /// Clic su globo o fumetto: apre il VOX visibile su Chronocol, senza cambiare coda.
     private func openCurrent() {
         guard !showingGreeting, let current else { return }
         NSWorkspace.shared.open(current.permalink)
@@ -184,7 +184,7 @@ final class MascotWindowController {
         }
     }
 
-    /// Freccia in basso a destra: passa alla VOX successiva in coda.
+    /// Freccia in basso a destra: passa al VOX successivo in coda.
     private func goToNext() {
         guard queue.count > 1, let shown = queue.first else { return }
         history.append(shown)
@@ -192,7 +192,7 @@ final class MascotWindowController {
         presentNext(fromHidden: false)
     }
 
-    /// Freccia in basso a sinistra: torna alla VOX precedente.
+    /// Freccia in basso a sinistra: torna al VOX precedente.
     private func goToPrevious() {
         guard let previous = history.popLast() else { return }
         queue.insert(previous, at: 0)
@@ -289,7 +289,7 @@ final class MascotWindowController {
         let previous = history.count
         model.remaining = remaining
         model.previous = previous
-        let nextLabel = remaining <= 1 ? "VOX successiva" : "\(remaining) VOX successive"
+        let nextLabel = remaining <= 1 ? "VOX successivo" : "\(remaining) VOX successivi"
         nextButton.toolTip = nextLabel
         nextButton.setAccessibilityLabel(nextLabel)
         let backLabel = previous <= 1 ? "VOX precedente" : "\(previous) VOX precedenti"

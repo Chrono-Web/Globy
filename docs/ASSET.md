@@ -1,6 +1,6 @@
 # Asset e attribuzioni
 
-- Aggiornato: 2026-09-16
+- Aggiornato: 2026-09-17
 - Stato: nessun file grafico in repository; politica scelta
 - Risponde a: da dove provengono grafica, font, suoni e modelli e come possono essere usati
 
@@ -14,7 +14,7 @@ terzi entra solo con una licenza compatibile e riga in questa tabella.
 
 ## Stato attuale
 
-Non sono presenti grafica, font, suoni o modelli. Il globo dello spike è disegnato dal
+Non sono presenti grafica, font, suoni o modelli. Il globo (spike e app) è disegnato dal
 codice, quindi non c'è un file da registrare. Quando verrà aggiunto il primo asset, la
 sezione registro diventa una tabella con file, autore, fonte, licenza, modifiche e
 attribuzione richiesta.

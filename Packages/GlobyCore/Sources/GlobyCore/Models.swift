@@ -1,7 +1,7 @@
 import CryptoKit
 import Foundation
 
-/// VOX osservata localmente. `readAt` e `notifiedAt` sono fatti distinti.
+/// VOX osservato localmente. `readAt` e `notifiedAt` sono fatti distinti.
 public struct VoxRecord: Equatable, Sendable, Codable {
     public var documentId: String
     public var permalink: URL
@@ -169,7 +169,7 @@ public struct SyncReport: Equatable, Sendable {
     }
 }
 
-/// Segnale non autorevole. Non implica che una VOX sia nuova.
+/// Segnale non autorevole. Non implica che un VOX sia nuovo.
 public enum HintEvent: Equatable, Sendable {
     case connected
     case heartbeat

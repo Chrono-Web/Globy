@@ -1,22 +1,22 @@
 # Globy
 
-> **Stato: pre-alpha.** Le fasi 0–2 sono chiuse. Non esiste ancora una build
-> installabile dell'app: manca il progetto Xcode. Il core di sincronizzazione è in
-> `Packages/GlobyCore/`; la mascotte ha uno spike 2D usa e getta.
+> **Stato: pre-alpha.** Le fasi 0–2 sono chiuse. La fase 3 ha un progetto Xcode
+> compilabile; la Debug usa fixture in processo e non è una build installabile
+> collaudata. Chronocol in produzione è la fase 4.
 
 Globy è il compagno ufficiale macOS di [Chronocol](https://chronocol.com): vive nella
-barra dei menu e raccoglie le VOX più recenti. Quando arriva una nuova VOX confermata,
+barra dei menu e raccoglie i VOX più recenti. Quando arriva un nuovo VOX confermato,
 un piccolo globo compare brevemente nell'angolo inferiore destro dello schermo e poi
 scompare.
 
 ## Obiettivo della prima versione
 
-- consultare le VOX più recenti dalla barra dei menu;
+- consultare i VOX più recenti dalla barra dei menu;
 - ricevere notifiche locali mentre Globy è in esecuzione;
-- recuperare le VOX uscite da quando Globy ha sincronizzato l'ultima volta;
+- recuperare i VOX usciti da quando Globy ha sincronizzato l'ultima volta;
 - distinguere contenuti non letti e contenuti già notificati;
-- aprire la VOX originale su Chronocol;
-- mostrare brevemente la mascotte in basso a destra soltanto per nuove VOX confermate.
+- aprire il VOX originale su Chronocol;
+- mostrare brevemente la mascotte in basso a destra soltanto per nuovi VOX confermati.
 
 Globy non include nella prima versione funzioni editoriali, account, chat, telemetria
 o notifiche remote ad applicazione terminata.
@@ -25,13 +25,18 @@ o notifiche remote ad applicazione terminata.
 
 La fondazione (fase 0), lo spike di sincronizzazione (fase 1) e lo spike della
 mascotte (fase 2) sono verificati. Gli ADR 0001, 0002, 0003 e 0004 sono **accettati**.
-L'app non è iniziata: `Packages/GlobyCore/` e `Spikes/MascotSpike/` non sono il
-prodotto.
+L'app esiste come `Globy.xcodeproj` (fase 3, `[~]`): menu, store JSON, saluto,
+preferenze e mascotte sulle fixture. `Packages/GlobyCore/` e `Spikes/MascotSpike/`
+non sono il prodotto.
 
 Requisiti di piattaforma e canale: macOS 15 o successivo, identificatore
 `com.chronocol.globy`, GitHub fuori dallo Store. Dettaglio in
 [`docs/SVILUPPO.md`](docs/SVILUPPO.md) e [`docs/DISTRIBUZIONE.md`](docs/DISTRIBUZIONE.md).
-I test del core: `swift test --package-path Packages/GlobyCore`.
+
+```bash
+swift test --package-path Packages/GlobyCore
+xcodebuild -project Globy.xcodeproj -scheme Globy -destination 'platform=macOS' build
+```
 
 La roadmap è in [`docs/ROADMAP.md`](docs/ROADMAP.md). Il brief è in
 [`docs/PRODOTTO.md`](docs/PRODOTTO.md).
@@ -55,9 +60,9 @@ La roadmap è in [`docs/ROADMAP.md`](docs/ROADMAP.md). Il brief è in
 
 ## Contribuire e sicurezza
 
-Vedi [`CONTRIBUTING.md`](CONTRIBUTING.md) e [`SECURITY.md`](SECURITY.md). Il progetto
-non accetta ancora contributi di codice: manca il progetto Xcode. Non c'è un indirizzo
-di sicurezza dedicato.
+Vedi [`CONTRIBUTING.md`](CONTRIBUTING.md) e [`SECURITY.md`](SECURITY.md). I contributi
+esterni di codice restano chiusi finché la fase 3 non ha il collaudo umano. Non c'è
+un indirizzo di sicurezza dedicato.
 
 ## Licenza
 

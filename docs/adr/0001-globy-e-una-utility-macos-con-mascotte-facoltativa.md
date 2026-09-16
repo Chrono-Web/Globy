@@ -10,7 +10,7 @@
 
 ## Contesto
 
-Globy deve poter segnalare le nuove VOX quando il sito non è aperto e mantenere una
+Globy deve poter segnalare i nuovi VOX quando il sito non è aperto e mantenere una
 presenza visiva riconoscibile. Una finestra tradizionale obbligherebbe a tenere aperta
 un'interfaccia più grande del necessario; una mascotte sempre visibile renderebbe invece
 il prodotto invasivo e confonderebbe visibilità con funzionamento.
@@ -21,10 +21,10 @@ dei menu, notifiche, login item e finestre trasparenti senza un runtime multipia
 ## Decisione
 
 Globy viene progettato come applicazione macOS autonoma. Un pulsante persistente nella
-barra dei menu apre l'elenco delle VOX recenti; sincronizzazione ed elenco funzionano
+barra dei menu apre l'elenco dei VOX recenti; sincronizzazione ed elenco funzionano
 senza una finestra principale permanente.
 
-Quando la sincronizzazione conferma una nuova VOX, la mascotte compare brevemente
+Quando la sincronizzazione conferma un nuovo VOX, la mascotte compare brevemente
 nell'angolo inferiore destro e poi scompare. È facoltativa e può essere disabilitata
 senza chiudere Globy o interrompere la sincronizzazione. Swift e SwiftUI sono la base;
 AppKit resta confinato agli adattatori necessari per il comportamento della finestra.
@@ -33,7 +33,7 @@ AppKit resta confinato agli adattatori necessari per il comportamento della fine
 
 - la scomparsa automatica della mascotte non ferma una sincronizzazione simulata;
 - la barra dei menu resta utilizzabile con mascotte disabilitata;
-- una nuova VOX confermata produce una sola entrata e una sola uscita del globo;
+- un nuovo VOX confermato produce una sola entrata e una sola uscita del globo;
 - il globo rispetta l'area visibile dello schermo scelto;
 - il processo non mostra un'icona Dock se il comportamento scelto non la richiede;
 - stop, Space, fullscreen e più monitor rispettano la specifica approvata;

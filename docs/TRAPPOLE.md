@@ -4,10 +4,11 @@
 - Vale per: tutta la repository
 - Risponde a: che cosa sembra vero e non lo è
 
-## 1. Questa non è ancora un'app
+## 1. Compilare non significa collaudare
 
-La presenza di roadmap e architettura non implica che esistano target Xcode, sorgenti,
-asset o test. Verificare il disco prima di descrivere una capacità come realizzata.
+`Globy.xcodeproj` esiste e la Debug gira sulle fixture. Non è una release: niente
+Chronocol di produzione, niente installazione pulita verificata, niente firma.
+Descrivere una capacità come realizzata solo con il criterio della roadmap.
 
 ## 2. SSE non consegna uno storico
 
@@ -24,7 +25,7 @@ stream attuale possa sostenere una release pubblica perché sostiene il sito.
 
 Il feed osservato il 2026-09-16 aveva 50 item e non esprime i ritiri. Dal codice di
 Chronocol è limitato e ordinato per `createdAt`. Se l'item più vecchio è posteriore a
-`lastSuccessfulSyncAt`, il buco non è coperto: serve l'elenco JSON. Una VOX assente
+`lastSuccessfulSyncAt`, il buco non è coperto: serve l'elenco JSON. Un VOX assente
 dal solo RSS non è un ritiro.
 
 L'elenco JSON, senza `sort=createdAt:desc`, parte dall'inizio dell'archivio. La pagina
@@ -32,13 +33,15 @@ L'elenco JSON, senza `sort=createdAt:desc`, parte dall'inizio dell'archivio. La 
 
 ## 5. `documentId` non è una versione
 
-Una VOX può essere modificata, ripubblicata o ritirata mantenendo lo stesso
+Un VOX può essere modificato, ripubblicato o ritirato mantenendo lo stesso
 identificativo. Una tabella di soli ID non basta a decidere se notificare.
 
 ## 6. Primo avvio e catch-up non sono diretta
 
 Trattare la baseline o una riconnessione come arrivi live produce raffiche di notifiche
 e animazioni. La causa della sincronizzazione deve restare disponibile alla politica.
+L'unica presentazione dell'archivio ammessa al primo avvio è quella chiesta con «Sì»
+nel fumetto di presentazione: i VOX restano «recenti», non «nuovi».
 
 ## 7. La scomparsa della mascotte non significa chiudere Globy
 
@@ -112,9 +115,12 @@ README, `SECURITY.md` e `CONTRIBUTING.md` descrivono soltanto canali e procedure
 che esistono oggi. Un contatto, un SLA o una issue di bug applicativo si
 aggiungono quando il fatto è vero, non per completare un modello di repository.
 
-## 20. Il saluto non è una VOX inventata
+## 20. Il saluto non è un VOX inventato
 
-Il globo può comparire una volta al primo avvio per presentarsi. Quella apparizione
-non è una pubblicazione, non apre un permalink e non sostituisce la baseline.
+Il globo può comparire una volta al primo avvio per presentarsi, e a ogni rientro
+(avvio o risveglio) per dire com'è andata. Nessuno dei due è una pubblicazione, apre
+un permalink o sostituisce la baseline. Il numero di VOX del saluto di rientro viene
+dalla sincronizzazione appena conclusa, mai da un segnale SSE; se la sincronizzazione
+fallisce, il saluto non può affermare che non c'è nulla di nuovo.
 Notificare l'archivio resterebbe un errore (punto 6). Il dettaglio di prodotto
 sta in `docs/PRODOTTO.md`.

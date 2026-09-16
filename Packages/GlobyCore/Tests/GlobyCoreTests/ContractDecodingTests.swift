@@ -16,7 +16,7 @@ struct ContractDecodingTests {
         let page = try await client.fetchListPage(page: 1)
         #expect(page.items.count == 1)
         #expect(page.items[0].documentId == "fixture-vox-1")
-        #expect(page.items[0].listText == "Testo sintetico della prima VOX di fixture.")
+        #expect(page.items[0].listText == "Testo sintetico del primo VOX di fixture.")
         #expect(page.pageCount == 3)
         #expect(page.items[0].permalink.absoluteString == "https://chronocol.test/it/vox/fixture-vox-1")
     }

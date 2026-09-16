@@ -34,7 +34,7 @@ e gli ADR 0001 e 0002 sono `accettato`.
 - [x] Verificare i limiti del contratto attuale con Chronocol.
 
 **Verifica:** il 2026-09-16 `swift test --package-path Packages/GlobyCore` (Swift 6.3.3)
-ha eseguito 26 test senza rete. Un evento SSE non crea una VOX senza conferma HTTP.
+ha eseguito 26 test senza rete. Un evento SSE non crea un VOX senza conferma HTTP.
 Il test di più pagine JSON è definito e passa sulle fixture; il contratto Chronocol
 resta instabile per una release (manca un cursore dei cambiamenti).
 
@@ -58,21 +58,28 @@ schermo: globo e fumetto non escono dall'area visibile durante lo spostamento.
 
 ## Fase 3 — MVP macOS
 
-- [ ] Creare app e target di test.
-- [ ] Aggiungere pulsante persistente nella barra dei menu ed elenco recente al clic.
-- [ ] Persistenza locale di contenuti, letto e notificato.
-- [ ] Saluto di primo avvio (una volta, non è una VOX) e onboarding breve:
-      cosa legge, baseline senza raffica, permesso notifiche dopo la spiegazione.
-- [ ] Preferenze: mascotte, permanenza, suono, pausa notifiche, avvio al login,
+- [~] Creare app e target di test.
+- [~] Aggiungere pulsante persistente nella barra dei menu ed elenco recente al clic.
+- [~] Persistenza locale di contenuti, letto e notificato.
+- [~] Saluto di primo avvio (una volta, non è un VOX) e onboarding breve:
+      cosa legge, baseline senza raffica, permesso notifiche dopo la spiegazione,
+      domanda «Sì / No» per vedere gli ultimi 5 VOX come recenti.
+- [~] Saluto di rientro a ogni avvio e risveglio, con esito della sincronizzazione
+      e freccia verso i VOX nuovi.
+- [~] Controllo periodico a macchina accesa (5 min, jitter, backoff), pausa durante
+      lo stop e sync al ritorno della rete.
+- [~] Preferenze: mascotte, permanenza, suono, dimensioni personalizzate con anteprima dal vivo, pausa notifiche, avvio al login,
       azzera dati.
-- [ ] Notifiche locali senza suono per impostazione iniziale.
-- [ ] Apertura del permalink nel browser.
-- [ ] Mascotte transitoria, disattivabile e indipendente dalla sincronizzazione.
+- [~] Notifiche locali senza suono per impostazione iniziale.
+- [~] Apertura del permalink nel browser.
+- [~] Mascotte transitoria, disattivabile e indipendente dalla sincronizzazione.
 
-**Verifica:** una persona installa una build pulita, vede il saluto una sola volta,
-nega o concede le notifiche dopo la spiegazione, riceve una pubblicazione simulata,
-vede il globo comparire e scomparire una sola volta, apre la barra dei menu e
-raggiunge il contenuto corretto.
+**Verifica:** il 2026-09-17 `xcodebuild -project Globy.xcodeproj -scheme Globy
+-destination 'platform=macOS' build` e `test` passano su Xcode 26.6; Debug usa
+fixture in processo, senza rete (`--live` per leggere Chronocol vero). Release legge
+Chronocol pubblico con sole GET: basta per il collaudo, non è ancora la fase 4
+(frequenza da concordare, SSE assente, modifiche e ritiri non verificati). Resta il
+collaudo umano con la checklist in `docs/COLLAUDO_FASE3.md`.
 
 ## Fase 4 — Collegamento e affidabilità
 
