@@ -23,8 +23,9 @@ stream attuale possa sostenere una release pubblica perché sostiene il sito.
 ## 4. RSS non è un registro dei cambiamenti
 
 Il feed osservato il 2026-09-16 aveva 50 item e non esprime i ritiri. Dal codice di
-Chronocol è limitato e ordinato per `createdAt`. È utile per un prototipo, non
-garantisce il recupero completo.
+Chronocol è limitato e ordinato per `createdAt`. Se l'item più vecchio è posteriore a
+`lastSuccessfulSyncAt`, il buco non è coperto: serve l'elenco JSON. Una VOX assente
+dal solo RSS non è un ritiro.
 
 ## 5. `documentId` non è una versione
 

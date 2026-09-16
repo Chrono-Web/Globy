@@ -53,6 +53,7 @@ final class MascotModel: ObservableObject {
             guard let self, self.generation == current, self.phase != .hidden else { return }
             self.typingStart = Date.timeIntervalSinceReferenceDate + pop
             withAnimation(.spring(response: 0.45, dampingFraction: 0.78)) { self.reading = layout }
+            self.onCardChange()
             self.wake(for: pop + layout.typingDuration + Self.lookAtViewer + 0.8)
         }
         return delay + pop + layout.typingDuration + Self.lookAtViewer
@@ -60,7 +61,12 @@ final class MascotModel: ObservableObject {
 
     func dismissVox() {
         withAnimation(.easeOut(duration: 0.3)) { reading = nil }
+        onCardChange()
     }
+
+    /// Chiusura dal pulsante sulla card: la finestra decide se nascondere anche il globo.
+    var onUserDismiss: () -> Void = {}
+    var onCardChange: () -> Void = {}
 
     enum GazeTarget { case cursor, viewer, point(CGPoint) }
 
@@ -98,6 +104,7 @@ final class MascotModel: ObservableObject {
             phase = .leaving
             reading = nil
         }
+        onCardChange()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in
             guard let self, self.generation == current else { return }
             self.phase = .hidden
@@ -216,7 +223,8 @@ struct MascotView: View {
     var body: some View {
         VStack(alignment: .trailing, spacing: MascotWindowController.cardGap) {
             if let reading = model.reading {
-                VoxCard(layout: reading, typingStart: model.typingStart, animating: model.animating, surface: model.surface)
+                VoxCard(layout: reading, typingStart: model.typingStart, animating: model.animating,
+                        surface: model.surface)
                     .padding(.trailing, MascotWindowController.cardTrailing)
                     .transition(reduceMotion ? .opacity : .scale(scale: 0.8, anchor: .bottomTrailing).combined(with: .opacity))
             }

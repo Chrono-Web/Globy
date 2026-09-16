@@ -1,11 +1,11 @@
 # Contribuire a Globy
 
-Globy è in pre-alpha e non accetta ancora contributi di codice: manca una licenza e non
-esiste un progetto compilabile. Issue che correggono fatti, chiariscono requisiti o
-mettono in discussione una decisione proposta sono invece benvenute.
+Globy è in pre-alpha e non accetta ancora contributi di codice: la licenza è GNU GPL
+versione 3, ma non esiste un progetto compilabile dell'app. Issue che correggono fatti,
+chiariscono requisiti o mettono in discussione una decisione sono benvenute.
 
-Questa limitazione verrà rimossa soltanto dopo la scelta della licenza e la creazione
-del progetto Xcode.
+Questa limitazione sui contributi di codice verrà rimossa dopo la creazione del
+progetto Xcode. I contributi futuri saranno sotto la stessa GPL-3.
 
 ## Prima di iniziare
 
@@ -49,6 +49,5 @@ inesistente. Per questioni di sicurezza segui `SECURITY.md`.
 
 ## Licenza
 
-La licenza non è ancora stata scelta. Fino alla presenza di un file `LICENSE`, non
-inviare contributi di codice o asset e non presumere che i contenuti siano disponibili
-per redistribuzione.
+Codice e asset originali sono GNU GPL versione 3. Vedi `LICENSE`. Non inviare file
+con una licenza incompatibile.

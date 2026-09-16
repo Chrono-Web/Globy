@@ -5,7 +5,7 @@ import SwiftUI
 @MainActor
 final class MascotWindowController {
     /// Finestra: globo nell'angolo in basso a destra, fumetto della VOX sopra.
-    static let size = CGSize(width: 360, height: 500)
+    static let size = CGSize(width: 360, height: 512)
     static let globeArea = CGSize(width: 160, height: 160)
     /// Distanza del fumetto dal bordo destro e dal riquadro del globo (negativa: il globo
     /// disegnato è più piccolo del suo riquadro).
@@ -17,7 +17,9 @@ final class MascotWindowController {
 
     private let panel: NSPanel
     private let model = MascotModel()
+    private let closeButton = VoxCloseButton(frame: .zero)
     private var hideWork: DispatchWorkItem?
+    private var mouseMonitors: [Any] = []
 
     /// Modalità sempre presente: il globo resta a schermo e reagisce alle nuove VOX.
     var alwaysOn = false {
@@ -39,8 +41,8 @@ final class MascotWindowController {
 
     var clickThrough = true {
         didSet {
-            panel.ignoresMouseEvents = clickThrough
             panel.isMovableByWindowBackground = !clickThrough
+            updateIgnoresMouseEvents()
         }
     }
 
@@ -58,10 +60,21 @@ final class MascotWindowController {
         panel.isReleasedWhenClosed = false
 
         model.windowFrame = { [unowned panel] in panel.frame }
-        let host = NSHostingView(rootView: MascotView(model: model))
-        host.frame = CGRect(origin: .zero, size: Self.size)
-        panel.contentView = host
 
+        let root = NSView(frame: CGRect(origin: .zero, size: Self.size))
+        let host = NSHostingView(rootView: MascotView(model: model))
+        host.frame = root.bounds
+        host.autoresizingMask = [.width, .height]
+        closeButton.isHidden = true
+        closeButton.action = { [weak self] in self?.dismissFromUser() }
+        root.addSubview(host)
+        root.addSubview(closeButton)
+        panel.contentView = root
+
+        model.onUserDismiss = { [weak self] in self?.dismissFromUser() }
+        model.onCardChange = { [weak self] in self?.syncCloseButton() }
+
+        startMouseTracking()
         NotificationCenter.default.addObserver(forName: NSApplication.didChangeScreenParametersNotification,
                                                object: nil, queue: .main) { [weak self] _ in
             MainActor.assumeIsolated { self?.reposition() }
@@ -100,6 +113,13 @@ final class MascotWindowController {
         }
     }
 
+    /// X sulla card: chiude il fumetto; il globo resta solo se è sempre presente.
+    private func dismissFromUser() {
+        hideWork?.cancel()
+        hideWork = nil
+        alwaysOn ? model.dismissVox() : dismiss()
+    }
+
     /// Angolo inferiore destro dell'area visibile dello schermo su cui si trova il puntatore.
     private func reposition() {
         let mouse = NSEvent.mouseLocation
@@ -108,5 +128,55 @@ final class MascotWindowController {
         let origin = CGPoint(x: visible.maxX - Self.size.width - Self.margin,
                              y: visible.minY + Self.margin)
         panel.setFrameOrigin(origin)
+        syncCloseButton()
+    }
+
+    /// Bersaglio di clic allineato alla X disegnata in SwiftUI col vetro nativo.
+    private func syncCloseButton() {
+        guard let reading = model.reading else {
+            closeButton.isHidden = true
+            updateIgnoresMouseEvents()
+            return
+        }
+        let size = VoxCloseButton.size
+        let cardRight = Self.size.width - Self.cardTrailing
+        let cardTop = Self.globeArea.height + Self.cardGap + reading.height
+        let outset: CGFloat = 3
+        closeButton.frame = CGRect(
+            x: cardRight - size + outset,
+            y: cardTop - size + outset,
+            width: size,
+            height: size
+        )
+        closeButton.isHidden = false
+        updateIgnoresMouseEvents()
+    }
+
+    /// Con il click-through la finestra ignora i clic, tranne quando il puntatore è sulla X.
+    private func updateIgnoresMouseEvents() {
+        guard clickThrough else {
+            panel.ignoresMouseEvents = false
+            return
+        }
+        guard !closeButton.isHidden else {
+            panel.ignoresMouseEvents = true
+            return
+        }
+        panel.ignoresMouseEvents = !closeButton.screenFrame.insetBy(dx: -4, dy: -4).contains(NSEvent.mouseLocation)
+    }
+
+    private func startMouseTracking() {
+        let update: (NSEvent) -> Void = { [weak self] _ in
+            DispatchQueue.main.async { self?.updateIgnoresMouseEvents() }
+        }
+        if let global = NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved, .leftMouseDragged], handler: update) {
+            mouseMonitors.append(global)
+        }
+        if let local = NSEvent.addLocalMonitorForEvents(matching: [.mouseMoved, .leftMouseDragged], handler: {
+            update($0)
+            return $0
+        }) {
+            mouseMonitors.append(local)
+        }
     }
 }

@@ -1,7 +1,7 @@
 # Architettura
 
 - Aggiornato: 2026-09-16
-- Stato: proposta, nessun codice presente
+- Stato: proposta, nessun progetto Xcode dell'app
 - Risponde a: responsabilità interne, dipendenze e flusso dello stato
 
 ## Principio centrale
@@ -12,7 +12,7 @@ mascotte osservano quello stato.
 
 ```text
 Chronocol HTTP ───────┐
-                      ├─> SyncCoordinator ─> Store locale ─┬─> Menu bar
+  RSS, poi JSON        ├─> SyncCoordinator ─> Store locale ─┬─> Menu bar
 Chronocol SSE ─ hint ─┘                                    ├─> Notifiche
                                                            └─> Mascotte
 ```
@@ -72,7 +72,7 @@ contratto incrementale.
 ### Riconnessione o risveglio
 
 1. Applica un breve debounce per evitare richieste duplicate.
-2. Esegue il catch-up HTTP.
+2. Esegue il catch-up HTTP descritto nell'ADR 0002 (RSS se copre il buco, JSON altrimenti).
 3. Aggiorna ritiri e modifiche.
 4. Se gli arrivi sono numerosi, produce un riepilogo anziché notifiche singole.
 

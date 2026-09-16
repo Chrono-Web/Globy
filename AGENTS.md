@@ -17,20 +17,21 @@ Leggi, nell'ordine:
 6. il documento specifico dell'area che stai modificando;
 7. gli ADR pertinenti in `docs/adr/`.
 
-Non dedurre l'esistenza di codice dal piano: al 2026-09-16 il progetto Xcode non
-esiste ancora e la repository contiene soltanto la fondazione documentale.
+Non dedurre l'esistenza dell'app dal piano: al 2026-09-16 il progetto Xcode non esiste.
+C'è uno spike usa e getta in `Spikes/MascotSpike/`; non è Globy.
 
 ## Identità del progetto
 
-Globy è un'applicazione macOS autonoma collegata ai contenuti pubblici di Chronocol.
-La barra dei menu è la sua presenza stabile: un clic apre l'elenco delle VOX recenti.
-La mascotte è un piccolo globo transitorio che compare nell'angolo inferiore destro
-quando viene confermata una nuova VOX e poi scompare. Mascotte e sincronizzazione
-devono restare indipendenti.
+Globy è il compagno ufficiale macOS di Chronocol, un'applicazione autonoma collegata
+ai contenuti pubblici. La barra dei menu è la sua presenza stabile: un clic apre
+l'elenco delle VOX recenti. La mascotte è un piccolo globo transitorio che compare
+nell'angolo inferiore destro quando viene confermata una nuova VOX e poi scompare.
+Mascotte e sincronizzazione devono restare indipendenti.
 
-La fonte autorevole dello stato è una lettura HTTP di Chronocol. Lo stream SSE, se
-usato, è soltanto un segnale che invita a sincronizzare: non è uno storico e non
-garantisce il recupero degli eventi persi.
+La fonte autorevole dello stato è una lettura HTTP di Chronocol: RSS se copre il buco
+da `lastSuccessfulSyncAt`, elenco JSON altrimenti. Lo stream SSE, se usato, è soltanto
+un segnale che invita a sincronizzare: non è uno storico e non garantisce il recupero
+degli eventi persi.
 
 ## Mappa dei documenti
 
@@ -42,7 +43,7 @@ garantisce il recupero degli eventi persi.
 | `docs/CONTRATTO_API.md` | Endpoint Chronocol, garanzie e lacune |
 | `docs/SVILUPPO.md` | Bootstrap locale, fixture, test e comandi verificati |
 | `docs/PRIVACY.md` | Dati trattati, conservazione e telemetria |
-| `docs/DISTRIBUZIONE.md` | Build, firma, notarizzazione e aggiornamenti |
+| `docs/DISTRIBUZIONE.md` | Come si pubblica una release |
 | `docs/ASSET.md` | Provenienza, licenza e uso di grafica, font e suoni |
 | `docs/TRAPPOLE.md` | Errori ricorrenti e assunzioni vietate |
 | `docs/ROADMAP.md` | Stato reale e criteri di completamento |
@@ -55,7 +56,7 @@ Un fatto deve avere una casa sola. Gli altri documenti lo collegano, non lo copi
 1. **Niente eventi inventati.** La mascotte compare soltanto dopo che la sincronizzazione
    autorevole ha confermato una nuova VOX; un pacchetto SSE non basta.
 2. **HTTP è autorevole, SSE è un indizio.** Ogni riconnessione, risveglio o evento SSE
-   termina in una sincronizzazione idempotente.
+   termina in una sincronizzazione idempotente. Il dettaglio è l'ADR 0002.
 3. **`documentId` identifica il contenuto, non la sua versione.** Letto, notificato,
    aggiornato e ritirato sono stati diversi.
 4. **Il primo avvio non notifica l'archivio.** Costruisce una baseline e informa la
@@ -73,14 +74,17 @@ Un fatto deve avere una casa sola. Gli altri documenti lo collegano, non lo copi
 10. **Non anticipare l'admin.** Account e funzioni editoriali appartengono a una fase e
     a un contratto di sicurezza separati.
 
-## Vincoli di implementazione proposti
+## Vincoli di implementazione
 
-Finché gli ADR corrispondenti sono `proposto`, trattali come direzione da validare e
-non come decisione irreversibile:
+Accettati (ADR 0001 e 0002):
 
 - Swift e SwiftUI per l'app macOS;
 - AppKit soltanto dove SwiftUI non esprime il comportamento della finestra-mascotte;
-- RealityKit o una soluzione 2D da confrontare con uno spike misurato;
+- catch-up HTTP con RSS se copre il buco, JSON altrimenti; SSE solo come segnale.
+
+Ancora da validare con spike o ADR:
+
+- RealityKit o una soluzione 2D, da confrontare con uno spike misurato;
 - persistenza locale dietro un protocollo, senza accoppiare le viste al database;
 - client di rete dietro un protocollo e verificabile con fixture locali.
 

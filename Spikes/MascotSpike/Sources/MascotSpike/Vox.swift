@@ -92,6 +92,7 @@ struct VoxCard: View {
                     .font(.system(size: 11))
                     .foregroundStyle(.tertiary)
             }
+            .padding(.trailing, 16)
             .frame(height: VoxLayout.headerHeight)
 
             // 30 aggiornamenti al secondo bastano: la scrittura avanza di pochi caratteri.
@@ -106,6 +107,10 @@ struct VoxCard: View {
         .padding(VoxLayout.padding)
         .frame(width: VoxLayout.width, height: layout.height, alignment: .topLeading)
         .background { CardBackground(surface: surface) }
+        .overlay(alignment: .topTrailing) {
+            VoxCloseChrome(surface: surface)
+                .offset(x: 3, y: -3)
+        }
         .environment(\.colorScheme, surface.isGlass ? colorScheme : .dark)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(layout.text)
@@ -116,6 +121,68 @@ struct VoxCard: View {
         let split = string.characters.index(string.startIndex, offsetBy: n)
         string[split..<string.endIndex].foregroundColor = .clear
         return string
+    }
+}
+
+/// Disco della X: stesso `GlassPanelView` di fumetto e sfera. Il clic è in AppKit.
+struct VoxCloseChrome: View {
+    var surface: Surface
+
+    var body: some View {
+        let r = VoxCloseButton.size / 2
+        ZStack {
+            if surface.isGlass {
+                GlassPanelView(surface: surface, cornerRadius: r)
+                    .id(surface)
+                    .clipShape(Circle())
+                    .overlay { Circle().strokeBorder(.white.opacity(0.18), lineWidth: 0.5) }
+            } else {
+                Circle()
+                    .fill(Color(white: 0.08).opacity(0.92))
+                    .overlay { Circle().strokeBorder(.white.opacity(0.1), lineWidth: 0.5) }
+            }
+            Image(systemName: "xmark")
+                .font(.system(size: 8, weight: .bold))
+                .foregroundStyle(.white.opacity(0.92))
+                .shadow(color: .black.opacity(surface.isGlass ? 0.45 : 0), radius: 1.2)
+        }
+        .frame(width: VoxCloseButton.size, height: VoxCloseButton.size)
+        .allowsHitTesting(false)
+    }
+}
+
+/// Bersaglio di clic trasparente sopra la X disegnata in SwiftUI.
+final class VoxCloseButton: NSView {
+    static let size: CGFloat = 22
+
+    var action: () -> Void = {}
+
+    override init(frame: NSRect) {
+        super.init(frame: frame)
+        toolTip = "Chiudi"
+        setAccessibilityRole(.button)
+        setAccessibilityLabel("Chiudi")
+    }
+
+    required init?(coder: NSCoder) { nil }
+
+    override var isOpaque: Bool { false }
+
+    override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
+
+    override func resetCursorRects() {
+        addCursorRect(bounds, cursor: .pointingHand)
+    }
+
+    override func mouseDown(with event: NSEvent) {}
+
+    override func mouseUp(with event: NSEvent) {
+        if bounds.contains(convert(event.locationInWindow, from: nil)) { action() }
+    }
+
+    var screenFrame: CGRect {
+        guard let window else { return .zero }
+        return window.convertToScreen(convert(bounds, to: nil))
     }
 }
 
@@ -142,16 +209,7 @@ struct GlassPanelView: NSViewRepresentable {
     var cornerRadius: CGFloat
 
     func makeNSView(context: Context) -> NSView {
-        if #available(macOS 26, *), surface == .liquidGlass || surface == .clearGlass {
-            let glass = NSGlassEffectView()
-            glass.contentView = NSView()
-            return glass
-        }
-        let blur = NSVisualEffectView()
-        blur.material = .hudWindow
-        blur.blendingMode = .behindWindow
-        blur.state = .active
-        return blur
+        Self.makeNSView(surface: surface)
     }
 
     func updateNSView(_ view: NSView, context: Context) {
@@ -163,5 +221,19 @@ struct GlassPanelView: NSViewRepresentable {
             blur.layer?.cornerRadius = cornerRadius
             blur.layer?.masksToBounds = true
         }
+    }
+
+    static func makeNSView(surface: Surface) -> NSView {
+        if #available(macOS 26, *), surface == .liquidGlass || surface == .clearGlass {
+            let glass = NSGlassEffectView()
+            glass.contentView = NSView()
+            glass.style = surface == .clearGlass ? .clear : .regular
+            return glass
+        }
+        let blur = NSVisualEffectView()
+        blur.material = .hudWindow
+        blur.blendingMode = .behindWindow
+        blur.state = .active
+        return blur
     }
 }

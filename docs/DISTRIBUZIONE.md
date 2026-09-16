@@ -1,23 +1,26 @@
 # Distribuzione
 
 - Aggiornato: 2026-09-16
-- Stato: strategia da scegliere
+- Stato: canale scelto, pipeline non costruita
 - Risponde a: come una build diventa una release installabile e aggiornabile
 
-## Decisione aperta
+## Decisione
 
-I due percorsi candidati sono:
+Globy si distribuisce **fuori dal Mac App Store**. Il canale ufficiale è GitHub:
+sorgente nel repository, binari eventualmente in Releases.
 
-1. Developer ID, notarizzazione e aggiornamenti firmati fuori dal Mac App Store;
-2. Mac App Store con i relativi requisiti di sandbox e revisione.
+La prima strategia **non firma e non notarizza**. L'utente scarica e apre il binario
+accettando l'avviso Gatekeeper (sviluppatore non identificato: apri dal menu
+contestuale). Compilare da sorgente resta il percorso senza quel blocco.
 
-Non produrre una pipeline definitiva finché il canale non è scelto. Firma e
-notarizzazione non costituiscono da sole un sistema di aggiornamento.
+Questa scelta si può sostituire in seguito con Developer ID e notarizzazione, senza
+passare dallo Store. Firma e notarizzazione non costituiscono da sole un sistema di
+aggiornamento: per ora l'aggiornamento è scaricare la release successiva.
 
 ## Requisiti comuni
 
-- bundle identifier stabile;
-- versione minima di macOS dichiarata;
+- bundle identifier stabile: `com.chronocol.globy`, casa `docs/SVILUPPO.md`;
+- versione minima di macOS 15, stessa casa;
 - numero di versione e build riproducibili;
 - asset con provenienza e licenza registrate;
 - privacy e permessi coerenti con il comportamento reale;
@@ -25,34 +28,19 @@ notarizzazione non costituiscono da sole un sistema di aggiornamento.
 - test su un Mac o utente pulito;
 - possibilità di compilare senza credenziali di distribuzione.
 
-## Developer ID
+## GitHub
 
-Se scelto, vanno progettati:
+Ogni binario pubblicato deve corrispondere a un tag il cui sorgente è nello stesso
+repository (obbligo GPL). La Release indica il tag, il sistema operativo minimo e che
+il pacchetto non è notarizzato.
 
-- archivio Xcode firmato;
-- notarizzazione e stapling;
-- pacchetto `.dmg` o `.zip` verificato;
-- feed di aggiornamento firmato, per esempio tramite un framework valutato con ADR;
-- separazione tra certificati di CI e repository;
-- procedura di revoca, rollback e rilascio urgente.
-
-## Mac App Store
-
-Se scelto, lo spike deve verificare presto:
-
-- App Sandbox e client di rete;
-- login item;
-- comportamento della finestra-mascotte;
-- aggiornamenti gestiti dallo Store;
-- regole applicabili a contenuti e collegamenti esterni.
+Non versionare certificati, profili o password. Non servono alla strategia attuale.
 
 ## Canali
 
-La proposta iniziale distingue:
-
 - **Debug locale:** fixture o staging;
-- **Beta:** gruppo limitato, diagnostica manuale e contratto ancora evolvibile;
-- **Stable:** contratto compatibile, update funzionante e criteri della roadmap `[x]`.
+- **Beta:** gruppo limitato, diagnostica manuale, binario GitHub non firmato;
+- **Stable:** stesso canale, contratto compatibile e criteri della roadmap `[x]`.
 
 Una beta non deve usare automaticamente la produzione per operazioni che modificano
 contenuti. Le sole letture pubbliche possono essere collaudate contro produzione con
@@ -61,15 +49,12 @@ frequenza rispettosa dei limiti.
 ## Gate di release
 
 - build e test automatici riusciti;
-- firma verificata;
-- notarizzazione verificata se applicabile;
-- aggiornamento dalla release precedente provato;
-- avvio su installazione pulita provato;
+- sorgente del tag coincidente con il binario;
+- avvio su installazione pulita provato, compreso il percorso Gatekeeper;
 - notifiche consentite e negate provate;
 - login item abilitato e disabilitato provato;
 - consumo a riposo entro le soglie ancora da fissare;
-- licenza del codice scelta;
-- licenze di tutti gli asset registrate;
+- `LICENSE` e registro asset allineati al bundle;
 - `CHANGELOG.md`, privacy e documentazione aggiornati.
 
 ## Credenziali

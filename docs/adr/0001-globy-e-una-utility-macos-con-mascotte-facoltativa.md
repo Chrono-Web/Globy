@@ -1,7 +1,8 @@
 # 0001 — Globy è una utility macOS con mascotte facoltativa
 
-- Stato: proposto
+- Stato: accettato
 - Data: 2026-09-16
+- Accettato: 2026-09-16
 - Proprietario: progetto Globy
 - Vincolante per: prodotto, shell macOS, mascotte
 - Nasce da: fondazione iniziale della repository
@@ -25,9 +26,8 @@ senza una finestra principale permanente.
 
 Quando la sincronizzazione conferma una nuova VOX, la mascotte compare brevemente
 nell'angolo inferiore destro e poi scompare. È facoltativa e può essere disabilitata
-senza chiudere Globy o interrompere la sincronizzazione. Swift e SwiftUI sono la base
-proposta; AppKit resta confinato agli adattatori necessari per il comportamento della
-finestra.
+senza chiudere Globy o interrompere la sincronizzazione. Swift e SwiftUI sono la base;
+AppKit resta confinato agli adattatori necessari per il comportamento della finestra.
 
 ## Come si verifica
 

@@ -10,6 +10,7 @@
 | **VOX** | Unità pubblica di contenuto Chronocol: notizia verificata con fonti e metadati |
 | **baseline** | Stato osservato al primo avvio; non genera notifiche retroattive |
 | **catch-up** | Sincronizzazione autorevole dopo avvio, riconnessione, risveglio o ritorno online |
+| **lastSuccessfulSyncAt** | Istante dell'ultimo catch-up riuscito; il buco da coprire parte da lì |
 | **diretta** | Cambiamento confermato mentre Globy era connesso; non è sinonimo di evento SSE |
 | **hint** | Segnale non autorevole, per esempio SSE, che richiede un catch-up |
 | **letto** | Contenuto che la persona ha esplicitamente aperto o marcato come letto |

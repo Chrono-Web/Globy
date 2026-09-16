@@ -8,9 +8,12 @@ versionamento pubblico.
 ### Aggiunto
 
 - Fondazione documentale del progetto.
-- Brief di prodotto, architettura proposta e contratto API osservato.
+- Brief di prodotto, architettura e contratto API osservato.
 - Regole per agenti, contributi, sicurezza, privacy e distribuzione.
 - Roadmap verificabile e registro delle decisioni architetturali.
+- Spike usa e getta della mascotte 2D in `Spikes/MascotSpike/`.
+- Licenza GNU GPL versione 3.
+- Fase 0 chiusa: macOS 15, `com.chronocol.globy`, GitHub non firmato, ADR 0001 e 0002 accettati.
 
 ### Corretto
 

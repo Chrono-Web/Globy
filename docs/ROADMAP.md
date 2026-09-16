@@ -11,18 +11,18 @@
 
 ## Fase 0 — Fondazione
 
-- [~] Definire promessa, perimetro e non-obiettivi del prodotto.
-- [~] Separare fonte HTTP autorevole e segnale SSE.
-- [~] Documentare privacy, sviluppo, distribuzione e trappole.
-- [~] Proporre gli ADR iniziali senza dichiararli accettati.
-- [ ] Decidere versione minima di macOS.
-- [ ] Decidere bundle identifier.
-- [ ] Scegliere licenza del codice e politica degli asset.
-- [ ] Scegliere il canale di distribuzione.
-- [ ] Approvare o sostituire gli ADR proposti.
+- [x] Definire promessa, perimetro e non-obiettivi del prodotto.
+- [x] Separare fonte HTTP autorevole e segnale SSE.
+- [x] Documentare privacy, sviluppo, distribuzione e trappole.
+- [x] Proporre gli ADR iniziali senza dichiararli accettati.
+- [x] Decidere versione minima di macOS: 15, con Liquid Glass su 26.
+- [x] Decidere bundle identifier: `com.chronocol.globy`.
+- [x] Scegliere licenza del codice e politica degli asset: GNU GPL v3.
+- [x] Scegliere il canale di distribuzione: GitHub, fuori Mac App Store, binari non firmati.
+- [x] Approvare gli ADR 0001 e 0002.
 
-**Verifica:** una revisione umana risponde alle domande aperte in `docs/PRODOTTO.md` e
-gli ADR necessari passano ad `accettato`. Fino ad allora la fase resta `[~]`.
+**Verifica:** il 2026-09-16 una revisione umana ha chiuso le domande in `docs/PRODOTTO.md`
+e gli ADR 0001 e 0002 sono `accettato`.
 
 ## Fase 1 — Spike di sincronizzazione
 

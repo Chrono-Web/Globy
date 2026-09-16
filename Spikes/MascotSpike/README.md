@@ -21,11 +21,13 @@ swift run MascotSpike --snapshot globo.png   # esporta il disegno senza finestre
 - `NSPanel` trasparente e non attivante: non ruba il focus.
 - Presente su tutti gli Space e sopra le app a schermo intero.
 - Angolo inferiore destro della `visibleFrame` dello schermo col puntatore (Dock escluso).
-- Click-through attivo; disattivandolo dal menu il globo si può trascinare.
+- Click-through attivo; disattivandolo dal menu il globo si può trascinare. La X in
+  vetro sull'angolo del fumetto riceve i clic anche col click-through.
 - Entrata a molla del globo, poi fumetto sopra con la VOX di esempio (fixture scritta a
   mano) che si scrive carattere per carattere. Gli occhi seguono il carattere appena
   scritto (posizione calcolata con TextKit), poi guardano chi osserva per 1,2 s e tornano
   al puntatore. Il fumetto resta 6 s dopo la lettura; un nuovo richiamo ricomincia.
+  La X chiude il fumetto subito; se il globo non è sempre presente, scompare anche lui.
 - Sfera scura con 3 paralleli, 3 meridiani e due occhi a trattino, tutti solidali:
   nessuna rotazione automatica, la "testa" si orienta verso il puntatore. Battito di
   ciglia, a volte doppio. Niente bocca né continenti.

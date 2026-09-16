@@ -89,7 +89,10 @@ Osservato il 2026-09-16:
 Dal codice di Chronocol il feed ha un tetto di 100 elementi e ordina per
 `createdAt` decrescente. Non rappresenta esplicitamente ritiri o cancellazioni.
 
-È adatto a fixture e prototipi. Non garantisce un recupero incrementale completo.
+È adatto a fixture e alla lettura ordinaria di Globy. Non garantisce da solo un
+recupero del buco se, da `lastSuccessfulSyncAt`, sono uscite più VOX di quante il
+feed ne tenga. In quel caso Globy pagina l'elenco JSON, come in
+[`docs/adr/0002-http-e-autorevole-sse-e-un-segnale.md`](adr/0002-http-e-autorevole-sse-e-un-segnale.md).
 
 ## Lacune da chiudere
 
