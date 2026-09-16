@@ -18,6 +18,9 @@ Mai pubblicare o ritirare in produzione per far scattare una prova (`AGENTS.md`,
    ditto build/release/Build/Products/Release/Globy.app /Applications/Globy.app
    ```
 
+   Prima di `ditto` Globy deve essere chiuso: sovrascrivere l'app mentre gira la fa
+   terminare dal sistema, e un `open` subito dopo può non riaprirla. Se succede,
+   attendi qualche secondo e rilancia `open`.
 3. Solo se ripeti il collaudo da zero, azzera i dati della Release (non tocca la Debug):
 
    ```bash
