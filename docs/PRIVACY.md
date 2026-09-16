@@ -19,6 +19,9 @@ pubblici di Chronocol e conserva sul Mac soltanto lo stato necessario al funzion
 - posizione e visibilità della mascotte;
 - diagnostica locale strettamente necessaria, con contenuto limitato.
 
+L'elenco pubblico di Chronocol può contenere campi che non servono a Globy.
+Quei campi non vanno conservati, mostrati o copiati in questa documentazione.
+
 La durata di conservazione e l'azione “Azzera dati locali” vanno definite prima della
 release.
 

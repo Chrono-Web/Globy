@@ -4,6 +4,11 @@ Descrivi il problema e l'esito ottenuto.
 
 ## Verifica
 
+Finché la repository è solo documentale, indica fonte, data e come è stato
+controllato il fatto. Non spuntare caselle di build o test inesistenti.
+
+Quando esisterà codice:
+
 - [ ] Test pertinenti eseguiti
 - [ ] Nessun test richiede credenziali o modifiche in produzione
 - [ ] Documentazione aggiornata se cambia un contratto o un comportamento

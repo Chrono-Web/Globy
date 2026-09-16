@@ -1,0 +1,37 @@
+name: Documentazione
+description: Segnala un fatto errato, incompleto o non verificabile nei documenti
+title: "[Docs] "
+labels:
+  - documentation
+body:
+  - type: markdown
+    attributes:
+      value: >
+        Globy non ha ancora codice eseguibile. Usa questo template per errori
+        nei documenti, non per comportamenti di un'app inesistente. Non includere
+        token, dati personali o dettagli di vulnerabilità sfruttabili.
+  - type: textarea
+    id: observed
+    attributes:
+      label: Che cosa c'è scritto oggi
+      description: Cita il file e il passaggio.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Che cosa dovrebbe dire
+      description: Il fatto corretto, con fonte o data di verifica se ce l'hai.
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: File o URL
+      description: Percorso nel repository o pagina pubblica controllata.
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Note

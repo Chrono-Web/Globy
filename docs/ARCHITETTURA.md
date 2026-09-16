@@ -29,7 +29,7 @@ SSE può ridurre la latenza, ma l'assenza dello stream non deve cambiare la corr
 | `ContentStore` | Persistenza di contenuti e versioni osservate | Conoscere SwiftUI |
 | `PreferenceStore` | Preferenze locali | Contenere segreti in chiaro |
 | `NotificationCoordinator` | Politiche, permessi e azioni | Dedurre lo stato dalla grafica |
-| `MenuBarFeature` | Elenco, badge e comandi | Chiamare direttamente Strapi |
+| `MenuBarFeature` | Elenco, badge e comandi | Chiamare direttamente le API HTTP |
 | `MascotFeature` | Presentare entrata, attesa e uscita del globo | Produrre eventi di dominio |
 | `AppLifecycle` | Avvio, stop/risveglio, login item | Duplicare la sincronizzazione |
 

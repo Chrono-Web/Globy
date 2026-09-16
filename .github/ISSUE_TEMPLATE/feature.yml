@@ -1,9 +1,14 @@
 name: Proposta
-description: Proponi un comportamento o un miglioramento
+description: Proponi un comportamento, un chiarimento di perimetro o un miglioramento
 title: "[Proposta] "
 labels:
   - enhancement
 body:
+  - type: markdown
+    attributes:
+      value: >
+        Non esiste ancora un'app compilabile. Una proposta utile cambia un requisito
+        o una decisione, non chiede di implementare la roadmap come se fosse già codice.
   - type: textarea
     id: problem
     attributes:

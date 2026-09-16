@@ -9,10 +9,15 @@
 
 ## Contesto
 
-Chronocol espone uno stream SSE pubblico a bassa latenza, ma il bus è in memoria, non
-conserva eventi persi e limita a 500 le connessioni contemporanee. Il payload contiene
-un identificativo e invita il client a rileggere il contenuto. Il frontend Chronocol
-esistente esegue già un catch-up quando si collega o torna visibile.
+Chronocol espone uno stream SSE pubblico a bassa latenza. Il 2026-09-16
+`https://chronocol.com/api/voxes/stream` rispondeva `text/event-stream` con il
+commento `: connected` e, in una finestra breve, senza eventi nominati.
+
+Dal codice di Chronocol, non dall'osservazione pubblica di quella finestra, il bus
+è in memoria, non conserva eventi persi e limita a 500 le connessioni contemporanee.
+Il payload previsto contiene un identificativo e invita il client a rileggere il
+contenuto. Il frontend Chronocol esistente esegue già un catch-up quando si collega
+o torna visibile.
 
 Un'app desktop può restare connessa per molte ore e attraversa normalmente stop, cambio
 rete e deploy. Trattare lo stream come coda affidabile produrrebbe perdite silenziose;

@@ -16,13 +16,15 @@ nessun evento sia andato perso. Dopo ogni apertura dello stream serve un catch-u
 
 ## 3. Il limite di 500 client è condiviso
 
-Una utility desktop resta collegata molto più a lungo di una pagina web. Non assumere
-che lo stream attuale possa sostenere una release pubblica perché sostiene il sito.
+Quel tetto viene dal codice di Chronocol, non da un header pubblico. Una utility
+desktop resta collegata molto più a lungo di una pagina web. Non assumere che lo
+stream attuale possa sostenere una release pubblica perché sostiene il sito.
 
 ## 4. RSS non è un registro dei cambiamenti
 
-Il feed è limitato, ordinato per `createdAt` e non esprime i ritiri. È utile per un
-prototipo, non garantisce il recupero completo.
+Il feed osservato il 2026-09-16 aveva 50 item e non esprime i ritiri. Dal codice di
+Chronocol è limitato e ordinato per `createdAt`. È utile per un prototipo, non
+garantisce il recupero completo.
 
 ## 5. `documentId` non è una versione
 
@@ -90,3 +92,15 @@ presentare Globy come riutilizzabile e non importare asset senza provenienza.
 
 Codice simile nelle altre app non costituisce un contratto. Riutilizzarlo richiede una
 verifica di modelli, endpoint, errori e licenza, non un copia-incolla.
+
+## 18. Lo schema pubblico non va copiato per intero
+
+L'elenco VOX può contenere campi estranei al client. Metterli nello store o in
+questa repository trascina dettagli di Chronocol in Globy. Servono `documentId`,
+permalink, testi dell'elenco, timestamp e un'impronta di versione, non il resto.
+
+## 19. I file di comunità non inventano un processo
+
+README, `SECURITY.md` e `CONTRIBUTING.md` descrivono soltanto canali e procedure
+che esistono oggi. Un contatto, un SLA o una issue di bug applicativo si
+aggiungono quando il fatto è vero, non per completare un modello di repository.

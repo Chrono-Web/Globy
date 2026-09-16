@@ -1,12 +1,16 @@
 # Globy
 
-Globy è il compagno macOS di Chronocol: vive nella barra dei menu e raccoglie le VOX
-più recenti. Quando arriva una nuova VOX confermata, un piccolo globo compare
-brevemente nell'angolo inferiore destro dello schermo e poi scompare.
+> **Stato: pre-alpha, documentazione di progetto.** Non esiste ancora una build
+> installabile. Questa repository contiene il perimetro e le decisioni da verificare
+> prima del prototipo.
 
-Il progetto è nella fase di fondazione. In questa repository ci sono per ora il
-perimetro del prodotto, le decisioni proposte e i criteri con cui verificare i primi
-prototipi; il progetto Xcode non è ancora stato creato.
+Globy è il compagno macOS di [Chronocol](https://chronocol.com): vive nella barra dei
+menu e raccoglie le VOX più recenti. Quando arriva una nuova VOX confermata, un piccolo
+globo compare brevemente nell'angolo inferiore destro dello schermo e poi scompare.
+
+Oggi sono presenti soltanto documentazione, roadmap e ADR. Non sono presenti progetto
+Xcode, codice applicativo, asset grafici, binari o release. Gli esempi di architettura
+descrivono una direzione da verificare, non funzionalità già disponibili.
 
 ## Obiettivo della prima versione
 
@@ -20,10 +24,10 @@ prototipi; il progetto Xcode non è ancora stato creato.
 Globy non include nella prima versione funzioni editoriali, account, chat, telemetria
 o notifiche remote ad applicazione terminata.
 
-## Stato
+## Stato del lavoro
 
-Tutte le fasi di implementazione sono ancora `[ ]` non iniziate. Le decisioni negli
-ADR sono **proposte**, non accettate.
+L'implementazione non è iniziata. Le decisioni negli ADR sono **proposte**, non
+accettate, e possono cambiare dopo gli spike tecnici.
 
 La roadmap verificabile è in [`docs/ROADMAP.md`](docs/ROADMAP.md). Il brief completo è
 in [`docs/PRODOTTO.md`](docs/PRODOTTO.md).
@@ -47,7 +51,7 @@ in [`docs/PRODOTTO.md`](docs/PRODOTTO.md).
 
 ## Requisiti
 
-Non ancora fissati. Prima di creare il progetto Xcode vanno decisi:
+Prima di creare il progetto Xcode vanno decisi:
 
 - versione minima di macOS;
 - bundle identifier e Apple Development Team;
@@ -56,5 +60,10 @@ Non ancora fissati. Prima di creare il progetto Xcode vanno decisi:
 
 ## Contribuire e sicurezza
 
-Vedi [`CONTRIBUTING.md`](CONTRIBUTING.md) e [`SECURITY.md`](SECURITY.md). Finché non
-viene scelta una licenza, il codice e gli asset non sono concessi per il riuso.
+Vedi [`CONTRIBUTING.md`](CONTRIBUTING.md) e [`SECURITY.md`](SECURITY.md). Il progetto
+non accetta contributi di codice. Non c'è un indirizzo di sicurezza dedicato.
+
+## Licenza
+
+Non è stata scelta. In assenza di un file `LICENSE`, i contenuti si possono
+consultare ma non sono concessi per copia, modifica o redistribuzione.

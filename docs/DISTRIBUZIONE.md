@@ -74,5 +74,5 @@ frequenza rispettosa dei limiti.
 
 ## Credenziali
 
-Certificati, password, profili e token non entrano nella repository. La CI riceve solo
-i privilegi necessari e la compilazione non firmata resta disponibile ai contributori.
+Certificati, password, profili e token non entrano nella repository. La compilazione
+non firmata deve restare possibile in locale senza credenziali di distribuzione.

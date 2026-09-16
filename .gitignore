@@ -32,3 +32,6 @@ xcuserdata/
 # Editors
 .idea/
 .vscode/
+
+# Workspace locali accidentali, non parte del progetto
+Senza nome/

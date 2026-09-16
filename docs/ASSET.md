@@ -1,7 +1,7 @@
 # Asset e attribuzioni
 
 - Aggiornato: 2026-09-16
-- Stato: registro vuoto, da compilare prima di aggiungere asset
+- Stato: nessun asset presente nella repository
 - Risponde a: da dove provengono grafica, font, suoni e modelli e come possono essere usati
 
 ## Regola
@@ -9,11 +9,11 @@
 Ogni asset non creato interamente per Globy deve essere registrato qui prima di entrare
 in una build distribuibile. Una URL di download non è una licenza.
 
-## Registro
+## Stato attuale
 
-| Asset | File | Autore/fonte | Licenza | Modifiche | Attribuzione richiesta |
-|---|---|---|---|---|---|
-| Nessuno | — | — | — | — | — |
+Non sono presenti grafica, font, suoni o modelli. Quando verrà aggiunto il primo asset,
+questa sezione diventerà una tabella con file, autore, fonte, licenza, modifiche e
+attribuzione richiesta.
 
 ## Categorie da controllare
 

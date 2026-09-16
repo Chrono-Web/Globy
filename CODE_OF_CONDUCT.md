@@ -22,6 +22,7 @@ rispettosi e utili.
 
 ## Applicazione
 
-I responsabili possono moderare o rimuovere contenuti e contributi che violano queste
-regole. Prima della prima release pubblica verranno indicati un contatto privato e una
-procedura di escalation. Le segnalazioni di sicurezza seguono `SECURITY.md`.
+Il manutentore della repository può moderare o rimuovere contenuti e contributi che
+violano queste regole. Per abusi sulla piattaforma usa anche i suoi strumenti di
+segnalazione. Le vulnerabilità tecniche seguono `SECURITY.md` e non vanno confuse con
+le violazioni di condotta.
