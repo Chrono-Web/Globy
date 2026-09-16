@@ -57,6 +57,8 @@ La mascotte è un avviso visivo transitorio, non il motore del prodotto.
     il numerino per aprirli. Se la sincronizzazione fallisce non dice «nulla»: dice
     che non lo sa ancora. La X vuol dire «dopo»; se nessuno usa la freccia il globo
     se ne va e i VOX restano nel menu. Al posto della raffica, non in aggiunta.
+    Se non c'è niente di nuovo e un saluto è già comparso negli ultimi 10 minuti
+    (anche prima di un riavvio), non si ripete.
     Il testo sta in `WelcomePolicy` (GlobyCore).
 - Entra nell'angolo inferiore destro della `visibleFrame` dello schermo col
   puntatore (margine 16 pt, Dock escluso) e si nasconde automaticamente.

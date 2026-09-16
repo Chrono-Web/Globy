@@ -25,7 +25,6 @@ final class AppSession: ObservableObject {
     private let coordinator: SyncCoordinator
     private var cancellables: [AnyCancellable] = []
     private var started = false
-    private var lastWelcomeAt: Date?
     private var poller: PollingScheduler?
     private let pathMonitor = NWPathMonitor()
     private var networkWasOffline = false
@@ -266,10 +265,17 @@ final class AppSession: ObservableObject {
         pathMonitor.start(queue: DispatchQueue(label: "globy.network"))
     }
 
+    static let quietWelcomeInterval: TimeInterval = 600
+
     private func presentWelcome(report: SyncReport, records: [VoxRecord]) {
         let now = Date()
-        if let lastWelcomeAt, now.timeIntervalSince(lastWelcomeAt) < 60, records.isEmpty { return }
-        lastWelcomeAt = now
+        // Senza novità, un saluto ogni 10 minuti al massimo: riavvii e risvegli ravvicinati
+        // non ripetono «Heilà». Con VOX nuovi il saluto c'è sempre.
+        if let last = preferences.lastWelcomeAt, now.timeIntervalSince(last) < Self.quietWelcomeInterval,
+           records.isEmpty, report.failure == nil {
+            return
+        }
+        preferences.lastWelcomeAt = now
         let text = WelcomePolicy.message(newVoxCount: records.count, syncFailed: report.failure != nil)
         mascot.presentGreeting(.welcome(text), then: records.map { Vox(record: $0) })
     }

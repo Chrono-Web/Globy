@@ -44,6 +44,13 @@ final class PreferenceStore: ObservableObject {
         didSet { defaults.set(buttonScale, forKey: Keys.buttonScale) }
     }
 
+    /// Ultimo saluto di rientro, anche tra un avvio e l'altro: riavvii ravvicinati non
+    /// devono ripetere «Heilà» se non c'è niente di nuovo.
+    var lastWelcomeAt: Date? {
+        get { defaults.object(forKey: Keys.lastWelcomeAt) as? Date }
+        set { defaults.set(newValue, forKey: Keys.lastWelcomeAt) }
+    }
+
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
         mascotEnabled = defaults.object(forKey: Keys.mascotEnabled) as? Bool ?? true
@@ -80,7 +87,8 @@ final class PreferenceStore: ObservableObject {
         static let customSizes = "customSizesEnabled"
         static let textScale = "textScale"
         static let buttonScale = "buttonScale"
+        static let lastWelcomeAt = "lastWelcomeAt"
         static let all = [mascotEnabled, permanence, mascotSound, notificationsPaused, didGreet, didOnboard,
-                          customSizes, textScale, buttonScale]
+                          customSizes, textScale, buttonScale, lastWelcomeAt]
     }
 }
