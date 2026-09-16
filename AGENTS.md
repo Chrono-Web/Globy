@@ -18,7 +18,8 @@ Leggi, nell'ordine:
 7. gli ADR pertinenti in `docs/adr/`.
 
 Non dedurre l'esistenza dell'app dal piano: al 2026-09-16 il progetto Xcode non esiste.
-C'è uno spike usa e getta in `Spikes/MascotSpike/`; non è Globy.
+C'è `Packages/GlobyCore/` (spike di sincronizzazione) e `Spikes/MascotSpike/`
+(prototipo della mascotte); nessuno dei due è Globy.
 
 ## Identità del progetto
 
@@ -53,8 +54,9 @@ Un fatto deve avere una casa sola. Gli altri documenti lo collegano, non lo copi
 
 ## Regole non negoziabili
 
-1. **Niente eventi inventati.** La mascotte compare soltanto dopo che la sincronizzazione
-   autorevole ha confermato una nuova VOX; un pacchetto SSE non basta.
+1. **Niente eventi inventati.** La mascotte compare dopo la conferma autorevole di
+   una nuova VOX; un pacchetto SSE non basta. Unica eccezione: il saluto di primo
+   avvio, che non è una VOX (casa: `docs/PRODOTTO.md`).
 2. **HTTP è autorevole, SSE è un indizio.** Ogni riconnessione, risveglio o evento SSE
    termina in una sincronizzazione idempotente. Il dettaglio è l'ADR 0002.
 3. **`documentId` identifica il contenuto, non la sua versione.** Letto, notificato,
@@ -76,19 +78,16 @@ Un fatto deve avere una casa sola. Gli altri documenti lo collegano, non lo copi
 
 ## Vincoli di implementazione
 
-Accettati (ADR 0001 e 0002):
+Accettati (ADR 0001, 0002, 0003 e 0004):
 
 - Swift e SwiftUI per l'app macOS;
 - AppKit soltanto dove SwiftUI non esprime il comportamento della finestra-mascotte;
-- catch-up HTTP con RSS se copre il buco, JSON altrimenti; SSE solo come segnale.
+- catch-up HTTP con RSS se copre il buco, JSON altrimenti; SSE solo come segnale;
+- mascotte disegnata in 2D (Canvas), non RealityKit;
+- persistenza dei contenuti in un file JSON dietro `ContentStore` (ADR 0004).
 
-Ancora da validare con spike o ADR:
-
-- RealityKit o una soluzione 2D, da confrontare con uno spike misurato;
-- persistenza locale dietro un protocollo, senza accoppiare le viste al database;
-- client di rete dietro un protocollo e verificabile con fixture locali.
-
-Non introdurre SceneKit in un progetto nuovo senza un ADR che giustifichi la scelta.
+Non introdurre SceneKit o RealityKit in un progetto nuovo senza un ADR che
+giustifichi la scelta.
 
 ## Qualità e verifica
 

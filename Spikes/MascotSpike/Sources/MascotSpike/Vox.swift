@@ -2,17 +2,46 @@ import AppKit
 import SwiftUI
 
 /// VOX di esempio per il richiamo manuale. Nello spike non c'è sincronizzazione:
-/// il testo è una fixture scritta a mano, non letta da Chronocol.
+/// il testo è una fixture scritta a mano. Il permalink apre Chronocol nel browser.
 struct Vox: Equatable {
+    enum Kind {
+        case publication
+        case greeting
+    }
+
     var text: String
+    var permalink: URL
+    var kind: Kind = .publication
 
-    static let sample = Vox(text: """
-    ⚡️🇵🇸🏚️ A six‑storey building housing ten families collapsed in Gaza City due to structural damage caused by previous Israeli bombings, killing at least twelve people and leaving a dozen survivors rescued by rescuers.
+    /// Saluto di primo avvio: non è una VOX e non nasce dalla sincronizzazione.
+    static let greeting = Vox(
+        text: "Ciao, sono Globy, la mascotte di Chronocol. Quando esce una nuova VOX vengo un attimo qui, in basso a destra.",
+        permalink: URL(string: "https://chronocol.com/it")!,
+        kind: .greeting
+    )
 
-    🔻 Palestinian Civil Protection reports that dozens of people remain trapped under the rubble, including about fifty children.
+    static let sample = Vox(
+        text: """
+        ⚡️🇵🇸🏚️ A six‑storey building housing ten families collapsed in Gaza City due to structural damage caused by previous Israeli bombings, killing at least twelve people and leaving a dozen survivors rescued by rescuers.
 
-    🔻 Rescue operations are also severely hampered by the lack of heavy equipment to remove the rubble, due to the entry bans imposed by Israel since October 7.
-    """)
+        🔻 Palestinian Civil Protection reports that dozens of people remain trapped under the rubble, including about fifty children.
+
+        🔻 Rescue operations are also severely hampered by the lack of heavy equipment to remove the rubble, due to the entry bans imposed by Israel since October 7.
+        """,
+        permalink: URL(string: "https://chronocol.com/it/vox/lf9v8nvbbuimue2xq8ffy1so")!
+    )
+
+    static let sampleShortA = Vox(
+        text: "Prima VOX di coda (fixture). Se ce n'è un'altra, in basso a destra compare la freccia.",
+        permalink: URL(string: "https://chronocol.com/it")!
+    )
+
+    static let sampleShortB = Vox(
+        text: "Terza VOX di coda (fixture). La X chiude solo il fumetto; la freccia passa alla successiva.",
+        permalink: URL(string: "https://chronocol.com/it")!
+    )
+
+    static let burst = [sampleShortA, sample, sampleShortB]
 }
 
 /// Impaginazione della card calcolata con TextKit: altezza fissa fin dall'inizio e
@@ -26,6 +55,7 @@ final class VoxLayout {
     static let fontSize: CGFloat = 12.5
     static let charactersPerSecond = 80.0
 
+    let kind: Vox.Kind
     let text: String
     let count: Int
     let textHeight: CGFloat
@@ -33,6 +63,7 @@ final class VoxLayout {
     private let carets: [CGPoint]
 
     init(_ vox: Vox) {
+        kind = vox.kind
         text = vox.text
         count = vox.text.count
         let font = NSFont.systemFont(ofSize: Self.fontSize)
@@ -77,6 +108,8 @@ struct VoxCard: View {
     var typingStart: TimeInterval
     var animating: Bool
     var surface: Surface
+    var remaining: Int
+    var previous: Int
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.colorScheme) private var colorScheme
@@ -84,11 +117,11 @@ struct VoxCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: VoxLayout.spacing) {
             HStack {
-                Text("Nuova VOX")
+                Text(layout.kind == .greeting ? "Globy" : "Nuova VOX")
                     .font(.system(size: 11, weight: .semibold))
                     .foregroundStyle(.secondary)
                 Spacer()
-                Text("ora")
+                Text(layout.kind == .greeting ? "ciao" : "ora")
                     .font(.system(size: 11))
                     .foregroundStyle(.tertiary)
             }
@@ -108,8 +141,20 @@ struct VoxCard: View {
         .frame(width: VoxLayout.width, height: layout.height, alignment: .topLeading)
         .background { CardBackground(surface: surface) }
         .overlay(alignment: .topTrailing) {
-            VoxCloseChrome(surface: surface)
-                .offset(x: 3, y: -3)
+            VoxCornerChrome(surface: surface, symbol: "xmark")
+                .offset(x: VoxCornerButton.outset, y: -VoxCornerButton.outset)
+        }
+        .overlay(alignment: .bottomTrailing) {
+            if remaining > 0 {
+                VoxCornerChrome(surface: surface, symbol: "chevron.forward", badge: remaining)
+                    .offset(x: VoxCornerButton.outset, y: VoxCornerButton.outset)
+            }
+        }
+        .overlay(alignment: .bottomLeading) {
+            if previous > 0 {
+                VoxCornerChrome(surface: surface, symbol: "chevron.backward", badge: previous, badgeEdge: .trailing)
+                    .offset(x: -VoxCornerButton.outset, y: VoxCornerButton.outset)
+            }
         }
         .environment(\.colorScheme, surface.isGlass ? colorScheme : .dark)
         .accessibilityElement(children: .ignore)
@@ -124,12 +169,15 @@ struct VoxCard: View {
     }
 }
 
-/// Disco della X: stesso `GlassPanelView` di fumetto e sfera. Il clic è in AppKit.
-struct VoxCloseChrome: View {
+/// Disco d'angolo: stesso vetro di fumetto e sfera. Il clic è in AppKit.
+struct VoxCornerChrome: View {
     var surface: Surface
+    var symbol: String
+    var badge: Int = 0
+    var badgeEdge: HorizontalAlignment = .leading
 
     var body: some View {
-        let r = VoxCloseButton.size / 2
+        let r = VoxCornerButton.size / 2
         ZStack {
             if surface.isGlass {
                 GlassPanelView(surface: surface, cornerRadius: r)
@@ -141,27 +189,44 @@ struct VoxCloseChrome: View {
                     .fill(Color(white: 0.08).opacity(0.92))
                     .overlay { Circle().strokeBorder(.white.opacity(0.1), lineWidth: 0.5) }
             }
-            Image(systemName: "xmark")
+            Image(systemName: symbol)
                 .font(.system(size: 8, weight: .bold))
                 .foregroundStyle(.white.opacity(0.92))
                 .shadow(color: .black.opacity(surface.isGlass ? 0.45 : 0), radius: 1.2)
         }
-        .frame(width: VoxCloseButton.size, height: VoxCloseButton.size)
+        .frame(width: VoxCornerButton.size, height: VoxCornerButton.size)
+        .overlay(alignment: badgeEdge == .leading ? .topLeading : .topTrailing) {
+            if badge > 0 {
+                Text(badge > 99 ? "99+" : "\(badge)")
+                    .font(.system(size: badge > 9 ? 7 : 8, weight: .bold, design: .rounded))
+                    .monospacedDigit()
+                    .foregroundStyle(Color(white: 0.12))
+                    .padding(.horizontal, badge > 9 ? 3.5 : 0)
+                    .frame(minWidth: 13, minHeight: 13)
+                    .background {
+                        Capsule(style: .continuous)
+                            .fill(.white.opacity(0.95))
+                            .overlay { Capsule(style: .continuous).strokeBorder(.black.opacity(0.14), lineWidth: 0.5) }
+                    }
+                    .offset(x: badgeEdge == .leading ? -4 : 4, y: -4)
+            }
+        }
         .allowsHitTesting(false)
     }
 }
 
-/// Bersaglio di clic trasparente sopra la X disegnata in SwiftUI.
-final class VoxCloseButton: NSView {
+/// Bersaglio di clic trasparente sopra un disco d'angolo disegnato in SwiftUI.
+final class VoxCornerButton: NSView {
     static let size: CGFloat = 22
+    static let outset: CGFloat = 3
 
     var action: () -> Void = {}
 
-    override init(frame: NSRect) {
+    init(frame: NSRect, tooltip: String, accessibilityLabel: String) {
         super.init(frame: frame)
-        toolTip = "Chiudi"
+        toolTip = tooltip
         setAccessibilityRole(.button)
-        setAccessibilityLabel("Chiudi")
+        setAccessibilityLabel(accessibilityLabel)
     }
 
     required init?(coder: NSCoder) { nil }

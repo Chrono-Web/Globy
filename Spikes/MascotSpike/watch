@@ -1,0 +1,13 @@
+#!/bin/zsh
+# Rilancia lo spike a ogni modifica dei sorgenti, col saluto già aperto.
+set -euo pipefail
+cd "${0:A:h}"
+export GLOBY_WATCH=1
+WATCHEXEC="${WATCHEXEC:-$(command -v watchexec || true)}"
+if [[ -z "$WATCHEXEC" ]]; then
+  print -u2 "Serve watchexec (brew install watchexec)."
+  exit 1
+fi
+print "$$" > /tmp/globy-mascot-watch.pid
+exec "$WATCHEXEC" -w Sources -w Package.swift -e swift -r --stop-signal SIGTERM -- \
+  zsh -c 'export GLOBY_WATCH=1; swift build && exec .build/debug/MascotSpike --greet'

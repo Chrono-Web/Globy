@@ -1,0 +1,7 @@
+: heartbeat
+
+event: vox-new
+data: {not-json
+
+event: mystery
+data: {"documentId":"x"}

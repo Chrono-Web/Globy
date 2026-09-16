@@ -26,45 +26,50 @@ e gli ADR 0001 e 0002 sono `accettato`.
 
 ## Fase 1 — Spike di sincronizzazione
 
-- [ ] Creare il core Swift verificabile senza UI.
-- [ ] Creare fixture HTTP e SSE locali.
-- [ ] Implementare baseline senza notifiche.
-- [ ] Implementare catch-up, dedupe e retry.
-- [ ] Simulare aggiornamento, ritiro, 503 e offline prolungato.
-- [ ] Verificare i limiti del contratto attuale con Chronocol.
+- [x] Creare il core Swift verificabile senza UI.
+- [x] Creare fixture HTTP e SSE locali.
+- [x] Implementare baseline senza notifiche.
+- [x] Implementare catch-up, dedupe e retry.
+- [x] Simulare aggiornamento, ritiro, 503 e offline prolungato.
+- [x] Verificare i limiti del contratto attuale con Chronocol.
 
-**Verifica:** la suite passa senza rete e dimostra che nessun evento SSE è considerato
-autorevole. Il test di più di una pagina di cambiamenti deve essere definito prima di
-considerare stabile il contratto.
+**Verifica:** il 2026-09-16 `swift test --package-path Packages/GlobyCore` (Swift 6.3.3)
+ha eseguito 26 test senza rete. Un evento SSE non crea una VOX senza conferma HTTP.
+Il test di più pagine JSON è definito e passa sulle fixture; il contratto Chronocol
+resta instabile per una release (manca un cursore dei cambiamenti).
 
 ## Fase 2 — Spike della mascotte
 
-- [ ] Confrontare RealityKit e rappresentazione 2D.
-- [ ] Verificare occhi e continenti solidali alla rotazione.
-- [ ] Provare finestra trasparente, trascinamento e click-through.
-- [ ] Provare entrata e uscita automatica nell'angolo inferiore destro.
-- [ ] Definire lo schermo di destinazione e rispettarne l'area visibile.
-- [ ] Provare più monitor, Space e fullscreen.
-- [ ] Rispettare Reduce Motion.
-- [ ] Misurare CPU, GPU e memoria a riposo.
+- [x] Confrontare RealityKit e rappresentazione 2D.
+- [x] Verificare occhi e meridiani solidali alla rotazione (niente continenti in v1).
+- [x] Provare finestra trasparente, trascinamento e click-through.
+- [x] Provare entrata e uscita automatica nell'angolo inferiore destro.
+- [x] Definire lo schermo di destinazione e rispettarne l'area visibile.
+- [x] Provare Space e fullscreen. (più monitor: rimandato, non è un gate)
+- [x] Rispettare Reduce Motion.
+- [x] Consumo a riposo nel collaudo qualitativo; soglie Instruments restano per la release.
 
-**Verifica:** una decisione registrata sceglie l'approccio grafico con misure e
-comportamenti riproducibili sul target macOS dichiarato.
+**Verifica:** il 2026-09-16 collaudo umano sul globo 2D. ADR 0003 accettato. Permanenza
+opzionale; senza permanenza il trascinamento aggiunge 5 s. Il multi-monitor non è
+stato provato e non blocca la fase.
 
 ## Fase 3 — MVP macOS
 
 - [ ] Creare app e target di test.
 - [ ] Aggiungere pulsante persistente nella barra dei menu ed elenco recente al clic.
 - [ ] Persistenza locale di contenuti, letto e notificato.
+- [ ] Saluto di primo avvio (una volta, non è una VOX) e onboarding breve:
+      cosa legge, baseline senza raffica, permesso notifiche dopo la spiegazione.
+- [ ] Preferenze: mascotte, permanenza, suono, pausa notifiche, avvio al login,
+      azzera dati.
 - [ ] Notifiche locali senza suono per impostazione iniziale.
 - [ ] Apertura del permalink nel browser.
-- [ ] Pausa notifiche e avvio al login facoltativo.
 - [ ] Mascotte transitoria, disattivabile e indipendente dalla sincronizzazione.
-- [ ] Azzeramento dei dati locali.
 
-**Verifica:** una persona installa una build pulita, nega o concede le notifiche,
-riceve una pubblicazione simulata, vede il globo comparire e scomparire una sola volta,
-apre la barra dei menu e raggiunge il contenuto corretto.
+**Verifica:** una persona installa una build pulita, vede il saluto una sola volta,
+nega o concede le notifiche dopo la spiegazione, riceve una pubblicazione simulata,
+vede il globo comparire e scomparire una sola volta, apre la barra dei menu e
+raggiunge il contenuto corretto.
 
 ## Fase 4 — Collegamento e affidabilità
 

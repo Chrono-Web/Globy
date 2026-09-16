@@ -1,7 +1,8 @@
 # Globy
 
-> **Stato: pre-alpha.** La fase 0 è chiusa. Non esiste ancora una build installabile
-> dell'app: manca il progetto Xcode. C'è uno spike usa e getta della mascotte.
+> **Stato: pre-alpha.** Le fasi 0–2 sono chiuse. Non esiste ancora una build
+> installabile dell'app: manca il progetto Xcode. Il core di sincronizzazione è in
+> `Packages/GlobyCore/`; la mascotte ha uno spike 2D usa e getta.
 
 Globy è il compagno ufficiale macOS di [Chronocol](https://chronocol.com): vive nella
 barra dei menu e raccoglie le VOX più recenti. Quando arriva una nuova VOX confermata,
@@ -22,13 +23,15 @@ o notifiche remote ad applicazione terminata.
 
 ## Stato del lavoro
 
-La fondazione (fase 0) è verificata. Gli ADR 0001 e 0002 sono **accettati**.
-L'implementazione dell'app non è iniziata; lo spike in `Spikes/MascotSpike/` non è
-il prodotto.
+La fondazione (fase 0), lo spike di sincronizzazione (fase 1) e lo spike della
+mascotte (fase 2) sono verificati. Gli ADR 0001, 0002, 0003 e 0004 sono **accettati**.
+L'app non è iniziata: `Packages/GlobyCore/` e `Spikes/MascotSpike/` non sono il
+prodotto.
 
 Requisiti di piattaforma e canale: macOS 15 o successivo, identificatore
 `com.chronocol.globy`, GitHub fuori dallo Store. Dettaglio in
 [`docs/SVILUPPO.md`](docs/SVILUPPO.md) e [`docs/DISTRIBUZIONE.md`](docs/DISTRIBUZIONE.md).
+I test del core: `swift test --package-path Packages/GlobyCore`.
 
 La roadmap è in [`docs/ROADMAP.md`](docs/ROADMAP.md). Il brief è in
 [`docs/PRODOTTO.md`](docs/PRODOTTO.md).

@@ -10,6 +10,20 @@ final class MascotModel: ObservableObject {
     @Published var surface: Surface = .dark
     /// VOX mostrata sopra il globo; `nil` quando il fumetto è nascosto.
     @Published private(set) var reading: VoxLayout?
+    /// Quante VOX restano in coda dopo quella visibile.
+    @Published var remaining = 0
+    /// Quante VOX già viste si possono riprendere con la freccia indietro.
+    @Published var previous = 0
+    /// Saluto: occhi a fessura come a metà battito, un po' più lunghi in orizzontale.
+    @Published private(set) var smiling = false
+    /// Moltiplicatore della larghezza di ogni occhio durante il saluto (1 = misura normale).
+    static let greetingEyeWidth: Double = 1.48
+    /// Arco verso l'alto della fessura, in radianti (0 = dritta).
+    static let greetingEyeArch: Double = 0.042
+    static let smileDuration: TimeInterval = 0.5
+    private var smileFrom: Double = 0
+    private var smileTo: Double = 0
+    private var smileStart: TimeInterval = -1e9
     private(set) var typingStart: TimeInterval = 0
     /// Dopo aver scritto la VOX il globo guarda chi osserva, poi torna al puntatore.
     static let lookAtViewer: TimeInterval = 1.2
@@ -59,6 +73,24 @@ final class MascotModel: ObservableObject {
         return delay + pop + layout.typingDuration + Self.lookAtViewer
     }
 
+    func setSmiling(_ on: Bool) {
+        let now = Date.timeIntervalSinceReferenceDate
+        smileFrom = smileAmount(at: now)
+        smileTo = on ? 1 : 0
+        smileStart = now
+        smiling = on
+        wake(for: Self.smileDuration + 0.15)
+    }
+
+    /// 0…1 tra occhi normali e fessura del saluto, con smoothstep.
+    func smileAmount(at t: TimeInterval) -> Double {
+        let span = Self.smileDuration
+        guard span > 0 else { return smileTo }
+        let u = min(1, max(0, (t - smileStart) / span))
+        let s = u * u * (3 - 2 * u)
+        return smileFrom + (smileTo - smileFrom) * s
+    }
+
     func dismissVox() {
         withAnimation(.easeOut(duration: 0.3)) { reading = nil }
         onCardChange()
@@ -73,6 +105,7 @@ final class MascotModel: ObservableObject {
     /// Dove guarda il globo all'istante `t`: il carattere che si sta scrivendo, poi chi
     /// osserva, poi il puntatore.
     func gazeTarget(at t: TimeInterval) -> GazeTarget {
+        if smileAmount(at: t) > 0.12 { return .viewer }
         guard let reading else { return .cursor }
         let typingEnd = typingStart + reading.typingDuration
         if t < typingEnd {
@@ -99,6 +132,7 @@ final class MascotModel: ObservableObject {
 
     func leave(completion: @escaping () -> Void) {
         generation += 1
+        setSmiling(false)
         let current = generation
         withAnimation(.easeIn(duration: 0.35)) {
             phase = .leaving
@@ -224,7 +258,7 @@ struct MascotView: View {
         VStack(alignment: .trailing, spacing: MascotWindowController.cardGap) {
             if let reading = model.reading {
                 VoxCard(layout: reading, typingStart: model.typingStart, animating: model.animating,
-                        surface: model.surface)
+                        surface: model.surface, remaining: model.remaining, previous: model.previous)
                     .padding(.trailing, MascotWindowController.cardTrailing)
                     .transition(reduceMotion ? .opacity : .scale(scale: 0.8, anchor: .bottomTrailing).combined(with: .opacity))
             }
@@ -240,13 +274,15 @@ struct MascotView: View {
                 GlobeGlass(surface: model.surface)
             }
             GlobeBody(surface: model.surface)
-            // Il render loop gira solo mentre qualcosa si muove e il movimento è ammesso,
-            // e ridisegna soltanto griglia e occhi: corpo e riflesso sono statici.
             TimelineView(.animation(paused: !model.animating || reduceMotion)) { context in
                 let t = context.date.timeIntervalSinceReferenceDate
+                let blink = reduceMotion ? 1 : Self.eyeOpen(t - model.blinkStart, double: model.doubleBlink)
+                let smile = reduceMotion ? (model.smiling ? 1 : 0) : model.smileAmount(at: t)
                 GlobeFeatures(glass: model.surface.isGlass,
-                              gaze: reduceMotion ? .zero : model.gaze.update(at: t, center: model.globeCenter, target: model.gazeTarget(at: t)),
-                              eyeOpen: reduceMotion ? 1 : Self.eyeOpen(t - model.blinkStart, double: model.doubleBlink))
+                              gaze: reduceMotion && smile < 0.12 ? .zero : model.gaze.update(at: t, center: model.globeCenter, target: model.gazeTarget(at: t)),
+                              eyeOpen: blink * (1 - smile),
+                              eyeWidth: 1 + (MascotModel.greetingEyeWidth - 1) * smile,
+                              eyeArch: MascotModel.greetingEyeArch * smile)
             }
             GlobeSheen()
         }
@@ -413,12 +449,14 @@ struct GlobeFeatures: View {
     var glass = false
     var gaze: CGVector
     var eyeOpen: Double
+    var eyeWidth: Double = 1
+    var eyeArch: Double = 0
 
     var body: some View {
         Canvas { ctx, size in
             let r = Globe.radius(size), c = Globe.center(size)
             Self.drawGrid(in: &ctx, glass: glass, gaze: gaze, center: c, radius: r)
-            Self.drawEyes(in: &ctx, glass: glass, gaze: gaze, open: eyeOpen, center: c, radius: r)
+            Self.drawEyes(in: &ctx, glass: glass, gaze: gaze, open: eyeOpen, width: eyeWidth, arch: eyeArch, center: c, radius: r)
         }
     }
 
@@ -444,7 +482,11 @@ struct GlobeFeatures: View {
         }
 
         func addCurve(_ point: (Double) -> SIMD3<Double>) {
-            let pts = (0..<steps).map { point(Double($0) / Double(steps)) }
+            var pts: [SIMD3<Double>] = []
+            pts.reserveCapacity(steps)
+            for i in 0..<steps {
+                pts.append(point(Double(i) / Double(steps)))
+            }
             // Si parte da un punto nascosto, così un tratto visibile non si spezza a metà.
             let start = pts.indices.first { Globe.rotate(pts[$0], gaze: gaze).z < -0.05 } ?? 0
             var el: [CGPoint] = [], er: [CGPoint] = [], cl: [CGPoint] = [], cr: [CGPoint] = []
@@ -504,12 +546,13 @@ struct GlobeFeatures: View {
     /// Occhi solidali alla sfera, disegnati come capsule sulla superficie: seguono la
     /// curvatura e si deformano in prospettiva quando la testa gira.
     private static func drawEyes(in ctx: inout GraphicsContext, glass: Bool, gaze: CGVector, open: Double,
-                                 center c: CGPoint, radius r: Double) {
+                                 width: Double, arch: Double, center c: CGPoint, radius r: Double) {
         // Angoli sulla sfera, in radianti: semilarghezza e metà del tratto rettilineo.
-        let halfWidth = 0.115
+        let halfWidth = 0.115 * max(width, 0.5)
         let halfStraight = 0.19
         // Il battito schiaccia la capsula in verticale fino a una sottile fessura.
         let squash = max(open, 0.12)
+        let arch = max(0, arch)
         let arcSteps = 10, sideSteps = 8
         var eyes = Path()
         for side in [-1.0, 1.0] {
@@ -530,7 +573,9 @@ struct GlobeFeatures: View {
                 outline.append((halfWidth, -halfStraight + 2 * halfStraight * Double(k) / Double(sideSteps)))
             }
             for (n, p) in outline.enumerated() {
-                let lat = Globe.eyeLat + p.v * squash
+                let uNorm = p.u / halfWidth
+                let bow = arch * (1 - uNorm * uNorm)
+                let lat = Globe.eyeLat + p.v * squash + bow
                 let lon = side * Globe.eyeLon + p.u / cos(lat)
                 let pt = Globe.project(lon: lon, lat: lat, gaze: gaze, center: c, radius: r).0
                 n == 0 ? eyes.move(to: pt) : eyes.addLine(to: pt)
@@ -558,11 +603,13 @@ struct GlobeCanvas: View {
     var surface: Surface = .dark
     var gaze: CGVector
     var eyeOpen: Double
+    var eyeWidth: Double = 1
+    var eyeArch: Double = 0
 
     var body: some View {
         ZStack {
             GlobeBody(surface: surface)
-            GlobeFeatures(glass: surface.isGlass, gaze: gaze, eyeOpen: eyeOpen)
+            GlobeFeatures(glass: surface.isGlass, gaze: gaze, eyeOpen: eyeOpen, eyeWidth: eyeWidth, eyeArch: eyeArch)
             GlobeSheen()
         }
     }
@@ -576,7 +623,7 @@ private var caretCheck: some View {
     let n = 250
     let caret = layout.caret(after: n)
     return VoxCard(layout: layout, typingStart: Date.timeIntervalSinceReferenceDate - Double(n) / VoxLayout.charactersPerSecond,
-                   animating: true, surface: .dark)
+                   animating: true, surface: .dark, remaining: 2, previous: 1)
         .overlay(alignment: .topLeading) {
             Circle().fill(.red).frame(width: 6, height: 6)
                 .offset(x: VoxLayout.padding + caret.x - 3,
@@ -599,6 +646,12 @@ struct SnapshotSheet: View {
             .padding(20)
             .frame(width: 540)
             .background(Color(white: 0.75))
+            HStack(spacing: 0) {
+                GlobeCanvas(gaze: .zero, eyeOpen: 1)
+                GlobeCanvas(gaze: .zero, eyeOpen: 0, eyeWidth: MascotModel.greetingEyeWidth, eyeArch: MascotModel.greetingEyeArch)
+            }
+            .frame(width: 540, height: 180)
+            .background(Color(white: 0.93))
         }
     }
 

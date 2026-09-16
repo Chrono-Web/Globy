@@ -6,10 +6,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem!
     private var mascot: MascotWindowController!
     private var clickThroughItem: NSMenuItem!
-    private var alwaysOnItem: NSMenuItem!
+    private var permanenceItem: NSMenuItem!
+    private var soundItem: NSMenuItem!
+    private var liveItem: NSMenuItem!
     private var surfaceItems: [NSMenuItem] = []
-    private static let alwaysOnKey = "alwaysOn"
     private static let surfaceKey = "surface"
+    private static let soundKey = "soundEnabled"
+    private static let permanenceKey = "permanence"
+    private static let greetedKey = "didGreet"
+    private var skipAutoGreet = false
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         mascot = MascotWindowController()
@@ -20,7 +25,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         let menu = NSMenu()
         menu.addItem(withTitle: "Simula nuova VOX", action: #selector(summon), keyEquivalent: "n")
-        alwaysOnItem = menu.addItem(withTitle: "Sempre presente", action: #selector(toggleAlwaysOn), keyEquivalent: "")
+        menu.addItem(withTitle: "Simula raffica (3 VOX)", action: #selector(summonBurst), keyEquivalent: "b")
+        menu.addItem(withTitle: "Saluta", action: #selector(greet), keyEquivalent: "g")
         let surfaceMenu = NSMenu()
         for surface in Surface.allCases {
             let item = surfaceMenu.addItem(withTitle: surface.title, action: #selector(chooseSurface(_:)), keyEquivalent: "")
@@ -29,8 +35,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             surfaceItems.append(item)
         }
         menu.addItem(withTitle: "Superficie", action: nil, keyEquivalent: "").submenu = surfaceMenu
-        clickThroughItem = menu.addItem(withTitle: "Click-through", action: #selector(toggleClickThrough), keyEquivalent: "")
+        permanenceItem = menu.addItem(withTitle: "Permanenza", action: #selector(togglePermanence), keyEquivalent: "")
+        clickThroughItem = menu.addItem(withTitle: "Click-through (buchi)", action: #selector(toggleClickThrough), keyEquivalent: "")
         clickThroughItem.state = .on
+        soundItem = menu.addItem(withTitle: "Suono", action: #selector(toggleSound), keyEquivalent: "")
+        liveItem = menu.addItem(withTitle: "Ricarica alle modifiche", action: #selector(toggleLive), keyEquivalent: "")
+        liveItem.state = LiveReload.isWatched ? .on : .off
         menu.addItem(.separator())
         menu.addItem(withTitle: "Esci", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         for item in menu.items where item.action != #selector(NSApplication.terminate(_:)) {
@@ -38,13 +48,29 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         statusItem.menu = menu
 
-        setSurface(UserDefaults.standard.string(forKey: Self.surfaceKey).flatMap(Surface.init) ?? .dark)
-        if UserDefaults.standard.bool(forKey: Self.alwaysOnKey) {
-            setAlwaysOn(true)
-        }
+        setSurface(UserDefaults.standard.string(forKey: Self.surfaceKey).flatMap(Surface.init) ?? Self.defaultSurface)
+        mascot.soundEnabled = UserDefaults.standard.object(forKey: Self.soundKey) as? Bool ?? true
+        soundItem.state = mascot.soundEnabled ? .on : .off
+        mascot.permanence = UserDefaults.standard.bool(forKey: Self.permanenceKey)
+        permanenceItem.state = mascot.permanence ? .on : .off
 
-        // --snapshot <file.png>: esporta il globo senza finestre, per controlli senza schermo.
+        applyCommandLine()
+        if !skipAutoGreet, !UserDefaults.standard.bool(forKey: Self.greetedKey) {
+            UserDefaults.standard.set(true, forKey: Self.greetedKey)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in
+                self?.mascot.presentGreeting()
+            }
+        }
+    }
+
+    private static var defaultSurface: Surface {
+        if #available(macOS 26, *) { return .liquidGlass }
+        return .frosted
+    }
+
+    private func applyCommandLine() {
         if let i = CommandLine.arguments.firstIndex(of: "--snapshot"), i + 1 < CommandLine.arguments.count {
+            skipAutoGreet = true
             let renderer = ImageRenderer(content: SnapshotSheet())
             renderer.scale = 2
             if let cg = renderer.cgImage,
@@ -52,10 +78,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 try? png.write(to: URL(fileURLWithPath: CommandLine.arguments[i + 1]))
             }
             NSApp.terminate(nil)
+            return
         }
-
         if CommandLine.arguments.contains("--demo") {
+            skipAutoGreet = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in self?.summon() }
+        }
+        if CommandLine.arguments.contains("--burst") {
+            skipAutoGreet = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in self?.summonBurst() }
+        }
+        if CommandLine.arguments.contains("--greet") {
+            skipAutoGreet = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in self?.mascot.presentGreeting() }
         }
     }
 
@@ -63,14 +98,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         mascot.summon(vox: .sample)
     }
 
-    @objc private func toggleAlwaysOn() {
-        setAlwaysOn(!mascot.alwaysOn)
+    @objc private func summonBurst() {
+        mascot.summonBurst(Vox.burst)
     }
 
-    private func setAlwaysOn(_ on: Bool) {
-        mascot.alwaysOn = on
-        alwaysOnItem.state = on ? .on : .off
-        UserDefaults.standard.set(on, forKey: Self.alwaysOnKey)
+    @objc private func greet() {
+        mascot.presentGreeting()
     }
 
     @objc private func chooseSurface(_ sender: NSMenuItem) {
@@ -86,8 +119,37 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         UserDefaults.standard.set(surface.rawValue, forKey: Self.surfaceKey)
     }
 
+    @objc private func togglePermanence() {
+        mascot.permanence.toggle()
+        permanenceItem.state = mascot.permanence ? .on : .off
+        UserDefaults.standard.set(mascot.permanence, forKey: Self.permanenceKey)
+    }
+
     @objc private func toggleClickThrough() {
         mascot.clickThrough.toggle()
         clickThroughItem.state = mascot.clickThrough ? .on : .off
+    }
+
+    @objc private func toggleSound() {
+        mascot.soundEnabled.toggle()
+        soundItem.state = mascot.soundEnabled ? .on : .off
+        UserDefaults.standard.set(mascot.soundEnabled, forKey: Self.soundKey)
+    }
+
+    @objc private func toggleLive() {
+        if LiveReload.isWatched {
+            LiveReload.stopExternalWatch()
+            liveItem.state = .off
+            return
+        }
+        do {
+            try LiveReload.startExternalWatch()
+            NSApp.terminate(nil)
+        } catch {
+            let alert = NSAlert()
+            alert.messageText = "Ricarica alle modifiche"
+            alert.informativeText = "Non riesco ad avviare il watch. Serve watchexec (brew install watchexec)."
+            alert.runModal()
+        }
     }
 }

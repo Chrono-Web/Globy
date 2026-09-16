@@ -14,6 +14,11 @@ versionamento pubblico.
 - Spike usa e getta della mascotte 2D in `Spikes/MascotSpike/`.
 - Licenza GNU GPL versione 3.
 - Fase 0 chiusa: macOS 15, `com.chronocol.globy`, GitHub non firmato, ADR 0001 e 0002 accettati.
+- Spike di sincronizzazione in `Packages/GlobyCore/`: baseline, catch-up, hint SSE e
+  suite di 26 test senza rete.
+- Spike mascotte 2D: coda, permanenza, frecce di coda, saluto di primo avvio
+  (fessura arcuata, non è una VOX). RealityKit scartato (ADR 0003). Fase 2 chiusa.
+- Store locale JSON dietro `ContentStore` (ADR 0004), con test di round-trip.
 
 ### Corretto
 

@@ -14,34 +14,63 @@
 | Bundle identifier di sviluppo | `com.chronocol.globy.debug` |
 | Licenza | GNU GPL versione 3, file `LICENSE` |
 
-Restano da registrare, quando verificati: versione di Xcode, toolchain Swift, se il
-progetto è Xcode nativo o generato, dipendenze esterne ammesse.
+Restano da registrare, quando verificati: se il progetto dell'app è Xcode nativo o
+generato, dipendenze esterne ammesse.
+
+Toolchain verificata il 2026-09-16 sullo spike di sincronizzazione:
+
+| Strumento | Valore |
+|---|---|
+| Xcode | 26.6 (build 17F113) |
+| Swift | 6.3.3 (`swiftlang-6.3.3.1.3`) |
+| Comando | `swift test --package-path Packages/GlobyCore` |
 
 ## Stato reale
 
-Non esiste ancora il `.xcodeproj` dell'app. C'è uno spike usa e getta in
-`Spikes/MascotSpike/` (SwiftPM) che non è Globy e non sostituisce il target di
-produzione. Non inventare comandi di build dell'app finché quel progetto non esiste
-e i comandi non sono verificati qui.
+Non esiste ancora il `.xcodeproj` dell'app. Esistono due spike SwiftPM, nessuno dei
+due è Globy:
 
-## Struttura proposta
+- `Packages/GlobyCore/` — sincronizzazione verificabile senza UI;
+- `Spikes/MascotSpike/` — mascotte 2D usa e getta.
 
-La struttura definitiva nasce dallo spike di sincronizzazione. La direzione preferita
-è separare la shell macOS dalla logica verificabile:
+Non inventare comandi di build dell'app finché quel progetto non esiste e i comandi
+non sono verificati qui.
+
+## Struttura
+
+La shell macOS arriverà con il progetto Xcode. La logica verificabile vive già nel
+package:
+
+```text
+Packages/GlobyCore/     # dominio, sincronizzazione, store in memoria, fixture
+Spikes/MascotSpike/     # prototipo usa e getta della mascotte
+docs/
+```
+
+La struttura prevista per l'app, quando esisterà:
 
 ```text
 Globy.xcodeproj
 Globy/                  # entry point, menu bar, finestre, asset, entitlement
-Packages/GlobyCore/     # dominio, sincronizzazione, persistenza astratta
+Packages/GlobyCore/
 GlobyTests/
 GlobyUITests/
-Fixtures/               # risposte HTTP e sequenze SSE prive di dati sensibili
-Spikes/                 # prototipi usa e getta, non l'app
+Spikes/
 docs/
 ```
 
-Non creare cartelle vuote per simulare moduli: Git non le conserva e i nomi danno una
-falsa impressione di implementazione.
+Le fixture HTTP e SSE dello spike stanno in `Packages/GlobyCore/Tests/GlobyCoreTests/Fixtures/`
+e sono sintetiche. Non creare cartelle vuote per simulare moduli.
+
+## Comandi verificati
+
+```bash
+swift test --package-path Packages/GlobyCore
+cd Spikes/MascotSpike && swift run MascotSpike --snapshot globo.png
+cd Spikes/MascotSpike && swift run -c release MascotSpike --demo
+```
+
+La suite di `GlobyCore` non apre connessioni di rete.
 
 ## Ambiente
 
@@ -53,8 +82,7 @@ fornire un file `.example` e ignorare la copia privata.
 
 ## Fixture locale
 
-Prima di collegare l'interfaccia alla produzione serve un server o un protocollo finto
-capace di riprodurre:
+`Packages/GlobyCore` riproduce in processo, senza rete:
 
 - lista iniziale;
 - nuova pubblicazione;
@@ -66,7 +94,8 @@ capace di riprodurre:
 - timeout, offline e riconnessione;
 - raffica di più elementi.
 
-La suite automatica non deve pubblicare o ritirare contenuti reali.
+La suite automatica non deve pubblicare o ritirare contenuti reali. Un server HTTP
+di sviluppo resta utile quando nascerà l'app, non per i test del core.
 
 ## Strategia di test
 

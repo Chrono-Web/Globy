@@ -1,55 +1,60 @@
 # Spike della mascotte (2D)
 
 - Aggiornato: 2026-09-16
-- Stato: prototipo usa e getta, non è il progetto dell'app
-- Risponde a: il globo 2D disegnato in SwiftUI funziona come mascotte transitoria?
+- Stato: prototipo usa e getta; il motore è il 2D (ADR 0003)
+- Risponde a: il globo Canvas funziona come mascotte transitoria?
 
 Non contiene sincronizzazione: la VOX si simula dal menu. Il globo è disegnato dal
-codice, quindi non ci sono asset da registrare in `docs/ASSET.md`.
+codice, quindi non ci sono asset da registrare in `docs/ASSET.md`. Il suono è
+`Tink` di sistema. RealityKit è stato provato e rimosso dopo il collaudo visivo.
 
 ## Uso
 
 ```bash
 cd Spikes/MascotSpike
-swift run MascotSpike            # icona nella barra dei menu → "Simula nuova VOX" (⌘N)
-swift run MascotSpike --demo     # richiamo automatico dopo 1 s
-swift run MascotSpike --snapshot globo.png   # esporta il disegno senza finestre
+swift run MascotSpike                         # menu: Simula nuova VOX (⌘N), raffica (⌘B), Saluta (⌘G)
+swift run MascotSpike --demo                  # un richiamo dopo 1 s
+swift run MascotSpike --burst                 # coda di 3 VOX
+swift run MascotSpike --greet                 # saluto, anche se già visto
+swift run -c release MascotSpike --demo       # per Instruments
+swift run MascotSpike --snapshot globo.png    # esporta il disegno senza finestre
+./watch                                       # ricompila e riapre a ogni salvataggio (serve watchexec)
 ```
 
-## Che cosa prova
+Menu: Superficie, Permanenza, Click-through (buchi), Suono, Ricarica alle modifiche.
+Al primo avvio dello spike (senza `--demo`/`--burst`/`--snapshot`) parte il saluto;
+poi restano ⌘G. «Ricarica alle modifiche» (o `./watch`) ricompila e riapre col
+saluto a ogni cambio nei sorgenti, così non serve uscire e rilanciare a mano.
 
-- `NSPanel` trasparente e non attivante: non ruba il focus.
-- Presente su tutti gli Space e sopra le app a schermo intero.
-- Angolo inferiore destro della `visibleFrame` dello schermo col puntatore (Dock escluso).
-- Click-through attivo; disattivandolo dal menu il globo si può trascinare. La X in
-  vetro sull'angolo del fumetto riceve i clic anche col click-through.
-- Entrata a molla del globo, poi fumetto sopra con la VOX di esempio (fixture scritta a
-  mano) che si scrive carattere per carattere. Gli occhi seguono il carattere appena
-  scritto (posizione calcolata con TextKit), poi guardano chi osserva per 1,2 s e tornano
-  al puntatore. Il fumetto resta 6 s dopo la lettura; un nuovo richiamo ricomincia.
-  La X chiude il fumetto subito; se il globo non è sempre presente, scompare anche lui.
-- Sfera scura con 3 paralleli, 3 meridiani e due occhi a trattino, tutti solidali:
-  nessuna rotazione automatica, la "testa" si orienta verso il puntatore. Battito di
-  ciglia, a volte doppio. Niente bocca né continenti.
-- "Sempre presente" dal menu: il globo resta a schermo (preferenza ricordata tra un
-  avvio e l'altro); una nuova VOX lo fa salutare con un doppio battito.
-- Il render loop si accende solo quando serve (puntatore in movimento, battito di ciglia)
-  e si spegne da fermo, anche con il globo sempre presente.
-- Paralleli e meridiani come tubicini in rilievo: nastri costruiti sulla sfera 3D e
-  proiettati, che si assottigliano e scompaiono dietro il bordo senza tagli.
-- Menu "Superficie": Scura, Liquid Glass, Liquid Glass trasparente (`NSGlassEffectView`,
-  macOS 26) e Vetro smerigliato (`NSVisualEffectView` dietro la finestra), con una
-  velatura scura che tiene leggibili gli occhi. Aspetto da valutare dal vivo.
-- Reduce Motion: solo dissolvenza, niente rotazione né oscillazione.
+## Comportamento
+
+- Transitoria: compare, legge, scompare.
+- Schermo del puntatore, angolo inferiore destro della `visibleFrame`, margine 16 pt.
+- Tutti gli Space, sopra il fullscreen.
+- Fumetto con scrittura carattere per carattere; Reduce Motion: fade, testo già
+  scritto, niente suono.
+- Coda: un globo; in basso a destra si va avanti, in basso a sinistra si torna
+  indietro. Senza permanenza, dopo la lettura c'è una pausa di 1 s e poi la
+  VOX seguente.
+- Clic su globo o fumetto: apre la VOX visibile su Chronocol.
+- X: chiude solo il fumetto, mai il globo.
+- Frecce in basso (stessa distanza dagli angoli che ha la X in alto a destra):
+  successiva e precedente; i numeretti sono quante VOX ci sono da quella parte.
+- Saluto (⌘G): fumetto «Ciao, sono Globy…», occhi chiusi come a metà battito,
+  sguardo verso chi guarda; non è una VOX e non apre Chronocol. Al primo avvio
+  dello spike parte da solo.
+- Trascinabile mentre è visibile; al richiamo successivo torna in basso a destra.
+- Menu Permanenza: il globo resta a schermo, anche senza fumetto; X e frecce
+  non lo nascondono. Senza permanenza, un trascinamento aggiunge 5 s e poi
+  scompare anche il globo.
+- Superficie di default: Liquid Glass su macOS 26, vetro smerigliato sotto.
 
 ## Verificato
 
-- Compila con Swift 6.3.3 su macOS 26 (arm64).
-- `--snapshot` produce il disegno atteso.
-- Misure con `top` sulla build release, globo sempre presente e mouse fermo (non
-  Instruments): 0–2% CPU, con brevi picchi fino a circa 6% durante i battiti di ciglia.
-  Durante la scrittura della VOX (circa 7 s): 10–21%. Non misurato mentre il mouse
-  si muove.
+- Compila debug e release con Swift 6.3.3 su macOS 26 (arm64), macOS 15 come minimo.
+- `--snapshot` produce il disegno 2D atteso.
+- RealityKit scartato visivamente il 2026-09-16 (ADR 0003).
+- Collaudo umano: occhi, trascinamento, Space, fullscreen, scomparsa automatica.
 
-Da provare a mano: più monitor, fullscreen, Reduce Motion, CPU e GPU durante
-l'animazione e confronto con RealityKit.
+Il multi-monitor non è stato provato e non è un gate. Reduce Motion e Instruments
+restano da sogliare in release.

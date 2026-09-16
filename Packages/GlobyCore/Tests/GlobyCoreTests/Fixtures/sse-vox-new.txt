@@ -1,0 +1,7 @@
+: connected
+
+event: vox-new
+data: {"documentId":"fixture-new","createdAt":"2026-09-16T12:00:00.000Z"}
+
+event: vox-new
+data: {"documentId":"fixture-new","createdAt":"2026-09-16T12:00:00.000Z"}

@@ -13,6 +13,8 @@
 | **lastSuccessfulSyncAt** | Istante dell'ultimo catch-up riuscito; il buco da coprire parte da lì |
 | **diretta** | Cambiamento confermato mentre Globy era connesso; non è sinonimo di evento SSE |
 | **hint** | Segnale non autorevole, per esempio SSE, che richiede un catch-up |
+| **saluto** | Prima apparizione della mascotte al primo avvio; non è una VOX |
+| **onboarding** | Spiegazione al primo avvio dell'app: cosa legge, baseline, notifiche |
 | **letto** | Contenuto che la persona ha esplicitamente aperto o marcato come letto |
 | **notificato** | Contenuto per cui Globy ha già programmato o mostrato un avviso |
 | **ritirato** | Contenuto prima disponibile che la fonte autorevole non considera più pubblico |

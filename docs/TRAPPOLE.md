@@ -27,6 +27,9 @@ Chronocol è limitato e ordinato per `createdAt`. Se l'item più vecchio è post
 `lastSuccessfulSyncAt`, il buco non è coperto: serve l'elenco JSON. Una VOX assente
 dal solo RSS non è un ritiro.
 
+L'elenco JSON, senza `sort=createdAt:desc`, parte dall'inizio dell'archivio. La pagina
+1 predefinita non copre un buco recente.
+
 ## 5. `documentId` non è una versione
 
 Una VOX può essere modificata, ripubblicata o ritirata mantenendo lo stesso
@@ -66,8 +69,9 @@ con Instruments; non dedurre il consumo dall'aspetto statico.
 
 ## 12. SceneKit non è la scelta predefinita
 
-È una tecnologia deprecata per nuovi progetti. RealityKit e un rendering 2D vanno
-confrontati sul caso reale prima di scegliere.
+È una tecnologia deprecata per nuovi progetti. Il 2026-09-16 RealityKit è stato
+confrontato con un globo 2D e scartato (ADR 0003). Non reintrodurre 3D senza un
+nuovo ADR e un confronto alla pari.
 
 ## 13. Notifica locale non significa consegna ad app terminata
 
@@ -105,3 +109,10 @@ permalink, testi dell'elenco, timestamp e un'impronta di versione, non il resto.
 README, `SECURITY.md` e `CONTRIBUTING.md` descrivono soltanto canali e procedure
 che esistono oggi. Un contatto, un SLA o una issue di bug applicativo si
 aggiungono quando il fatto è vero, non per completare un modello di repository.
+
+## 20. Il saluto non è una VOX inventata
+
+Il globo può comparire una volta al primo avvio per presentarsi. Quella apparizione
+non è una pubblicazione, non apre un permalink e non sostituisce la baseline.
+Notificare l'archivio resterebbe un errore (punto 6). Il dettaglio di prodotto
+sta in `docs/PRODOTTO.md`.

@@ -1,7 +1,7 @@
 # Architettura
 
 - Aggiornato: 2026-09-16
-- Stato: proposta, nessun progetto Xcode dell'app
+- Stato: proposta; il coordinatore esiste nello spike `Packages/GlobyCore/`, senza progetto Xcode
 - Risponde a: responsabilità interne, dipendenze e flusso dello stato
 
 ## Principio centrale
@@ -92,25 +92,24 @@ osservabili sul `MainActor`; non possiedono task di rete persistenti indipendent
 
 ## Persistenza
 
-La tecnologia non è ancora scelta. Lo spike deve confrontare almeno:
-
-- SwiftData o Core Data per contenuti e stato;
-- `UserDefaults` soltanto per preferenze piccole;
-- Keychain soltanto per eventuali segreti futuri.
-
-La scelta dipende anche dalla versione minima di macOS. Qualunque implementazione deve
-essere sostituibile da uno store in memoria nei test.
+I contenuti osservati vivono in un file JSON in Application Support, dietro il
+protocollo `ContentStore` (ADR 0004). `InMemoryContentStore` resta per i test.
+`UserDefaults` soltanto per preferenze piccole; il Portachiavi non serve nella
+prima versione.
 
 ## Mascotte e rendering
 
-Lo spike grafico confronta una soluzione RealityKit con una rappresentazione 2D. Deve
-misurare qualità, consumo, trasparenza della finestra, input, multi-monitor e Space.
+La mascotte è un globo 2D (ADR 0003). SwiftUI `Canvas` disegna sfera, meridiani e
+occhi; AppKit adatta la finestra trasparente. RealityKit è stato confrontato nello
+spike e scartato.
 
-La finestra è un adattatore AppKit separato dal modello della mascotte. Dopo la conferma
-di una nuova VOX, il coordinatore dell'interfaccia richiede una sola presentazione in
-basso a destra; una raffica viene aggregata invece di sovrapporre più globi. Terminata
-l'animazione, la finestra si nasconde e rilascia o sospende le risorse grafiche senza
-fermare l'app.
+La finestra è un adattatore AppKit separato dal modello della mascotte. Due
+presentazioni distinte: il saluto di primo avvio (non è una VOX) e la conferma
+di una nuova VOX. Il coordinatore dell'interfaccia richiede una sola presentazione
+in basso a destra; una raffica viene aggregata invece di sovrapporre più globi.
+Terminata l'animazione, la finestra si nasconde e rilascia o sospende le risorse
+grafiche senza fermare l'app. Le preferenze piccole (mascotte, permanenza, suono,
+pausa notifiche, avvio al login, saluto già mostrato) restano in `UserDefaults`.
 
 Il posizionamento deve usare l'area visibile dello schermo scelto, non coordinate
 globali fisse: Dock, notch, ridimensionamento e più monitor cambiano l'angolo realmente

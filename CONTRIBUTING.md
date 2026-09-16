@@ -5,7 +5,9 @@ versione 3, ma non esiste un progetto compilabile dell'app. Issue che correggono
 chiariscono requisiti o mettono in discussione una decisione sono benvenute.
 
 Questa limitazione sui contributi di codice verrà rimossa dopo la creazione del
-progetto Xcode. I contributi futuri saranno sotto la stessa GPL-3.
+progetto Xcode. I contributi futuri saranno sotto la stessa GPL-3. Il package
+`Packages/GlobyCore/` è verificabile con `swift test --package-path Packages/GlobyCore`
+ma non è ancora l'app.
 
 ## Prima di iniziare
 

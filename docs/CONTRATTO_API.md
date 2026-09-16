@@ -46,10 +46,22 @@ Sull'elenco, la risposta aveva forma `{ data, meta }`. `meta.pagination` riporta
 osservato nel RSS ha la forma `https://chronocol.com/it/vox/{documentId}`. La
 stessa forma JSON valeva per il dettaglio per `documentId`.
 
+La paginazione accettata il 2026-09-16 usava `pagination[page]` e
+`pagination[pageSize]`. I parametri `page` / `pageSize` in radice rispondevano 400.
+
+L'ordine predefinito dell'elenco **non** è per recenza: la pagina 1 partiva
+dall'inizio dell'archivio. Per il catch-up è stato osservato che
+`sort=createdAt:desc` allinea la pagina 1 alle VOX più recenti, nello stesso senso
+del RSS. GlobyCore richiede sempre quel sort. Non è una garanzia di contratto:
+se Chronocol lo ritira, il JSON non copre più un buco in modo sicuro.
+
+Un dettaglio inesistente rispondeva HTTP 404 con `{ data: null, error }`. Nello
+spike un 404 su un `documentId` già in store è l'unico ritiro simulabile: una VOX
+assente dal solo RSS non è un ritiro.
+
 La risposta contiene anche campi che non servono a Globy. Non vanno copiati in
 questa documentazione, nello store locale o nell'interfaccia: sono metadati del
-servizio a monte. Globy deve trattare i campi non necessari come opachi e
-ignorarli.
+servizio a monte. Il mapping del sottoinsieme minimo vive in `ChronocolClient`.
 
 Le intestazioni delle stesse risposte esponevano un limite `180` richieste per
 finestra di `60` secondi (`ratelimit-policy: 180;w=60`). Una release deve
@@ -91,8 +103,11 @@ Dal codice di Chronocol il feed ha un tetto di 100 elementi e ordina per
 
 È adatto a fixture e alla lettura ordinaria di Globy. Non garantisce da solo un
 recupero del buco se, da `lastSuccessfulSyncAt`, sono uscite più VOX di quante il
-feed ne tenga. In quel caso Globy pagina l'elenco JSON, come in
+feed ne tenga. In quel caso Globy pagina l'elenco JSON con `sort=createdAt:desc`,
+come in
 [`docs/adr/0002-http-e-autorevole-sse-e-un-segnale.md`](adr/0002-http-e-autorevole-sse-e-un-segnale.md).
+Un buco profondo può avvicinarsi al limite di 180 richieste al minuto: 172 pagine
+da 25 elementi coprono l'archivio osservato oggi.
 
 ## Lacune da chiudere
 
