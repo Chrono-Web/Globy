@@ -88,6 +88,9 @@ Decisioni di comportamento chiuse il 2026-09-16 (ADR 0003 per il motore):
 - La X chiude solo il fumetto. Con più VOX, due frecce in basso (stessa
   distanza dagli angoli che ha la X in alto a destra): indietro e avanti;
   i numeretti indicano quanti ce ne sono da quella parte.
+- Testo di fumetto, menu e banner: senza la sezione «Fonti:» e senza link
+  (`VoxText.readable`); le fonti restano nel VOX completo su Chronocol. Il fumetto
+  mostra al massimo 8 righe, poi «…»; il clic apre il VOX intero.
 - Gli angoli del fumetto appartengono a X e frecce: testo, intestazione e pulsanti
   interni non entrano mai in quelle zone (`VoxLayout.cornerClearance`), anche
   quando le frecce non sono visibili.

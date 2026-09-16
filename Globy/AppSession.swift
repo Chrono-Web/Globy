@@ -345,7 +345,7 @@ final class AppSession: ObservableObject {
                 guard let record = records.first(where: { $0.documentId == id }) else { continue }
                 notifications.post(
                     title: "Nuovo VOX",
-                    body: record.listText,
+                    body: VoxText.readable(record.listText),
                     permalink: record.permalink,
                     documentId: record.documentId
                 )

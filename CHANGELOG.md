@@ -21,6 +21,8 @@ versionamento pubblico.
   anteprima dal vivo sul globo.
 - La Release legge Chronocol pubblico (solo GET); «Simula…» resta nella Debug.
 - L'archivio del primo avvio non conta più tra i non letti.
+- Fumetto, menu e banner mostrano i VOX senza fonti e link; il fumetto si ferma a
+  8 righe con «…» (trovato nel collaudo con i VOX reali).
 - Checklist di collaudo della fase 3 in `docs/COLLAUDO_FASE3.md`.
 - Controllo periodico ogni 5 minuti mentre il Mac è acceso, con backoff sugli errori
   e sync immediata al ritorno della rete.

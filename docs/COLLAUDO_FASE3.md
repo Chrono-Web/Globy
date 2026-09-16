@@ -38,6 +38,7 @@ Segna ogni riga con ✅, ❌ (con una nota su cosa è successo) o «non provato�
       gli ultimi 5 VOX pubblicati?».
 - [ ] «Sì, partiamo»: passano 5 VOX veri, intestazione «VOX recente · già uscito»,
       frecce con numerini, nessun banner di sistema.
+- [ ] I VOX lunghi restano al massimo 8 righe con «…», senza «Fonti:» né link.
 - [ ] Clic su un VOX recente: apre il permalink giusto nel browser.
 - [ ] Esci e riapri Globy: la presentazione **non** ricompare; compare il saluto di
       rientro («Non ti sei perso nulla…» se non è uscito niente).

@@ -61,6 +61,8 @@ struct Vox: Equatable {
     static let burst = [sampleShortA, sample, sampleShortB]
 }
 
+nonisolated(unsafe) private var storageKey: UInt8 = 0
+
 /// Impaginazione della card calcolata con TextKit: altezza fissa fin dall'inizio e
 /// posizione del carattere appena scritto, che gli occhi seguono.
 @MainActor
@@ -90,34 +92,71 @@ final class VoxLayout {
     /// Fine di ogni carattere, calcolata una volta sola: `carets[n]` segue l'n-esimo.
     private let carets: [CGPoint]
 
+    /// Righe massime nel fumetto: oltre, il testo finisce con «…» e il resto è su Chronocol.
+    static let maxLines = 8
+
     init(_ vox: Vox) {
         self.vox = vox
         kind = vox.kind
         asksChoice = vox.asksChoice
-        text = vox.text
-        count = vox.text.count
-        let font = NSFont.systemFont(ofSize: Self.fontSize)
-        let storage = NSTextStorage(string: vox.text, attributes: [.font: font])
-        let container = NSTextContainer(size: CGSize(width: Self.width - 2 * Self.padding, height: .greatestFiniteMagnitude))
-        container.lineFragmentPadding = 0
-        let layoutManager = NSLayoutManager()
-        layoutManager.addTextContainer(container)
-        storage.addLayoutManager(layoutManager)
-        layoutManager.ensureLayout(for: container)
+        let fitted = Self.fitted(vox.text)
+        text = fitted
+        count = fitted.count
+        let (layoutManager, container, font) = Self.layout(fitted)
         // Un filo di margine: a corpi grandi SwiftUI misura le righe poco più alte di TextKit,
         // e senza margine l'ultima riga verrebbe troncata con i puntini.
         textHeight = ceil(layoutManager.usedRect(for: container).height + 2 * MascotMetrics.textScale)
 
         var carets = [CGPoint(x: 0, y: layoutManager.defaultLineHeight(for: font) / 2)]
-        var index = vox.text.startIndex
-        while index < vox.text.endIndex {
-            let next = vox.text.index(after: index)
-            let glyphs = layoutManager.glyphRange(forCharacterRange: NSRange(index..<next, in: vox.text), actualCharacterRange: nil)
+        var index = fitted.startIndex
+        while index < fitted.endIndex {
+            let next = fitted.index(after: index)
+            let glyphs = layoutManager.glyphRange(forCharacterRange: NSRange(index..<next, in: fitted), actualCharacterRange: nil)
             let rect = layoutManager.boundingRect(forGlyphRange: glyphs, in: container)
             carets.append(CGPoint(x: rect.maxX, y: rect.midY))
             index = next
         }
         self.carets = carets
+    }
+
+    private static func layout(_ string: String) -> (NSLayoutManager, NSTextContainer, NSFont) {
+        let font = NSFont.systemFont(ofSize: fontSize)
+        let storage = NSTextStorage(string: string, attributes: [.font: font])
+        let container = NSTextContainer(size: CGSize(width: width - 2 * padding, height: .greatestFiniteMagnitude))
+        container.lineFragmentPadding = 0
+        let layoutManager = NSLayoutManager()
+        layoutManager.addTextContainer(container)
+        storage.addLayoutManager(layoutManager)
+        layoutManager.ensureLayout(for: container)
+        // Lo storage deve vivere quanto il layout manager, che lo tiene solo debolmente.
+        objc_setAssociatedObject(layoutManager, &storageKey, storage, .OBJC_ASSOCIATION_RETAIN)
+        return (layoutManager, container, font)
+    }
+
+    /// Testo tagliato a `maxLines` righe con «…», alla larghezza e al corpo attuali.
+    static func fitted(_ string: String) -> String {
+        let (layoutManager, _, _) = layout(string)
+        var lines = 0
+        var cut: Int?
+        var glyph = 0
+        let glyphCount = layoutManager.numberOfGlyphs
+        while glyph < glyphCount {
+            var lineRange = NSRange()
+            layoutManager.lineFragmentRect(forGlyphAt: glyph, effectiveRange: &lineRange)
+            lines += 1
+            if lines == maxLines {
+                cut = layoutManager.characterRange(forGlyphRange: lineRange, actualGlyphRange: nil).upperBound
+            }
+            if lines > maxLines { break }
+            glyph = NSMaxRange(lineRange)
+        }
+        guard lines > maxLines, let cut else { return string }
+        var prefix = String((string as NSString).substring(to: cut))
+        // Spazio per «…» sull'ultima riga: toglie l'ultima parola, poi gli spazi.
+        if let space = prefix.trimmingCharacters(in: .whitespacesAndNewlines).lastIndex(where: \.isWhitespace) {
+            prefix = String(prefix[..<space])
+        }
+        return prefix.trimmingCharacters(in: .whitespacesAndNewlines) + "…"
     }
 
     var height: CGFloat {

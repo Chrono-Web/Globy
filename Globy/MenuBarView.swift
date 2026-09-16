@@ -165,7 +165,7 @@ private struct VoxRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text(record.listText)
+            Text(VoxText.readable(record.listText))
                 .lineLimit(3)
                 .fixedSize(horizontal: false, vertical: true)
                 .font(.system(size: 13))

@@ -63,7 +63,7 @@ final class MascotWindowController {
             } else if model.reading == nil {
                 dismiss()
             } else {
-                scheduleHide(after: ReadingPolicy.linger(forText: current?.text ?? ""))
+                scheduleHide(after: ReadingPolicy.linger(forText: VoxLayout.fitted(current?.text ?? "")))
             }
         }
     }
@@ -201,7 +201,7 @@ final class MascotWindowController {
             cancelHide()
         } else {
             // A una domanda si lascia più tempo per rispondere.
-            scheduleHide(after: readingDone + (greetingAsksChoice ? Self.choiceLinger : ReadingPolicy.linger(forText: greeting.text)))
+            scheduleHide(after: readingDone + (greetingAsksChoice ? Self.choiceLinger : ReadingPolicy.linger(forText: VoxLayout.fitted(greeting.text))))
         }
     }
 
@@ -318,7 +318,7 @@ final class MascotWindowController {
         if permanence {
             cancelHide()
         } else {
-            scheduleHide(after: readingDone + ReadingPolicy.linger(forText: vox.text))
+            scheduleHide(after: readingDone + ReadingPolicy.linger(forText: VoxLayout.fitted(vox.text)))
         }
     }
 
