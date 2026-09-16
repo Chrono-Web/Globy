@@ -1,0 +1,46 @@
+name: Proposta
+description: Proponi un comportamento o un miglioramento
+title: "[Proposta] "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema
+      description: Quale bisogno concreto non è coperto?
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Esito desiderato
+      description: Descrivi il comportamento, non soltanto l'implementazione preferita.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative considerate
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area prevalente
+      options:
+        - Prodotto
+        - Sincronizzazione
+        - Menu bar
+        - Mascotte
+        - Notifiche
+        - Accessibilità
+        - Distribuzione
+        - Documentazione
+    validations:
+      required: true
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Perimetro
+      options:
+        - label: Ho controllato `docs/PRODOTTO.md` e `docs/ROADMAP.md`.
+          required: true
