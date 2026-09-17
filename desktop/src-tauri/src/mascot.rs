@@ -161,22 +161,22 @@ pub struct Screen {
     pub platform: Platform,
 }
 
+/// Prima chiamata della pagina: schermo, vetro e sistema.
 #[tauri::command]
-pub fn mascot_ready(app: AppHandle) -> Screen {
+pub fn mascot_environment(app: AppHandle) -> Screen {
+    let glass = app.get_webview_window(LABEL).is_some_and(|w| apply_surface(&w));
+    Screen { work_area: work_area(&app), glass, platform: Platform::current() }
+}
+
+/// La pagina ascolta: consegna le richieste arrivate prima.
+#[tauri::command]
+pub fn mascot_ready(app: AppHandle) {
     let bridge = app.state::<MascotBridge>();
     bridge.ready.store(true, Ordering::Relaxed);
-    let glass = app.get_webview_window(LABEL).is_some_and(|w| apply_surface(&w));
-    let screen = Screen { work_area: work_area(&app), glass, platform: Platform::current() };
     let pending: Vec<MascotRequest> = std::mem::take(&mut *bridge.pending.lock().unwrap());
-    let handle = app.clone();
-    // Dopo la risposta: la pagina deve prima conoscere lo schermo.
-    tauri::async_runtime::spawn(async move {
-        tokio::time::sleep(Duration::from_millis(50)).await;
-        for request in pending {
-            let _ = handle.emit_to(LABEL, "mascot-request", request);
-        }
-    });
-    screen
+    for request in pending {
+        let _ = app.emit_to(LABEL, "mascot-request", request);
+    }
 }
 
 #[tauri::command]

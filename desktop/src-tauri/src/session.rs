@@ -173,6 +173,17 @@ impl Session {
         let session = Arc::clone(self);
         tauri::async_runtime::spawn(async move { session.wake_watch().await });
 
+        // Solo sviluppo: `GLOBY_SIMULATE_VOX=N` pubblica N VOX sulla fixture dopo l'avvio.
+        if cfg!(debug_assertions) {
+            if let Some(count) = std::env::var("GLOBY_SIMULATE_VOX").ok().and_then(|v| v.parse::<usize>().ok()) {
+                let session = Arc::clone(self);
+                tauri::async_runtime::spawn(async move {
+                    tokio::time::sleep(Duration::from_secs(4)).await;
+                    session.simulate_publication(count).await;
+                });
+            }
+        }
+
         let session = Arc::clone(self);
         tauri::async_runtime::spawn(async move {
             if session.preferences().did_greet {

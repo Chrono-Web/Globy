@@ -6,7 +6,13 @@
     <title>Globy</title>
   </head>
   <body>
-    <canvas id="stage"></canvas>
+    <div id="root">
+      <div id="globe" class="out" aria-label="Globy">
+        <canvas id="globe-body"></canvas>
+        <canvas id="globe-features"></canvas>
+        <canvas id="globe-sheen"></canvas>
+      </div>
+    </div>
     <script type="module" src="/src/mascot/main.ts"></script>
   </body>
 </html>

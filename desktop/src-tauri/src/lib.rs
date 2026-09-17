@@ -18,7 +18,17 @@ pub fn run() {
     let app = tauri::Builder::default()
         // Una sola copia di Globy: due globi e due sincronizzazioni si pesterebbero i piedi.
         // Riaprirlo mostra l'elenco dei VOX.
-        .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
+        .plugin(tauri_plugin_single_instance::init(|app, args, _cwd| {
+            // Solo sviluppo: `globy --simulate-vox N` sulla copia già aperta pubblica N VOX.
+            if cfg!(debug_assertions) {
+                if let Some(count) = args.iter().position(|a| a == "--simulate-vox").and_then(|i| args.get(i + 1)) {
+                    if let (Ok(count), Some(session)) = (count.parse(), app.try_state::<Arc<session::Session>>()) {
+                        let session = Arc::clone(&session);
+                        tauri::async_runtime::spawn(async move { session.simulate_publication(count).await });
+                        return;
+                    }
+                }
+            }
             windows::show_menu(app, None);
         }))
         .plugin(tauri_plugin_autostart::init(MacosLauncher::LaunchAgent, None))
@@ -39,6 +49,7 @@ pub fn run() {
             commands::show_settings,
             commands::hide_menu,
             commands::quit,
+            mascot::mascot_environment,
             mascot::mascot_ready,
             mascot::mascot_screen,
             mascot::mascot_layout,

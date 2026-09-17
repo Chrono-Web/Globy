@@ -62,7 +62,6 @@ export const commands = {
   showSettings: () => invoke("show_settings"),
   hideMenu: () => invoke("hide_menu"),
   quit: () => invoke("quit"),
-  mascotReady: () => invoke("mascot_ready"),
   hasGlass: () => invoke<boolean>("has_glass"),
   simulatePublication: (count: number) => invoke("simulate_publication", { count }),
 };
