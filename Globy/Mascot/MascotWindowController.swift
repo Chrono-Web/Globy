@@ -5,8 +5,8 @@ import SwiftUI
 /// Finestra trasparente, non attivante, presente su tutti gli Space e sopra il fullscreen.
 @MainActor
 final class MascotWindowController {
-    static let globeArea = MascotLayout.globeArea
-    static let globeDrawn = MascotLayout.globeDrawn
+    static var globeArea: CGSize { MascotLayout.globeArea }
+    static var globeDrawn: CGFloat { MascotLayout.globeDrawn }
     static let margin = MascotLayout.margin
     /// Quanto resta una domanda «Sì / No» dopo la lettura, se nessuno risponde.
     static let choiceLinger: TimeInterval = 20
@@ -179,6 +179,7 @@ final class MascotWindowController {
     /// Preferenze di dimensione cambiate: fumetto e pulsanti si adattano subito.
     func metricsDidChange() {
         model.refreshLayout()
+        if model.phase != .hidden { applyLayout() }
         syncCornerButtons()
     }
 

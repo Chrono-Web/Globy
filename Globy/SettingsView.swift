@@ -4,6 +4,7 @@ struct SettingsView: View {
     @ObservedObject var session: AppSession
     @ObservedObject private var preferences: PreferenceStore
     @State private var confirmReset = false
+    @State private var confirmSystemNotifications = false
 
     init(session: AppSession) {
         self.session = session
@@ -12,13 +13,25 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
-            Section("Mascotte") {
-                Toggle("Mostra la mascotte", isOn: $preferences.mascotEnabled)
-                Toggle("Permanenza del globo", isOn: $preferences.permanence)
+            Section {
+                Toggle("Mostra sempre Globy", isOn: $preferences.permanence)
+                    .disabled(!preferences.mascotEnabled)
+                Toggle("Apri Globy al login", isOn: launchAtLoginBinding)
                 Toggle("Suono", isOn: $preferences.mascotSoundEnabled)
+                    .disabled(!preferences.mascotEnabled)
+            } header: {
+                Text("Globy")
+            } footer: {
+                if !preferences.mascotEnabled {
+                    footnote("Globy è spento mentre sono attive le notifiche di sistema.")
+                }
             }
             Section {
                 Toggle("Dimensioni personalizzate", isOn: $preferences.customSizesEnabled)
+                LabeledContent("Globy") {
+                    scaleSlider($preferences.globeScale, range: MascotMetrics.globeRange)
+                }
+                .disabled(!preferences.customSizesEnabled)
                 LabeledContent("Testo") {
                     scaleSlider($preferences.textScale, range: MascotMetrics.textRange)
                 }
@@ -29,29 +42,29 @@ struct SettingsView: View {
                 .disabled(!preferences.customSizesEnabled)
                 LabeledContent("") {
                     Button("Ripristina standard") {
+                        preferences.globeScale = 1
                         preferences.textScale = 1
                         preferences.buttonScale = 1
                     }
-                    .disabled(!preferences.customSizesEnabled || (preferences.textScale == 1 && preferences.buttonScale == 1))
+                    .disabled(!preferences.customSizesEnabled || isStandardSize)
                 }
             } header: {
                 Text("Dimensioni")
             } footer: {
-                Text("Mentre le Preferenze sono aperte Globy mostra un’anteprima in basso a destra. Se spegni le dimensioni personalizzate i valori restano salvati.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                footnote("Mentre le Preferenze sono aperte Globy mostra un’anteprima in basso a destra. Se spegni le dimensioni personalizzate i valori restano salvati.")
             }
+            .disabled(!preferences.mascotEnabled)
             Section {
-                Toggle("Pausa temporanea", isOn: $preferences.notificationsPaused)
+                Toggle("Notifiche di sistema", isOn: systemNotificationsBinding)
             } header: {
                 Text("Notifiche")
             } footer: {
-                Text("Senza suono. Un permesso negato non è un errore: i VOX restano nel menu.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            Section("Avvio") {
-                Toggle("Apri Globy al login", isOn: launchAtLoginBinding)
+                VStack(alignment: .leading, spacing: 4) {
+                    footnote("Al posto di Globy, i nuovi VOX arrivano come notifiche del Mac, senza suono.")
+                    if let note = session.notificationStatusNote {
+                        footnote(note)
+                    }
+                }
             }
             Section {
                 LabeledContent("Dati locali") {
@@ -62,14 +75,20 @@ struct SettingsView: View {
             } header: {
                 Text("Dati")
             } footer: {
-                Text("I contenuti stanno in un file JSON in Application Support. Azzerare cancella store e preferenze, non il permesso di sistema.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                footnote("I contenuti stanno in un file JSON in Application Support. Azzerare cancella store e preferenze, non il permesso di sistema.")
             }
         }
         .formStyle(.grouped)
         .toggleStyle(.switch)
         .frame(width: 460, height: 680)
+        .alert("Passare alle notifiche di sistema?", isPresented: $confirmSystemNotifications) {
+            Button("Annulla", role: .cancel) {}
+            Button("Attiva") {
+                Task { await session.enableSystemNotifications() }
+            }
+        } message: {
+            Text("Attivando le notifiche di sistema, disattiverai la visualizzazione di Globy. I nuovi VOX arriveranno come notifiche del Mac.")
+        }
         .alert("Azzerare i dati locali?", isPresented: $confirmReset) {
             Button("Annulla", role: .cancel) {}
             Button("Azzera", role: .destructive) {
@@ -95,6 +114,31 @@ struct SettingsView: View {
                 .foregroundStyle(.secondary)
                 .frame(width: 42, alignment: .trailing)
         }
+    }
+
+    private var isStandardSize: Bool {
+        preferences.globeScale == 1 && preferences.textScale == 1 && preferences.buttonScale == 1
+    }
+
+    /// Accendere chiede conferma (spegne Globy); spegnere riporta Globy subito.
+    private var systemNotificationsBinding: Binding<Bool> {
+        Binding(
+            get: { !preferences.mascotEnabled },
+            set: { on in
+                if on {
+                    confirmSystemNotifications = true
+                } else {
+                    session.disableSystemNotifications()
+                }
+            }
+        )
+    }
+
+    private func footnote(_ text: String) -> some View {
+        Text(text)
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
     }
 
     private var launchAtLoginBinding: Binding<Bool> {

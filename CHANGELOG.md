@@ -23,7 +23,9 @@ versionamento pubblico.
 - L'archivio del primo avvio non conta più tra i non letti.
 - Fumetto, menu e banner mostrano i VOX senza fonti e link, con il testo intero
   (limite di sicurezza a 16 righe).
-- Onboarding raccontato dal globo in tre fumetti: barra dei menu, Preferenze, notifiche.
+- Onboarding raccontato da Globy: presentazione, menu, Preferenze, poi i 5 VOX recenti.
+- Preferenze riorganizzate: sezione Globy (mostra sempre, login, suono), grandezza di
+  Globy tra le dimensioni, «Notifiche di sistema» come modalità al posto di Globy.
 - Checklist di collaudo della fase 3 in `docs/COLLAUDO_FASE3.md`.
 - Controllo periodico ogni 5 minuti mentre il Mac è acceso, con backoff sugli errori
   e sync immediata al ritorno della rete.

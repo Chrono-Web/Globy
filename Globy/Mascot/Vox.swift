@@ -23,7 +23,7 @@ struct Vox: Equatable {
 
     /// Saluto di primo avvio: non è un VOX e non nasce dalla sincronizzazione.
     static let greeting = Vox(
-        text: "Ciao, sono Globy, la mascotte di Chronocol. Quando esce un nuovo VOX vengo un attimo qui, in basso a destra.",
+        text: "Ciao, sono Globy! Ti porto i VOX di Chronocol: quando ne esce uno nuovo vengo un attimo qui, in basso a destra.",
         permalink: URL(string: "https://chronocol.com/it")!,
         kind: .greeting
     )

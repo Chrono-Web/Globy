@@ -92,7 +92,10 @@ final class AppSession: ObservableObject {
         }.store(in: &cancellables)
         preferences.$mascotEnabled.sink { [weak self] enabled in
             guard let self else { return }
-            if !enabled { self.mascot.dismissAll() }
+            if !enabled {
+                self.mascot.hidePreview()
+                self.mascot.dismissAll()
+            }
         }.store(in: &cancellables)
         preferences.$permanence.sink { [weak self] value in
             self?.mascot.permanence = value
@@ -100,10 +103,12 @@ final class AppSession: ObservableObject {
         preferences.$mascotSoundEnabled.sink { [weak self] value in
             self?.mascot.soundEnabled = value
         }.store(in: &cancellables)
-        Publishers.CombineLatest3(preferences.$customSizesEnabled, preferences.$textScale, preferences.$buttonScale)
-            .sink { [weak self] custom, text, buttons in
+        Publishers.CombineLatest4(preferences.$customSizesEnabled, preferences.$textScale,
+                                  preferences.$buttonScale, preferences.$globeScale)
+            .sink { [weak self] custom, text, buttons, globe in
                 MascotMetrics.textScale = custom ? text : 1
                 MascotMetrics.buttonScale = custom ? buttons : 1
+                MascotMetrics.globeScale = custom ? globe : 1
                 self?.mascot.metricsDidChange()
             }
             .store(in: &cancellables)
@@ -171,14 +176,25 @@ final class AppSession: ObservableObject {
         }
     }
 
-    func finishOnboarding(requestNotifications: Bool) async {
+    func finishOnboarding() {
         preferences.didOnboard = true
-        if requestNotifications {
-            let status = await notifications.requestAfterExplanation()
-            notificationStatusNote = status == .denied
-                ? "Permesso negato. Puoi cambiarlo in Impostazioni di sistema › Notifiche."
-                : nil
+    }
+
+    /// Modalità «notifiche di sistema»: chiede il permesso e, se concesso, spegne Globy.
+    /// Con il permesso negato Globy resta com'era.
+    func enableSystemNotifications() async {
+        let status = await notifications.requestAfterExplanation()
+        if status == .denied || status == .notDetermined {
+            notificationStatusNote = "Il Mac non permette a Globy di mandare notifiche: puoi consentirlo in Impostazioni di Sistema › Notifiche › Globy."
+            return
         }
+        notificationStatusNote = nil
+        preferences.mascotEnabled = false
+    }
+
+    func disableSystemNotifications() {
+        notificationStatusNote = nil
+        preferences.mascotEnabled = true
     }
 
     func setLaunchAtLogin(_ on: Bool) {
@@ -330,18 +346,16 @@ final class AppSession: ObservableObject {
 
     private func presentOnboarding(latest: [Vox]) {
         let steps = WelcomePolicy.onboarding
-        mascot.presentGreeting(.welcome(WelcomePolicy.introduction), followingSteps: 3) { [weak self] outcome in
+        let hasOffer = WelcomePolicy.tourOffer(latestCount: latest.count) != nil
+        mascot.presentGreeting(.welcome(WelcomePolicy.introduction), followingSteps: hasOffer ? 3 : 2) { [weak self] outcome in
             guard outcome == .accepted, let self else { return }
-            self.mascot.presentGreeting(.welcome(steps[0]), followingSteps: 2) { [weak self] outcome in
+            self.mascot.presentGreeting(.welcome(steps[0]), followingSteps: hasOffer ? 2 : 1) { [weak self] outcome in
                 guard outcome == .accepted, let self else { return }
-                self.mascot.presentGreeting(.welcome(steps[1]), followingSteps: 1) { [weak self] outcome in
-                    guard outcome == .accepted, let self else { return }
-                    let question = Vox.welcome(steps[2], asksChoice: true, yesTitle: "Sì, attivale", noTitle: "No, grazie")
-                    self.mascot.presentGreeting(question) { [weak self] outcome in
-                        guard outcome != .timedOut, let self else { return }
-                        Task { await self.finishOnboarding(requestNotifications: outcome == .accepted) }
-                        self.offerTour(latest)
-                    }
+                self.mascot.presentGreeting(.welcome(steps[1]), followingSteps: hasOffer ? 1 : 0) { [weak self] outcome in
+                    guard outcome != .timedOut, let self else { return }
+                    // Letto fino alle Preferenze (freccia o X): l'onboarding è concluso.
+                    self.finishOnboarding()
+                    if outcome == .accepted { self.offerTour(latest) }
                 }
             }
         }
@@ -356,7 +370,8 @@ final class AppSession: ObservableObject {
         let plan = PresentationPolicy.plan(
             report: report,
             mascotEnabled: preferences.mascotEnabled,
-            notificationsPaused: preferences.notificationsPaused
+            // Globy o notifiche di sistema, mai entrambi.
+            notificationsPaused: preferences.mascotEnabled
         )
         let mascotRecords = plan.mascotDocumentIds.compactMap { id in records.first { $0.documentId == id } }
         if welcome, report.cause != .firstLaunch, preferences.mascotEnabled {

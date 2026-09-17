@@ -328,7 +328,7 @@ struct MascotView: View {
             }
             GlobeSheen()
         }
-        .frame(width: 116, height: 116)
+        .frame(width: MascotLayout.globeDrawn, height: MascotLayout.globeDrawn)
         .frame(width: MascotLayout.globeArea.width, height: MascotLayout.globeArea.height)
         .opacity(visible ? 1 : 0)
         .scaleEffect(reduceMotion || visible ? 1 : 0.72, anchor: .center)

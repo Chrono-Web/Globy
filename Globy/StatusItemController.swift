@@ -39,6 +39,14 @@ final class StatusItemController: NSObject {
                 }
             }
             .store(in: &cancellables)
+        // Tornando da «notifiche di sistema» con le Preferenze aperte, torna l'anteprima.
+        session.preferences.$mascotEnabled
+            .dropFirst()
+            .sink { [weak self] enabled in
+                guard let self, enabled, self.prefs?.isVisible == true else { return }
+                DispatchQueue.main.async { self.session.mascot.showPreview() }
+            }
+            .store(in: &cancellables)
     }
 
     @objc func togglePopover(_ sender: Any?) {

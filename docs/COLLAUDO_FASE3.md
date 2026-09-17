@@ -37,9 +37,8 @@ Segna ogni riga con ✅, ❌ (con una nota su cosa è successo) o «non provato�
 ## 1. Primo avvio
 
 - [ ] Compare il globo nella barra dei menu; nessuna icona nel Dock.
-- [ ] Dopo pochi secondi il globo in basso a destra si presenta; la freccia (numerino 3)
-      porta a: barra dei menu e menu, Preferenze, domanda «Le attivo?» sulle notifiche.
-- [ ] «Sì, attivale» mostra la richiesta di sistema; «No, grazie» va avanti senza.
+- [ ] Dopo pochi secondi Globy si presenta in basso a destra; la freccia (numerino 3)
+      porta a: barra dei menu e menu, poi Preferenze.
 - [ ] Per ultimo chiede «Partiamo con gli ultimi 5 VOX pubblicati?».
 - [ ] «Sì, partiamo»: passano 5 VOX veri, intestazione «VOX recente · già uscito»,
       frecce con numerini, nessun banner di sistema.
@@ -54,10 +53,8 @@ Segna ogni riga con ✅, ❌ (con una nota su cosa è successo) o «non provato�
 
 - [ ] Clic sul globo: pannello in vetro con angoli arrotondati, nessun bordo squadrato.
 - [ ] Al primo avvio l'intestazione dice «Nessun VOX non letto»: l'archivio non conta.
-- [ ] Se l'onboarding del globo è stato chiuso con la X, «Due cose, poi basta» resta in
-      cima al menu; «Non ora» lo chiude.
-- [ ] (Da zero) «Consenti notifiche»: compare la richiesta di sistema; negarla mostra la
-      nota, il menu continua a funzionare.
+- [ ] Se l'onboarding di Globy è stato chiuso con la X prima delle Preferenze, «Due cose,
+      poi basta» resta in cima al menu; «Ho capito» lo chiude.
 - [ ] L'elenco scorre; intestazione, Preferenze ed Esci restano visibili.
 - [ ] Clic su un VOX: apre il browser e il menu si chiude.
 - [ ] Clic fuori dal pannello o Esc: il pannello si chiude.
@@ -68,8 +65,8 @@ Segna ogni riga con ✅, ❌ (con una nota su cosa è successo) o «non provato�
 Richiede una pubblicazione reale su Chronocol mentre Globy è acceso. Il controllo
 periodico passa ogni 5 minuti circa.
 
-- [ ] Entro ~5 minuti dalla pubblicazione il globo compare con «Nuovo VOX».
-- [ ] Banner di sistema senza suono, se il permesso è concesso e la pausa è spenta.
+- [ ] Entro ~5 minuti dalla pubblicazione Globy compare con «Nuovo VOX», senza
+      notifica del Mac.
 - [ ] Il menu mostra «1 VOX non letto» e l'etichetta «Non letto · Notificato».
 - [ ] Aperto il VOX dal menu, diventa «Letto» e il conteggio scende.
 - [ ] Il fumetto resta più o meno il tempo di leggerlo, poi il globo esce da solo.
@@ -97,15 +94,18 @@ periodico passa ogni 5 minuti circa.
 ## 6. Preferenze
 
 - [ ] Menu › Preferenze…: finestra normale con barra del titolo; Globy compare nel Dock
-      e in ⌘Tab finché è aperta, poi sparisce di nuovo.
+      e in ⌘Tab finché è aperta, poi sparisce di nuovo. Nessuna parola «mascotte».
 - [ ] Mentre è aperta, in basso a destra c'è il fumetto «Anteprima».
-- [ ] «Dimensioni personalizzate» acceso: i cursori Testo e Pulsanti cambiano subito
-      fumetto, X e frecce; il testo non viene mai tagliato né tocca le frecce.
+- [ ] «Dimensioni personalizzate» acceso: i cursori Globy, Testo e Pulsanti cambiano
+      subito globo, fumetto, X e frecce; il testo non viene mai tagliato né tocca le frecce.
 - [ ] Spento: tornano le dimensioni standard; riacceso, tornano quelle scelte.
-- [ ] «Mostra la mascotte» spento: niente globo, niente anteprima; il menu si aggiorna.
-- [ ] «Permanenza del globo»: il globo resta; la X chiude solo il fumetto.
+- [ ] «Mostra sempre Globy»: Globy resta a schermo; la X chiude solo il fumetto.
 - [ ] «Suono» spento: nessun suono all'arrivo.
-- [ ] «Pausa temporanea»: nessun banner, il globo compare comunque.
+- [ ] «Notifiche di sistema» acceso: avviso di conferma, poi richiesta di permesso del
+      Mac; Globy e l'anteprima spariscono, le sezioni Globy e Dimensioni si disattivano.
+- [ ] Con le notifiche di sistema, un nuovo VOX arriva come notifica del Mac e Globy
+      non compare. Permesso negato: Globy resta acceso e c'è una nota.
+- [ ] Spento di nuovo: Globy e l'anteprima tornano.
 - [ ] «Apri Globy al login» acceso, poi logout e login: Globy parte da solo e saluta.
 - [ ] «Azzera…» e conferma: menu vuoto, poi nuova baseline e presentazione da capo.
 

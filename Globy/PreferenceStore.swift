@@ -5,6 +5,8 @@ import Foundation
 final class PreferenceStore: ObservableObject {
     private let defaults: UserDefaults
 
+    /// Globy a schermo. Spento vuol dire modalità «notifiche di sistema»: i nuovi VOX
+    /// arrivano come notifiche del Mac al posto del globo.
     @Published var mascotEnabled: Bool {
         didSet { defaults.set(mascotEnabled, forKey: Keys.mascotEnabled) }
     }
@@ -15,10 +17,6 @@ final class PreferenceStore: ObservableObject {
 
     @Published var mascotSoundEnabled: Bool {
         didSet { defaults.set(mascotSoundEnabled, forKey: Keys.mascotSound) }
-    }
-
-    @Published var notificationsPaused: Bool {
-        didSet { defaults.set(notificationsPaused, forKey: Keys.notificationsPaused) }
     }
 
     /// Il saluto della mascotte è già comparso una volta.
@@ -44,6 +42,10 @@ final class PreferenceStore: ObservableObject {
         didSet { defaults.set(buttonScale, forKey: Keys.buttonScale) }
     }
 
+    @Published var globeScale: Double {
+        didSet { defaults.set(globeScale, forKey: Keys.globeScale) }
+    }
+
     /// Ultimo saluto di rientro, anche tra un avvio e l'altro: riavvii ravvicinati non
     /// devono ripetere «Heilà» se non c'è niente di nuovo.
     var lastWelcomeAt: Date? {
@@ -56,12 +58,12 @@ final class PreferenceStore: ObservableObject {
         mascotEnabled = defaults.object(forKey: Keys.mascotEnabled) as? Bool ?? true
         permanence = defaults.bool(forKey: Keys.permanence)
         mascotSoundEnabled = defaults.object(forKey: Keys.mascotSound) as? Bool ?? true
-        notificationsPaused = defaults.bool(forKey: Keys.notificationsPaused)
         didGreet = defaults.bool(forKey: Keys.didGreet)
         didOnboard = defaults.bool(forKey: Keys.didOnboard)
         customSizesEnabled = defaults.bool(forKey: Keys.customSizes)
         textScale = defaults.object(forKey: Keys.textScale) as? Double ?? 1
         buttonScale = defaults.object(forKey: Keys.buttonScale) as? Double ?? 1
+        globeScale = defaults.object(forKey: Keys.globeScale) as? Double ?? 1
     }
 
     func reset() {
@@ -69,26 +71,26 @@ final class PreferenceStore: ObservableObject {
         mascotEnabled = true
         permanence = false
         mascotSoundEnabled = true
-        notificationsPaused = false
         didGreet = false
         didOnboard = false
         customSizesEnabled = false
         textScale = 1
         buttonScale = 1
+        globeScale = 1
     }
 
     private enum Keys {
         static let mascotEnabled = "mascotEnabled"
         static let permanence = "permanence"
         static let mascotSound = "mascotSoundEnabled"
-        static let notificationsPaused = "notificationsPaused"
         static let didGreet = "didGreet"
         static let didOnboard = "didOnboard"
         static let customSizes = "customSizesEnabled"
         static let textScale = "textScale"
         static let buttonScale = "buttonScale"
+        static let globeScale = "globeScale"
         static let lastWelcomeAt = "lastWelcomeAt"
-        static let all = [mascotEnabled, permanence, mascotSound, notificationsPaused, didGreet, didOnboard,
-                          customSizes, textScale, buttonScale, lastWelcomeAt]
+        static let all = [mascotEnabled, permanence, mascotSound, didGreet, didOnboard,
+                          customSizes, textScale, buttonScale, globeScale, lastWelcomeAt]
     }
 }

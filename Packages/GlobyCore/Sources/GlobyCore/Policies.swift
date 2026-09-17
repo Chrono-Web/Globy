@@ -84,19 +84,18 @@ public enum PresentationPolicy {
 /// Saluto di rientro: all'avvio e al risveglio il globo dice sempre com'è andata.
 /// Il numero viene dalla sincronizzazione appena conclusa, mai da un segnale SSE.
 public enum WelcomePolicy {
-    /// Onboarding raccontato dal globo dopo la presentazione: menu, Preferenze, notifiche.
-    /// L'ultimo passo è una domanda: il permesso di sistema si chiede solo dopo il «Sì».
+    /// Onboarding raccontato da Globy dopo la presentazione: menu e Preferenze.
+    /// Il permesso notifiche si chiede solo attivando la modalità nelle Preferenze.
     public static let onboarding = [
         "Quando non ci sono io, mi trovi in alto nella barra dei menu: è il globo. Con un clic vedi gli ultimi VOX, e in evidenza quelli nuovi che non hai ancora letto.",
-        "Nello stesso menu ci sono le Preferenze: puoi spegnermi, togliermi il suono, tenermi sempre a schermo o ingrandire testo e pulsanti.",
-        "Ultima cosa: quando esce un nuovo VOX posso mandarti anche una notifica di sistema, senza suono. Le attivo?",
+        "Nello stesso menu ci sono le Preferenze: puoi tenermi sempre a schermo, togliermi il suono, cambiare le dimensioni o passare alle notifiche di sistema al posto mio.",
     ]
 
     /// Quanti VOX recenti il globo propone di mostrare al primo avvio.
     public static let tourSize = 5
 
     /// Primo fumetto del primo avvio: chi è Globy. Poi vengono i passi di `onboarding`.
-    public static let introduction = "Ciao, sono Globy, la mascotte di Chronocol. Quando esce un nuovo VOX vengo un attimo qui, in basso a destra. Ti spiego in breve come funziono."
+    public static let introduction = "Ciao, sono Globy! Ti porto i VOX di Chronocol: quando ne esce uno nuovo vengo un attimo qui, in basso a destra. Ti spiego in breve come funziono."
 
     /// Chiusura dell'onboarding: propone i VOX recenti. `nil` se non ce ne sono.
     public static func tourOffer(latestCount: Int) -> String? {

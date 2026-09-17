@@ -87,24 +87,14 @@ struct MenuBarView: View {
                 .font(.callout)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
-            Text("Qui sotto ci sono le Preferenze (mascotte, suono, dimensioni). Se vuoi, Globy può avvisarti anche con una notifica di sistema senza suono: negarla non è un errore.")
+            Text("Nelle Preferenze puoi tenere Globy sempre a schermo, togliere il suono, cambiare le dimensioni o passare alle notifiche di sistema al posto di Globy.")
                 .font(.callout)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
-            if let note = session.notificationStatusNote {
-                Text(note)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+            Button("Ho capito") {
+                session.finishOnboarding()
             }
-            HStack {
-                Button("Non ora") {
-                    Task { await session.finishOnboarding(requestNotifications: false) }
-                }
-                Button("Consenti notifiche") {
-                    Task { await session.finishOnboarding(requestNotifications: true) }
-                }
-                .keyboardShortcut(.defaultAction)
-            }
+            .keyboardShortcut(.defaultAction)
         }
         .padding(10)
     }

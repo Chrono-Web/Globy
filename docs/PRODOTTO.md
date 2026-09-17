@@ -38,7 +38,8 @@ lettura completa.
    non letto vuol dire arrivato dopo la baseline e mai aperto.
 4. Quando una nuova pubblicazione è stata verificata, il piccolo globo compare in basso
    a destra, richiama brevemente l'attenzione e si nasconde automaticamente.
-5. Globy può mostrare anche una notifica locale, secondo permessi e preferenze.
+5. In alternativa a Globy, la modalità «Notifiche di sistema» delle Preferenze manda
+   una notifica del Mac senza suono al posto del globo: mai entrambi.
 6. Un clic su un VOX apre il permalink pubblico nel browser predefinito.
 7. Dopo rete assente, stop o riavvio, Globy recupera lo stato senza una raffica di
    notifiche.
@@ -112,18 +113,19 @@ resta una sola apparizione, dopo la baseline, poi tre fatti in un fumetto o in u
 breve:
 
 1. Globy legge i VOX pubblici di Chronocol;
-2. non notifica l'archivio; chiede il permesso notifiche solo dopo questa spiegazione;
+2. non notifica l'archivio; il permesso notifiche si chiede solo attivando la modalità
+   «Notifiche di sistema» nelle Preferenze;
 3. per chiudere l'onboarding (punto 4) il globo chiede «Partiamo con gli ultimi 5 VOX pubblicati?» con
    «Sì, partiamo» e «No, grazie». Solo con «Sì» il globo li mostra in coda, dal più
    recente, con l'etichetta «VOX recente · già uscito»: non sono notifiche, non
    segnano `notifiedAt` e non producono banner. «No», la X o nessuna risposta entro
    circa 20 s chiudono la presentazione. Se la baseline è vuota la domanda non c'è.
 4. ordine dei fumetti, avanzando con la freccia: presentazione di Globy; dove
-   trovarlo nella barra dei menu e cosa c'è nel menu; le Preferenze; «Le attivo?»
-   sulle notifiche («Sì, attivale» chiede il permesso di sistema); infine la
-   proposta dei VOX recenti del punto 3. Se un fumetto viene ignorato o chiuso con
-   la X la sequenza si ferma, e la spiegazione resta in cima al menu finché non si
-   sceglie sulle notifiche.
+   trovarlo nella barra dei menu e cosa c'è nel menu; le Preferenze (compresa la
+   modalità notifiche di sistema); infine la proposta dei VOX recenti del punto 3.
+   Arrivati alle Preferenze l'onboarding è concluso. Se un fumetto prima viene
+   ignorato o chiuso con la X la sequenza si ferma, e la spiegazione resta in cima al
+   menu finché non si preme «Ho capito».
 
 Niente wizard a più schermate. Il permesso negato non è un errore: casa
 `docs/TRAPPOLE.md` e `docs/PRIVACY.md`.
@@ -132,15 +134,18 @@ Niente wizard a più schermate. Il permesso negato non è un errore: casa
 
 Prima versione:
 
-- mascotte accesa o spenta (la sincronizzazione continua);
-- permanenza del globo;
-- suono della mascotte;
-- dimensioni personalizzate: interruttore più due cursori, testo del fumetto
-  (85–150%) e pulsanti X e frecce (80–160%). Spento, valgono le dimensioni standard
-  ma i valori scelti restano salvati. Finché le Preferenze sono aperte il globo
-  mostra un fumetto di anteprima con X e frecce finte, che cambia dal vivo;
-- pausa temporanea delle notifiche;
-- avvio al login;
+Nell'interfaccia il nome è sempre Globy: niente «mascotte» né «globo».
+
+- sezione Globy: «Mostra sempre Globy» (permanenza), «Apri Globy al login», «Suono»;
+- dimensioni personalizzate: interruttore più tre cursori, Globy (60–150%), testo
+  del fumetto (85–150%) e pulsanti X e frecce (80–160%). Spento, valgono le
+  dimensioni standard ma i valori scelti restano salvati. Finché le Preferenze sono
+  aperte Globy mostra un fumetto di anteprima con X e frecce finte, che cambia dal
+  vivo;
+- «Notifiche di sistema»: modalità alternativa a Globy. Accenderla chiede conferma
+  («Attivando le notifiche di sistema, disattiverai la visualizzazione di Globy») e
+  il permesso del Mac; con il permesso negato Globy resta attivo e compare una nota.
+  Spegnerla riporta Globy;
 - azzeramento dei dati locali.
 
 Nello spike si possono anche cambiare superficie e click-through; non sono un
@@ -156,7 +161,7 @@ Incluso:
 - conteggio e stato letto/non letto;
 - stato distinto di contenuto già notificato;
 - notifiche locali, inizialmente senza suono;
-- pausa temporanea delle notifiche;
+- modalità notifiche di sistema al posto di Globy;
 - avvio al login facoltativo;
 - recupero dopo interruzioni, limitato ai VOX usciti da `lastSuccessfulSyncAt`;
 - mascotte transitoria in basso a destra e disattivabile;
