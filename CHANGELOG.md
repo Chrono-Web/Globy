@@ -17,19 +17,21 @@ versionamento pubblico.
 - Al primo avvio il globo chiede se mostrare gli ultimi 5 VOX pubblicati («Sì, partiamo»
   / «No, grazie»); la fixture Debug ha 6 VOX per provarlo.
 - Il fumetto resta a schermo in base alla lunghezza del testo, non più 6 s fissi.
-- Preferenze «Dimensioni personalizzate» per testo e pulsanti del fumetto, con
+- Impostazioni «Dimensioni personalizzate» per testo e pulsanti del fumetto, con
   anteprima dal vivo sul globo.
 - La Release legge Chronocol pubblico (solo GET); «Simula…» resta nella Debug.
 - L'archivio del primo avvio non conta più tra i non letti.
 - Fumetto, menu e banner mostrano i VOX senza fonti e link, con il testo intero
   (limite di sicurezza a 16 righe).
-- Onboarding raccontato da Globy: presentazione, menu, Preferenze, poi i 5 VOX recenti.
+- Onboarding raccontato da Globy: presentazione, menu, Impostazioni, poi i 5 VOX recenti.
 - Globy più piccolo di default (70 pt di disco); i VOX in sequenza vanno sempre dal
   più vecchio al più recente.
+- DMG con istruzioni di installazione e disinstallazione (`scripts/crea-dmg.sh`).
+- «Preferenze» diventano «Impostazioni», con «Disinstalla Globy…» in fondo.
 - Una sola copia di Globy alla volta. Fase 3 chiusa dopo il collaudo umano.
-- Clic destro su Globy: «Preferenze…» e «Nascondi Globy». Feedback aptico sui cursori
+- Clic destro su Globy: «Impostazioni…» e «Nascondi Globy». Feedback aptico sui cursori
   delle dimensioni.
-- Preferenze riorganizzate: sezione Globy (mostra sempre, login, suono), grandezza di
+- Impostazioni riorganizzate: sezione Globy (mostra sempre, login, suono), grandezza di
   Globy tra le dimensioni, «Notifiche di sistema» come modalità al posto di Globy.
 - Checklist di collaudo della fase 3 in `docs/COLLAUDO_FASE3.md`.
 - Controllo periodico ogni 5 minuti mentre il Mac è acceso, con backoff sugli errori

@@ -84,11 +84,11 @@ public enum PresentationPolicy {
 /// Saluto di rientro: all'avvio e al risveglio il globo dice sempre com'è andata.
 /// Il numero viene dalla sincronizzazione appena conclusa, mai da un segnale SSE.
 public enum WelcomePolicy {
-    /// Onboarding raccontato da Globy dopo la presentazione: menu e Preferenze.
-    /// Il permesso notifiche si chiede solo attivando la modalità nelle Preferenze.
+    /// Onboarding raccontato da Globy dopo la presentazione: menu e Impostazioni.
+    /// Il permesso notifiche si chiede solo attivando la modalità nelle Impostazioni.
     public static let onboarding = [
         "Quando non ci sono io, mi trovi in alto nella barra dei menu: è il globo. Con un clic vedi gli ultimi VOX, e in evidenza quelli nuovi che non hai ancora letto.",
-        "Nello stesso menu ci sono le Preferenze: puoi tenermi sempre a schermo, togliermi il suono, cambiare le dimensioni o passare alle notifiche di sistema al posto mio.",
+        "Nello stesso menu ci sono le Impostazioni: puoi tenermi sempre a schermo, togliermi il suono, cambiare le dimensioni o passare alle notifiche di sistema al posto mio.",
     ]
 
     /// Quanti VOX recenti il globo propone di mostrare al primo avvio.

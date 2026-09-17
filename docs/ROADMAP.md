@@ -61,13 +61,13 @@ schermo: globo e fumetto non escono dall'area visibile durante lo spostamento.
 - [x] Creare app e target di test.
 - [x] Aggiungere pulsante persistente nella barra dei menu ed elenco recente al clic.
 - [x] Persistenza locale di contenuti, letto e notificato.
-- [x] Primo avvio: presentazione e onboarding raccontati da Globy (menu, Preferenze),
+- [x] Primo avvio: presentazione e onboarding raccontati da Globy (menu, Impostazioni),
       baseline senza raffica, poi «Sì / No» per vedere gli ultimi 5 VOX come recenti.
 - [x] Saluto di rientro a ogni avvio e risveglio, con esito della sincronizzazione
       e freccia verso i VOX nuovi.
 - [x] Controllo periodico a macchina accesa (5 min, jitter, backoff), pausa durante
       lo stop e sync al ritorno della rete.
-- [x] Preferenze: Mostra sempre Globy, login, suono, dimensioni personalizzate (Globy,
+- [x] Impostazioni: Mostra sempre Globy, login, suono, dimensioni personalizzate (Globy,
       testo, pulsanti) con anteprima dal vivo e aptica, azzera dati.
 - [x] Modalità «Notifiche di sistema» senza suono, al posto di Globy.
 - [x] Apertura del permalink nel browser.
@@ -76,7 +76,7 @@ schermo: globo e fumetto non escono dall'area visibile durante lo spostamento.
 
 **Verifica:** il 2026-09-17 `xcodebuild … build` e `test` passano su Xcode 26.6 e il
 collaudo umano sulla Release con Chronocol pubblico (sole GET) ha dato esito positivo
-per primo avvio e onboarding, menu, Globy e Preferenze (`docs/COLLAUDO_FASE3.md`).
+per primo avvio e onboarding, menu, Globy e Impostazioni (`docs/COLLAUDO_FASE3.md`).
 Non provati, e spostati alla fase 4: arrivo di un VOX nuovo reale, notifica di sistema
 per un VOX nuovo, rientro dallo stop e cambio rete. Fase 3 chiusa.
 

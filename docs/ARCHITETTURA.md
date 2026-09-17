@@ -27,7 +27,7 @@ SSE può ridurre la latenza, ma l'assenza dello stream non deve cambiare la corr
 | `EventHintClient` | Ascoltare SSE e chiedere un catch-up | Dichiarare da solo un VOX nuovo |
 | `SyncCoordinator` | Baseline, catch-up, dedupe, retry | Mostrare finestre o notifiche |
 | `ContentStore` | Persistenza di contenuti e versioni osservate | Conoscere SwiftUI |
-| `PreferenceStore` | Preferenze locali | Contenere segreti in chiaro |
+| `PreferenceStore` | Impostazioni locali | Contenere segreti in chiaro |
 | `NotificationCoordinator` | Politiche, permessi e azioni | Dedurre lo stato dalla grafica |
 | `MenuBarFeature` | Elenco, badge e comandi | Chiamare direttamente le API HTTP |
 | `MascotFeature` | Presentare entrata, attesa e uscita del globo | Produrre eventi di dominio |

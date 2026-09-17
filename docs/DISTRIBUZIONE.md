@@ -1,7 +1,7 @@
 # Distribuzione
 
-- Aggiornato: 2026-09-16
-- Stato: canale scelto, pipeline non costruita
+- Aggiornato: 2026-09-17
+- Stato: canale scelto; DMG locale non firmato, pipeline di release non costruita
 - Risponde a: come una build diventa una release installabile e aggiornabile
 
 ## Decisione
@@ -16,6 +16,20 @@ contestuale). Compilare da sorgente resta il percorso senza quel blocco.
 Questa scelta si può sostituire in seguito con Developer ID e notarizzazione, senza
 passare dallo Store. Firma e notarizzazione non costituiscono da sole un sistema di
 aggiornamento: per ora l'aggiornamento è scaricare la release successiva.
+
+## DMG
+
+`scripts/crea-dmg.sh` compila la Release e crea `build/Globy-<versione>.dmg` con:
+
+- `Globy.app`, firmata solo localmente, non notarizzata;
+- un collegamento «Applicazioni» per installare trascinando;
+- `Installa e disinstalla Globy.txt` (sorgente in `scripts/dmg/`): installazione,
+  percorso Gatekeeper «Apri comunque» in Privacy e sicurezza, aggiornamento e
+  disinstallazione.
+
+La disinstallazione normale sta nell'app: Impostazioni › «Disinstalla Globy…» toglie
+l'avvio al login e le notifiche consegnate, cancella dati e impostazioni e sposta l'app
+nel Cestino. Il permesso notifiche resta nelle Impostazioni di Sistema.
 
 ## Requisiti comuni
 

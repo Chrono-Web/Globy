@@ -197,6 +197,35 @@ final class AppSession: ObservableObject {
         preferences.mascotEnabled = true
     }
 
+    /// Disinstalla: toglie l'avvio al login e le notifiche, cancella VOX salvati e
+    /// impostazioni, sposta l'app nel Cestino e chiude. Il permesso notifiche resta nelle
+    /// Impostazioni di Sistema: macOS non lo fa togliere a un'app.
+    func uninstall() {
+        mascot.hideNow()
+        try? LoginItem.setEnabled(false)
+        notifications.removeAll()
+        let support = AppPaths.supportDirectory
+        try? FileManager.default.removeItem(at: support)
+        let parent = support.deletingLastPathComponent()
+        if (try? FileManager.default.contentsOfDirectory(atPath: parent.path))?.isEmpty == true {
+            try? FileManager.default.removeItem(at: parent)
+        }
+        if let domain = Bundle.main.bundleIdentifier {
+            UserDefaults.standard.removePersistentDomain(forName: domain)
+        }
+        NSWorkspace.shared.recycle([Bundle.main.bundleURL]) { _, error in
+            DispatchQueue.main.async {
+                if error != nil {
+                    let alert = NSAlert()
+                    alert.messageText = "Globy è quasi disinstallato"
+                    alert.informativeText = "Dati e impostazioni sono stati cancellati, ma non riesco a spostare l’app nel Cestino. Trascina Globy dalla cartella Applicazioni al Cestino."
+                    alert.runModal()
+                }
+                NSApp.terminate(nil)
+            }
+        }
+    }
+
     func setLaunchAtLogin(_ on: Bool) {
         do {
             try LoginItem.setEnabled(on)
@@ -331,7 +360,7 @@ final class AppSession: ObservableObject {
     }
     #endif
 
-    /// Primo avvio, una volta: presentazione, menu, Preferenze, domanda sulle notifiche e,
+    /// Primo avvio, una volta: presentazione, menu, Impostazioni, domanda sulle notifiche e,
     /// per chiudere, la proposta dei VOX recenti. Si avanza con la freccia; ignorato o chiuso
     /// con la X si ferma, e la spiegazione resta in cima al menu.
     private func presentGreetingIfNeeded() {
@@ -354,7 +383,7 @@ final class AppSession: ObservableObject {
                 guard outcome == .accepted, let self else { return }
                 self.mascot.presentGreeting(.welcome(steps[1]), followingSteps: hasOffer ? 1 : 0) { [weak self] outcome in
                     guard outcome != .timedOut, let self else { return }
-                    // Letto fino alle Preferenze (freccia o X): l'onboarding è concluso.
+                    // Letto fino alle Impostazioni (freccia o X): l'onboarding è concluso.
                     self.finishOnboarding()
                     if outcome == .accepted { self.offerTour(latest) }
                 }

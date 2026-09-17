@@ -46,7 +46,7 @@ struct MenuBarView: View {
             }
             #endif
             menuDivider
-            MenuActionRow(title: "Preferenze…") {
+            MenuActionRow(title: "Impostazioni…") {
                 onPreferences()
             }
             MenuActionRow(title: "Esci") {
@@ -87,7 +87,7 @@ struct MenuBarView: View {
                 .font(.callout)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
-            Text("Nelle Preferenze puoi tenere Globy sempre a schermo, togliere il suono, cambiare le dimensioni o passare alle notifiche di sistema al posto di Globy.")
+            Text("Nelle Impostazioni puoi tenere Globy sempre a schermo, togliere il suono, cambiare le dimensioni o passare alle notifiche di sistema al posto di Globy.")
                 .font(.callout)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)

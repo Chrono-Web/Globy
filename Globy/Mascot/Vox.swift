@@ -9,7 +9,7 @@ struct Vox: Equatable {
         case greeting
         /// VOX già uscito, mostrato su richiesta al primo avvio: non è una novità.
         case recent
-        /// Anteprima delle dimensioni mentre le Preferenze sono aperte.
+        /// Anteprima delle dimensioni mentre le Impostazioni sono aperte.
         case preview
     }
 

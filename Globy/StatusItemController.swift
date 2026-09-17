@@ -40,7 +40,7 @@ final class StatusItemController: NSObject {
                 }
             }
             .store(in: &cancellables)
-        // Tornando da «notifiche di sistema» con le Preferenze aperte, torna l'anteprima.
+        // Tornando da «notifiche di sistema» con le Impostazioni aperte, torna l'anteprima.
         session.preferences.$mascotEnabled
             .dropFirst()
             .sink { [weak self] enabled in
@@ -63,7 +63,7 @@ final class StatusItemController: NSObject {
         if prefs == nil {
             prefs = makePreferencesWindow()
         }
-        // Finché le Preferenze sono aperte Globy si comporta da app normale: Dock, ⌘Tab, menu.
+        // Finché le Impostazioni sono aperte Globy si comporta da app normale: Dock, ⌘Tab, menu.
         NSApp.setActivationPolicy(.regular)
         if prefs?.isVisible == false {
             prefs?.center()
@@ -209,7 +209,7 @@ final class StatusItemController: NSObject {
             backing: .buffered,
             defer: false
         )
-        window.title = "Preferenze di Globy"
+        window.title = "Impostazioni di Globy"
         window.contentView = hosting
         window.isReleasedWhenClosed = false
         window.delegate = self

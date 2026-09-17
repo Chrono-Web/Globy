@@ -59,6 +59,7 @@ e sono sintetiche. L'app Debug usa `FixtureChronocol` in processo.
 swift test --package-path Packages/GlobyCore
 xcodebuild -project Globy.xcodeproj -scheme Globy -destination 'platform=macOS' build
 xcodebuild -project Globy.xcodeproj -scheme Globy -destination 'platform=macOS' test
+./scripts/crea-dmg.sh
 cd Spikes/MascotSpike && swift run MascotSpike --snapshot globo.png
 cd Spikes/MascotSpike && swift run -c release MascotSpike --demo
 ```
@@ -70,7 +71,7 @@ Opzioni di avvio, solo in Debug, per provare l'app senza aspettare eventi reali
 |---|---|
 | `--live` | legge Chronocol pubblico (solo GET) invece della fixture; dati in `content-live.json` |
 | `--open-menu` | apre il pannello della barra dei menu |
-| `--open-preferences` | apre la finestra delle Preferenze |
+| `--open-preferences` | apre la finestra delle Impostazioni |
 | `--simulate-vox` | pubblica un VOX sulla fixture e sincronizza |
 | `--simulate-return N` | saluto di rientro con N VOX usciti mentre eri via |
 | `--poll-seconds S` | controllo periodico ogni S secondi invece di 5 minuti |

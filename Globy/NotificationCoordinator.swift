@@ -18,6 +18,11 @@ final class NotificationCoordinator: NSObject, UNUserNotificationCenterDelegate 
         return await authorizationStatus()
     }
 
+    func removeAll() {
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+    }
+
     func post(title: String, body: String, permalink: URL, documentId: String) {
         let content = UNMutableNotificationContent()
         content.title = title

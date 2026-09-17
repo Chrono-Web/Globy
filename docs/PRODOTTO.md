@@ -38,7 +38,7 @@ lettura completa.
    non letto vuol dire arrivato dopo la baseline e mai aperto.
 4. Quando una nuova pubblicazione è stata verificata, il piccolo globo compare in basso
    a destra, richiama brevemente l'attenzione e si nasconde automaticamente.
-5. In alternativa a Globy, la modalità «Notifiche di sistema» delle Preferenze manda
+5. In alternativa a Globy, la modalità «Notifiche di sistema» delle Impostazioni manda
    una notifica del Mac senza suono al posto del globo: mai entrambi.
 6. Un clic su un VOX apre il permalink pubblico nel browser predefinito.
 7. Dopo rete assente, stop o riavvio, Globy recupera lo stato senza una raffica di
@@ -89,7 +89,7 @@ Decisioni di comportamento chiuse il 2026-09-16 (ADR 0003 per il motore):
   successivo, quella in basso a sinistra torna al precedente; senza
   permanenza, dopo la lettura resta una pausa di circa 1 s.
 - Clic su globo o fumetto: apre il VOX visibile su Chronocol.
-- Clic destro su globo o fumetto: menu con «Preferenze…» e «Nascondi Globy». Nascondere
+- Clic destro su globo o fumetto: menu con «Impostazioni…» e «Nascondi Globy». Nascondere
   lo fa uscire subito con fumetto e coda; i VOX restano nel menu e Globy torna al
   prossimo arrivo.
 - La X chiude solo il fumetto. Con più VOX, due frecce in basso (stessa
@@ -118,23 +118,23 @@ breve:
 
 1. Globy legge i VOX pubblici di Chronocol;
 2. non notifica l'archivio; il permesso notifiche si chiede solo attivando la modalità
-   «Notifiche di sistema» nelle Preferenze;
+   «Notifiche di sistema» nelle Impostazioni;
 3. per chiudere l'onboarding (punto 4) il globo chiede «Partiamo con gli ultimi 5 VOX pubblicati?» con
    «Sì, partiamo» e «No, grazie». Solo con «Sì» il globo li mostra in coda, dal più
    vecchio al più recente, con l'etichetta «VOX recente · già uscito»: non sono notifiche, non
    segnano `notifiedAt` e non producono banner. «No», la X o nessuna risposta entro
    circa 20 s chiudono la presentazione. Se la baseline è vuota la domanda non c'è.
 4. ordine dei fumetti, avanzando con la freccia: presentazione di Globy; dove
-   trovarlo nella barra dei menu e cosa c'è nel menu; le Preferenze (compresa la
+   trovarlo nella barra dei menu e cosa c'è nel menu; le Impostazioni (compresa la
    modalità notifiche di sistema); infine la proposta dei VOX recenti del punto 3.
-   Arrivati alle Preferenze l'onboarding è concluso. Se un fumetto prima viene
+   Arrivati alle Impostazioni l'onboarding è concluso. Se un fumetto prima viene
    ignorato o chiuso con la X la sequenza si ferma, e la spiegazione resta in cima al
    menu finché non si preme «Ho capito».
 
 Niente wizard a più schermate. Il permesso negato non è un errore: casa
 `docs/TRAPPOLE.md` e `docs/PRIVACY.md`.
 
-## Preferenze
+## Impostazioni
 
 Prima versione:
 
@@ -144,14 +144,16 @@ Nell'interfaccia il nome è sempre Globy: niente «mascotte» né «globo».
 - dimensioni personalizzate: interruttore più tre cursori, Globy (75–250% di uno
   standard di 70 pt), testo
   del fumetto (85–150%) e pulsanti X e frecce (80–160%). Spento, valgono le
-  dimensioni standard ma i valori scelti restano salvati. Finché le Preferenze sono
+  dimensioni standard ma i valori scelti restano salvati. Finché le Impostazioni sono
   aperte Globy mostra un fumetto di anteprima con X e frecce finte, che cambia dal
   vivo. Ogni scatto dei cursori dà un tocco aptico sul trackpad, più marcato al 100%;
 - «Notifiche di sistema»: modalità alternativa a Globy. Accenderla chiede conferma
   («Attivando le notifiche di sistema, disattiverai la visualizzazione di Globy») e
   il permesso del Mac; con il permesso negato Globy resta attivo e compare una nota.
   Spegnerla riporta Globy;
-- azzeramento dei dati locali.
+- azzeramento dei dati locali;
+- in fondo, «Disinstalla Globy…» con conferma: chiude Globy, lo sposta nel Cestino e
+  cancella VOX salvati, impostazioni e avvio al login.
 
 Nello spike si possono anche cambiare superficie e click-through; non sono un
 obbligo di v1. Fuori dalla prima versione: temi extra, lingue della mascotte,

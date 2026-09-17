@@ -26,7 +26,7 @@ o notifiche remote ad applicazione terminata.
 La fondazione (fase 0), lo spike di sincronizzazione (fase 1) e lo spike della
 mascotte (fase 2) sono verificati. Gli ADR 0001, 0002, 0003 e 0004 sono **accettati**.
 L'app è `Globy.xcodeproj` (fase 3 chiusa): menu, store JSON, onboarding raccontato da
-Globy, saluto di rientro, controllo periodico, Preferenze e modalità notifiche di sistema. `Packages/GlobyCore/` e `Spikes/MascotSpike/`
+Globy, saluto di rientro, controllo periodico, Impostazioni e modalità notifiche di sistema. `Packages/GlobyCore/` e `Spikes/MascotSpike/`
 non sono il prodotto.
 
 Requisiti di piattaforma e canale: macOS 15 o successivo, identificatore

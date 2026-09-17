@@ -38,7 +38,7 @@ Segna ogni riga con ✅, ❌ (con una nota su cosa è successo) o «non provato�
 
 - [x] Compare il globo nella barra dei menu; nessuna icona nel Dock.
 - [x] Dopo pochi secondi Globy si presenta in basso a destra; la freccia (numerino 3)
-      porta a: barra dei menu e menu, poi Preferenze.
+      porta a: barra dei menu e menu, poi Impostazioni.
 - [x] Per ultimo chiede «Partiamo con gli ultimi 5 VOX pubblicati?».
 - [x] «Sì, partiamo»: passano 5 VOX veri, intestazione «VOX recente · già uscito»,
       frecce con numerini, nessun banner di sistema.
@@ -53,9 +53,9 @@ Segna ogni riga con ✅, ❌ (con una nota su cosa è successo) o «non provato�
 
 - [x] Clic sul globo: pannello in vetro con angoli arrotondati, nessun bordo squadrato.
 - [x] Al primo avvio l'intestazione dice «Nessun VOX non letto»: l'archivio non conta.
-- [x] Se l'onboarding di Globy è stato chiuso con la X prima delle Preferenze, «Due cose,
+- [x] Se l'onboarding di Globy è stato chiuso con la X prima delle Impostazioni, «Due cose,
       poi basta» resta in cima al menu; «Ho capito» lo chiude.
-- [x] L'elenco scorre; intestazione, Preferenze ed Esci restano visibili.
+- [x] L'elenco scorre; intestazione, Impostazioni ed Esci restano visibili.
 - [x] Clic su un VOX: apre il browser e il menu si chiude.
 - [x] Clic fuori dal pannello o Esc: il pannello si chiude.
 - [x] Nessuna riga «Simula…».
@@ -91,16 +91,16 @@ periodico passa ogni 5 minuti circa.
 
 - [x] Trascinamento del globo: globo e fumetto non escono dallo schermo.
 - [x] X: chiude solo il fumetto.
-- [x] Clic destro su Globy o sul fumetto: menu «Preferenze…» (apre le Preferenze) e
+- [x] Clic destro su Globy o sul fumetto: menu «Impostazioni…» (apre le Impostazioni) e
       «Nascondi Globy» (esce subito; torna al prossimo VOX).
 - [x] In un'app a tutto schermo e in un altro Space il globo compare sopra.
 - [x] Fuori da globo, fumetto, X e frecce i clic passano all'app sotto.
 - [x] Impostazioni di Sistema › Accessibilità › Schermo › Riduci movimento: solo
       dissolvenza, testo già scritto, nessun suono.
 
-## 6. Preferenze
+## 6. Impostazioni
 
-- [x] Menu › Preferenze…: finestra normale con barra del titolo; Globy compare nel Dock
+- [x] Menu › Impostazioni…: finestra normale con barra del titolo; Globy compare nel Dock
       e in ⌘Tab finché è aperta, poi sparisce di nuovo. Nessuna parola «mascotte».
 - [x] Mentre è aperta, in basso a destra c'è il fumetto «Anteprima».
 - [x] «Dimensioni personalizzate» acceso: i cursori Globy, Testo e Pulsanti cambiano

@@ -1,0 +1,27 @@
+GLOBY — installare e disinstallare
+
+INSTALLARE
+1. Trascina l'icona di Globy sulla cartella «Applicazioni» qui accanto.
+2. Apri la cartella Applicazioni e fai doppio clic su Globy.
+3. La prima volta il Mac avvisa che non può verificare lo sviluppatore: Globy non
+   è ancora firmato da Apple. Apri Impostazioni di Sistema › Privacy e sicurezza,
+   scorri in fondo e premi «Apri comunque» accanto a Globy. Serve una volta sola.
+4. Globy compare in alto nella barra dei menu (il globo) e si presenta in basso a
+   destra.
+
+Poi espelli il disco «Globy» e butta il file .dmg nel Cestino.
+
+AGGIORNARE
+Chiudi Globy (clic sul globo in alto › Esci), ripeti il punto 1 e scegli
+«Sostituisci». I VOX letti e le impostazioni restano.
+
+DISINSTALLARE
+Clic sul globo in alto › Impostazioni… › in fondo «Disinstalla Globy…».
+Globy si chiude, va nel Cestino e cancella i suoi dati.
+
+Se Globy non si apre più: trascinalo da Applicazioni al Cestino, poi nel Finder
+scegli Vai › Vai alla cartella…, scrivi ~/Library/Application Support/ e butta
+nel Cestino la cartella «Globy».
+
+Se avevi attivato le notifiche di sistema, puoi togliere Globy anche da
+Impostazioni di Sistema › Notifiche.

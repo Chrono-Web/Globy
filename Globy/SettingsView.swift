@@ -6,6 +6,7 @@ struct SettingsView: View {
     @ObservedObject private var preferences: PreferenceStore
     @State private var confirmReset = false
     @State private var confirmSystemNotifications = false
+    @State private var confirmUninstall = false
 
     init(session: AppSession) {
         self.session = session
@@ -52,7 +53,7 @@ struct SettingsView: View {
             } header: {
                 Text("Dimensioni")
             } footer: {
-                footnote("Mentre le Preferenze sono aperte Globy mostra un’anteprima in basso a destra. Se spegni le dimensioni personalizzate i valori restano salvati.")
+                footnote("Mentre le Impostazioni sono aperte Globy mostra un’anteprima in basso a destra. Se spegni le dimensioni personalizzate i valori restano salvati.")
             }
             .disabled(!preferences.mascotEnabled)
             Section {
@@ -76,7 +77,18 @@ struct SettingsView: View {
             } header: {
                 Text("Dati")
             } footer: {
-                footnote("I contenuti stanno in un file JSON in Application Support. Azzerare cancella store e preferenze, non il permesso di sistema.")
+                footnote("I contenuti stanno in un file JSON in Application Support. Azzerare cancella store e impostazioni, non il permesso di sistema.")
+            }
+            Section {
+                LabeledContent("Rimuovi Globy da questo Mac") {
+                    Button("Disinstalla Globy…", role: .destructive) {
+                        confirmUninstall = true
+                    }
+                }
+            } header: {
+                Text("Disinstalla")
+            } footer: {
+                footnote("Chiude Globy, lo sposta nel Cestino e cancella VOX salvati, impostazioni e avvio al login.")
             }
         }
         .formStyle(.grouped)
@@ -90,13 +102,21 @@ struct SettingsView: View {
         } message: {
             Text("Attivando le notifiche di sistema, disattiverai la visualizzazione di Globy. I nuovi VOX arriveranno come notifiche del Mac.")
         }
+        .alert("Disinstallare Globy?", isPresented: $confirmUninstall) {
+            Button("Annulla", role: .cancel) {}
+            Button("Disinstalla", role: .destructive) {
+                session.uninstall()
+            }
+        } message: {
+            Text("Globy viene chiuso e spostato nel Cestino. Vengono cancellati i VOX salvati, le impostazioni e l’avvio al login. Il permesso notifiche, se l’hai dato, resta in Impostazioni di Sistema › Notifiche.")
+        }
         .alert("Azzerare i dati locali?", isPresented: $confirmReset) {
             Button("Annulla", role: .cancel) {}
             Button("Azzera", role: .destructive) {
                 Task { await session.resetLocalData() }
             }
         } message: {
-            Text("Vengono cancellati elenco, stati letto/notificato e le preferenze di Globy. Poi parte di nuovo la baseline, senza notifiche sull’archivio.")
+            Text("Vengono cancellati elenco, stati letto/notificato e le impostazioni di Globy. Poi parte di nuovo la baseline, senza notifiche sull’archivio.")
         }
     }
 

@@ -40,9 +40,9 @@ final class MascotWindowController {
     private var greetingCompletion: ((GreetingOutcome) -> Void)?
 
     enum GreetingOutcome { case accepted, declined, timedOut }
-    /// Anteprima delle dimensioni, finché le Preferenze sono aperte.
+    /// Anteprima delle dimensioni, finché le Impostazioni sono aperte.
     private var previewing = false
-    /// Le Preferenze sono aperte: finito un saluto o un VOX, l'anteprima torna.
+    /// Le Impostazioni sono aperte: finito un saluto o un VOX, l'anteprima torna.
     private var previewRequested = false
     private var movedThisAppearance = false
     /// Centro del disco disegnato, in coordinate schermo. Resta fisso mentre la finestra si adatta al fumetto.
@@ -177,7 +177,7 @@ final class MascotWindowController {
         if !permanence { dismiss() }
     }
 
-    /// Preferenze di dimensione cambiate: fumetto e pulsanti si adattano subito.
+    /// Impostazioni di dimensione cambiate: fumetto e pulsanti si adattano subito.
     func metricsDidChange() {
         model.refreshLayout()
         if model.phase != .hidden { applyLayout() }
@@ -450,13 +450,13 @@ final class MascotWindowController {
         dismiss()
     }
 
-    /// Da impostare da chi possiede la finestra delle Preferenze.
+    /// Da impostare da chi possiede la finestra delle Impostazioni.
     var onOpenPreferences: () -> Void = {}
 
     /// Clic destro su Globy o sul fumetto.
     private func makeContextMenu() -> NSMenu {
         let menu = NSMenu()
-        let prefs = NSMenuItem(title: "Preferenze…", action: #selector(ContextMenuTarget.fire(_:)), keyEquivalent: "")
+        let prefs = NSMenuItem(title: "Impostazioni…", action: #selector(ContextMenuTarget.fire(_:)), keyEquivalent: "")
         prefs.target = contextTarget
         prefs.representedObject = { [weak self] in self?.onOpenPreferences() } as () -> Void
         menu.addItem(prefs)
