@@ -2,9 +2,15 @@
 # i suoi test girano ovunque. L'app Tauri si aggiunge come secondo membro.
 [workspace]
 resolver = "3"
-members = ["globy-core"]
+members = ["globy-core", "src-tauri"]
 
 [workspace.package]
 version = "0.2.0"
 edition = "2024"
 license = "GPL-3.0-only"
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true

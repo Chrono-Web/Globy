@@ -1,0 +1,31 @@
+[package]
+name = "globy"
+description = "Globy: i VOX di Chronocol su Windows e Linux"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+name = "globy_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+chrono = { version = "0.4", default-features = false, features = ["std", "clock", "serde"] }
+fastrand = "2"
+globy-core = { path = "../globy-core" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# `macos-private-api`: finestre trasparenti anche sul Mac, dove si sviluppa.
+tauri = { version = "2", features = ["tray-icon", "image-png", "macos-private-api"] }
+tauri-plugin-autostart = "2"
+tauri-plugin-notification = "2"
+tauri-plugin-opener = "2"
+tauri-plugin-single-instance = "2"
+tokio = { version = "1", features = ["macros", "sync", "time"] }
+
+[target.'cfg(windows)'.dependencies]
+window-vibrancy = "0.6"
+

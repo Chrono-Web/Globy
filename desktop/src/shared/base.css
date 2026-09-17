@@ -1,0 +1,47 @@
+/* Colori e caratteri comuni: tema chiaro e scuro dal sistema. */
+:root {
+  color-scheme: light dark;
+  --text: #1d1d1f;
+  --secondary: #6e6e73;
+  --tertiary: #9a9aa0;
+  --hover: rgba(0, 0, 0, 0.07);
+  --divider: rgba(0, 0, 0, 0.1);
+  --panel: #f5f5f7;
+  --group: #ffffff;
+  --accent: #0a6cff;
+  --danger: #d70015;
+  font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, "Ubuntu", "Cantarell", sans-serif;
+  font-size: 13px;
+  color: var(--text);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #f5f5f7;
+    --secondary: #a1a1a6;
+    --tertiary: #6e6e73;
+    --hover: rgba(255, 255, 255, 0.1);
+    --divider: rgba(255, 255, 255, 0.12);
+    --panel: #1c1c1e;
+    --group: #2c2c2e;
+    --accent: #4c9dff;
+    --danger: #ff6961;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
