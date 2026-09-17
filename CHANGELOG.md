@@ -24,6 +24,8 @@ versionamento pubblico.
 - Fumetto, menu e banner mostrano i VOX senza fonti e link, con il testo intero
   (limite di sicurezza a 16 righe).
 - Onboarding raccontato da Globy: presentazione, menu, Preferenze, poi i 5 VOX recenti.
+- Globy più piccolo di default (70 pt di disco); i VOX in sequenza vanno sempre dal
+  più vecchio al più recente.
 - Preferenze riorganizzate: sezione Globy (mostra sempre, login, suono), grandezza di
   Globy tra le dimensioni, «Notifiche di sistema» come modalità al posto di Globy.
 - Checklist di collaudo della fase 3 in `docs/COLLAUDO_FASE3.md`.

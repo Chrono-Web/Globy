@@ -88,7 +88,8 @@ final class PreferenceStore: ObservableObject {
         static let customSizes = "customSizesEnabled"
         static let textScale = "textScale"
         static let buttonScale = "buttonScale"
-        static let globeScale = "globeScale"
+        // Nuova chiave: la vecchia scala era relativa a un globo standard più grande.
+        static let globeScale = "globySizeScale"
         static let lastWelcomeAt = "lastWelcomeAt"
         static let all = [mascotEnabled, permanence, mascotSound, didGreet, didOnboard,
                           customSizes, textScale, buttonScale, globeScale, lastWelcomeAt]

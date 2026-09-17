@@ -338,7 +338,8 @@ final class AppSession: ObservableObject {
         guard preferences.mascotEnabled, !preferences.didGreet else { return }
         preferences.didGreet = true
         // Su richiesta, gli ultimi VOX già usciti: presentati come «recenti», mai notificati.
-        let latest = recent.prefix(WelcomePolicy.tourSize).map { Vox(record: $0, kind: .recent) }
+        // Globy mostra sempre i VOX dal più vecchio al più recente.
+        let latest = recent.prefix(WelcomePolicy.tourSize).reversed().map { Vox(record: $0, kind: .recent) }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in
             self?.presentOnboarding(latest: latest)
         }
@@ -373,7 +374,10 @@ final class AppSession: ObservableObject {
             // Globy o notifiche di sistema, mai entrambi.
             notificationsPaused: preferences.mascotEnabled
         )
-        let mascotRecords = plan.mascotDocumentIds.compactMap { id in records.first { $0.documentId == id } }
+        // Dal più vecchio al più recente, come ogni sequenza di Globy.
+        let mascotRecords = plan.mascotDocumentIds
+            .compactMap { id in records.first { $0.documentId == id } }
+            .sorted { $0.createdAt < $1.createdAt }
         if welcome, report.cause != .firstLaunch, preferences.mascotEnabled {
             presentWelcome(report: report, records: mascotRecords)
         } else if !mascotRecords.isEmpty {

@@ -26,8 +26,9 @@ struct MascotPlacement: Equatable {
 /// sotto se in alto non c'è spazio, e sempre interamente nella `visibleFrame`.
 @MainActor
 enum MascotLayout {
-    static var globeArea: CGSize { CGSize(width: 160 * MascotMetrics.globeScale, height: 160 * MascotMetrics.globeScale) }
-    static var globeDrawn: CGFloat { 116 * MascotMetrics.globeScale }
+    /// Misure standard (100%): 96 pt di area e 70 pt di disco, scelte nel collaudo.
+    static var globeArea: CGSize { CGSize(width: 96 * MascotMetrics.globeScale, height: 96 * MascotMetrics.globeScale) }
+    static var globeDrawn: CGFloat { 70 * MascotMetrics.globeScale }
     /// Distanza tra il disco disegnato e il bordo del fumetto.
     static let cardGap: CGFloat = 10
     static let margin: CGFloat = 16

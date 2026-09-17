@@ -84,7 +84,8 @@ Decisioni di comportamento chiuse il 2026-09-16 (ADR 0003 per il motore):
   lettura il fumetto resta il tempo di leggerlo: circa 0,3 s per parola, tra 2 e
   15 s (`ReadingPolicy`). Una domanda «Sì / No» resta circa 20 s. Reduce Motion:
   solo fade.
-- Più VOX: una coda, un globo solo. La freccia in basso a destra passa al
+- Più VOX: una coda, un globo solo, sempre dal più vecchio al più recente (anche i
+  VOX recenti del primo avvio e quelli del saluto di rientro). La freccia in basso a destra passa al
   successivo, quella in basso a sinistra torna al precedente; senza
   permanenza, dopo la lettura resta una pausa di circa 1 s.
 - Clic su globo o fumetto: apre il VOX visibile su Chronocol.
@@ -117,7 +118,7 @@ breve:
    «Notifiche di sistema» nelle Preferenze;
 3. per chiudere l'onboarding (punto 4) il globo chiede «Partiamo con gli ultimi 5 VOX pubblicati?» con
    «Sì, partiamo» e «No, grazie». Solo con «Sì» il globo li mostra in coda, dal più
-   recente, con l'etichetta «VOX recente · già uscito»: non sono notifiche, non
+   vecchio al più recente, con l'etichetta «VOX recente · già uscito»: non sono notifiche, non
    segnano `notifiedAt` e non producono banner. «No», la X o nessuna risposta entro
    circa 20 s chiudono la presentazione. Se la baseline è vuota la domanda non c'è.
 4. ordine dei fumetti, avanzando con la freccia: presentazione di Globy; dove
@@ -137,7 +138,8 @@ Prima versione:
 Nell'interfaccia il nome è sempre Globy: niente «mascotte» né «globo».
 
 - sezione Globy: «Mostra sempre Globy» (permanenza), «Apri Globy al login», «Suono»;
-- dimensioni personalizzate: interruttore più tre cursori, Globy (60–150%), testo
+- dimensioni personalizzate: interruttore più tre cursori, Globy (75–250% di uno
+  standard di 70 pt), testo
   del fumetto (85–150%) e pulsanti X e frecce (80–160%). Spento, valgono le
   dimensioni standard ma i valori scelti restano salvati. Finché le Preferenze sono
   aperte Globy mostra un fumetto di anteprima con X e frecce finte, che cambia dal
