@@ -681,27 +681,31 @@ private var caretCheck: some View {
 /// Icona dell'app, 1024 × 1024: il globo vero di Globy su un riquadro chiaro con gli
 /// angoli di macOS. Si rigenera con `--render-icon` (solo Debug).
 struct AppIconArt: View {
+    private static let corner: CGFloat = 186
+
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 186, style: .continuous)
+            // Sfondo con un po' di colore: il vetro di Globy si riconosce da ciò che lascia
+            // intravedere.
+            RoundedRectangle(cornerRadius: Self.corner, style: .continuous)
                 .fill(LinearGradient(
-                    colors: [Color(red: 0.97, green: 0.98, blue: 1.0), Color(red: 0.78, green: 0.84, blue: 0.94)],
-                    startPoint: .top, endPoint: .bottom))
+                    colors: [Color(red: 0.62, green: 0.80, blue: 0.98), Color(red: 0.36, green: 0.52, blue: 0.86)],
+                    startPoint: .topLeading, endPoint: .bottomTrailing))
                 .overlay {
-                    RoundedRectangle(cornerRadius: 186, style: .continuous)
-                        .strokeBorder(.white.opacity(0.7), lineWidth: 4)
+                    RoundedRectangle(cornerRadius: Self.corner, style: .continuous)
+                        .strokeBorder(.white.opacity(0.35), lineWidth: 4)
                 }
                 .frame(width: 824, height: 824)
                 .shadow(color: .black.opacity(0.28), radius: 18, y: 10)
-            // Il vetro di sistema non passa in un'immagine: lo imita un disco sfocato e
-            // colorato sotto le stesse velature, griglia e occhi del globo in vetro.
+            // Vetro trasparente: lo sfondo passa attraverso, appena scurito verso il bordo,
+            // sotto le stesse velature, griglia e occhi del globo in vetro.
             ZStack {
                 GeometryReader { geo in
                     let r = Globe.radius(geo.size), c = Globe.center(geo.size)
                     Circle()
                         .fill(RadialGradient(
-                            colors: [Color(red: 0.40, green: 0.42, blue: 0.47), Color(red: 0.11, green: 0.12, blue: 0.14)],
-                            center: UnitPoint(x: 0.35, y: 0.3), startRadius: 0, endRadius: r * 2))
+                            colors: [.white.opacity(0.10), .black.opacity(0.10), .black.opacity(0.32)],
+                            center: UnitPoint(x: 0.38, y: 0.32), startRadius: 0, endRadius: r * 1.6))
                         .frame(width: 2 * r, height: 2 * r)
                         .position(c)
                 }

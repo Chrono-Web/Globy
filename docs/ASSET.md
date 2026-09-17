@@ -19,7 +19,7 @@ app) è disegnato dal codice.
 
 | File | Autore | Fonte | Licenza | Note |
 |---|---|---|---|---|
-| `Globy/Assets.xcassets/AppIcon.appiconset/*.png` | progetto Globy | `AppIconArt` in `Globy/Mascot/MascotView.swift`, `Globy --render-icon` (Debug) poi `sips` | GPL-3.0 | Il vetro è imitato: il vetro di sistema non passa in un'immagine |
+| `Globy/Assets.xcassets/AppIcon.appiconset/*.png` | progetto Globy | `AppIconArt` in `Globy/Mascot/MascotView.swift`, `Globy --render-icon` (Debug) poi `sips` | GPL-3.0 | Vetro trasparente imitato su sfondo azzurro: il vetro di sistema non passa in un'immagine |
 | sfondo del DMG (generato a ogni build) | progetto Globy | `scripts/dmg/sfondo.swift` | GPL-3.0 | Font di sistema, non incluso nel file |
 
 ## Chronocol

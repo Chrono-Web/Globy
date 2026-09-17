@@ -28,7 +28,7 @@ versionamento pubblico.
   più vecchio al più recente.
 - DMG con finestra curata (sfondo, freccia, icone) e istruzioni di installazione e
   disinstallazione (`scripts/crea-dmg.sh`).
-- Icona dell'app: il globo di Globy in vetro.
+- Icona dell’app: il globo di Globy in vetro trasparente su sfondo azzurro.
 - «Preferenze» diventano «Impostazioni», con «Disinstalla Globy…» in fondo.
 - Una sola copia di Globy alla volta. Fase 3 chiusa dopo il collaudo umano.
 - Clic destro su Globy: «Impostazioni…» e «Nascondi Globy». Feedback aptico sui cursori
