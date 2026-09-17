@@ -37,6 +37,7 @@ degli eventi persi.
 
 | Documento | Fonte autorevole per |
 |---|---|
+| `docs/GUIDA.md` | Presentazione del progetto, stato e indice dei documenti (il README è solo per scaricare) |
 | `docs/PRODOTTO.md` | Perimetro, persone, comportamenti e non-obiettivi |
 | `docs/GLOSSARIO.md` | Vocabolario del prodotto e degli stati locali |
 | `docs/ARCHITETTURA.md` | Componenti interni, dipendenze e flusso dati |
