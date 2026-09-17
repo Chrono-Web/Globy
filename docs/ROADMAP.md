@@ -99,7 +99,7 @@ SSE disabilitato e non supera la frequenza HTTP concordata.
 
 ## Fase 5 — Beta distribuibile
 
-- [ ] CI per build e test.
+- [~] CI per build e test: `.github/workflows/swift.yml` (GlobyCore e app, senza firma su macos-26).
 - [ ] Firma e notarizzazione o flusso Mac App Store.
 - [ ] Meccanismo di aggiornamento.
 - [ ] Licenze e attribuzioni complete.
