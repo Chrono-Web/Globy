@@ -1,8 +1,9 @@
 #!/bin/bash
-# Crea build/Globy-<versione>.dmg: finestra con sfondo e freccia, Globy.app, collegamento
-# ad Applicazioni e istruzioni. Non firma e non notarizza (docs/DISTRIBUZIONE.md).
-# La disposizione della finestra la scrive il Finder: la prima volta macOS può chiedere
-# il permesso di controllarlo.
+# Crea build/Globy-<versione>.dmg e la copia stabile build/Globy.dmg (nome usato
+# dalla Release GitHub e dal README). Finestra con sfondo e freccia, Globy.app,
+# collegamento ad Applicazioni e istruzioni. Non firma e non notarizza
+# (docs/DISTRIBUZIONE.md). La disposizione della finestra la scrive il Finder:
+# la prima volta macOS può chiedere il permesso di controllarlo.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -15,10 +16,11 @@ WORK=build/dmg
 STAGE="$WORK/Globy"
 RW="$WORK/Globy-rw.dmg"
 OUT="build/Globy-$VERSION.dmg"
+STABLE="build/Globy.dmg"
 VOLUME="Globy"
 GUIDE="Installa e disinstalla Globy.txt"
 
-rm -rf "$WORK" "$OUT"
+rm -rf "$WORK" "$OUT" "$STABLE"
 mkdir -p "$STAGE/.background"
 ditto "$APP" "$STAGE/Globy.app"
 ln -s /Applications "$STAGE/Applicazioni"
@@ -62,4 +64,6 @@ sync
 hdiutil detach "$DEVICE" -quiet
 hdiutil convert "$RW" -format UDZO -imagekey zlib-level=9 -o "$OUT" >/dev/null
 rm -rf "$WORK"
+cp "$OUT" "$STABLE"
 echo "$OUT"
+echo "$STABLE"

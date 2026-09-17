@@ -3,8 +3,9 @@
 - Aggiornato: 2026-09-17
 - Risponde a: che cosa è Globy, a che punto è e dove trovare ogni documento
 
-Per scaricare e installare Globy basta il [README](../README.md). Questa guida è per chi
-vuole capire il progetto o lavorarci.
+Per scaricare e installare Globy basta il [README](../README.md) (il pulsante scarica
+`Globy.dmg` dall'ultima Release GitHub). Questa guida è per chi vuole capire il
+progetto o lavorarci.
 
 > **Stato: pre-alpha, versione 0.1.0.** Le fasi 0–3 sono chiuse. L'app legge Chronocol
 > pubblico con sole GET ed è stata collaudata a mano; arrivi reali, rientro e rete sono
