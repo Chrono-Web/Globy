@@ -685,15 +685,14 @@ struct AppIconArt: View {
 
     var body: some View {
         ZStack {
-            // Sfondo con un po' di colore: il vetro di Globy si riconosce da ciò che lascia
-            // intravedere.
+            // Grigio molto scuro: griglia e occhi bianchi del vetro risaltano.
             RoundedRectangle(cornerRadius: Self.corner, style: .continuous)
                 .fill(LinearGradient(
-                    colors: [Color(red: 0.62, green: 0.80, blue: 0.98), Color(red: 0.36, green: 0.52, blue: 0.86)],
-                    startPoint: .topLeading, endPoint: .bottomTrailing))
+                    colors: [Color(white: 0.20), Color(white: 0.07)],
+                    startPoint: .top, endPoint: .bottom))
                 .overlay {
                     RoundedRectangle(cornerRadius: Self.corner, style: .continuous)
-                        .strokeBorder(.white.opacity(0.35), lineWidth: 4)
+                        .strokeBorder(.white.opacity(0.12), lineWidth: 4)
                 }
                 .frame(width: 824, height: 824)
                 .shadow(color: .black.opacity(0.28), radius: 18, y: 10)
