@@ -21,6 +21,9 @@ app) è disegnato dal codice.
 |---|---|---|---|---|
 | `Globy/Assets.xcassets/AppIcon.appiconset/*.png` | progetto Globy | `AppIconArt` in `Globy/Mascot/MascotView.swift`, `Globy --render-icon` (Debug) poi `sips` | GPL-3.0 | Vetro trasparente imitato su sfondo grigio molto scuro: il vetro di sistema non passa in un'immagine |
 | sfondo del DMG (generato a ogni build) | progetto Globy | `scripts/dmg/sfondo.swift` | GPL-3.0 | Font di sistema, non incluso nel file |
+| `desktop/src-tauri/icons/*` | progetto Globy | icona del Mac `icon_512x512@2x.png` convertita con `npx tauri icon` | GPL-3.0 | Stessa immagine dell'app Mac |
+| icona nell'area di notifica (Windows e Linux) | progetto Globy | `desktop/src-tauri/src/tray_icon.rs`, disegnata all'avvio | GPL-3.0 | Nessun file |
+| suono di arrivo (Windows e Linux) | progetto Globy | `desktop/src/mascot/sound.ts`, sintetizzato | GPL-3.0 | Nessun file audio |
 
 ## Chronocol
 

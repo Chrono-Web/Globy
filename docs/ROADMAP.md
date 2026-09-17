@@ -110,12 +110,25 @@ SSE disabilitato e non supera la frequenza HTTP concordata.
 **Verifica:** un'altra persona clona e compila senza credenziali, installa la build
 ufficiale e completa un aggiornamento dalla versione precedente.
 
+## Windows e Linux (0.2.0)
+
+- [x] Porting del nucleo in Rust (`desktop/globy-core`) con i 39 test sulle fixture Swift.
+- [x] App Tauri: icona di sistema, elenco, Impostazioni, sincronizzazione e notifiche.
+- [~] Globy: globo, fumetto, coda, onboarding, trascinamento e anteprima; provato sul Mac
+      in sviluppo, non ancora su Windows e Linux.
+- [~] CI con installer Windows (NSIS) e Linux (AppImage, `.deb`).
+- [ ] Collaudo umano su Windows 11 (`docs/COLLAUDO_DESKTOP.md`).
+- [ ] Collaudo umano su Linux con X11 e con Wayland.
+- [ ] Release 0.2.0 con i tre sistemi e i tre pulsanti del README.
+
+**Verifica:** collaudo registrato in `docs/COLLAUDO_DESKTOP.md` per Windows e per
+entrambe le sessioni Linux, poi installazione dai pulsanti del README.
+
 ## Fuori roadmap iniziale
 
 - APNs e ricezione ad app terminata;
 - account e sincronizzazione fra dispositivi;
 - funzioni editoriali;
-- altre piattaforme;
 - telemetria remota.
 
 Questi temi entrano in roadmap soltanto con un nuovo perimetro e, quando coinvolgono

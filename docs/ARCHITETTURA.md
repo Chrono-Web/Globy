@@ -1,7 +1,8 @@
 # Architettura
 
 - Aggiornato: 2026-09-17
-- Stato: coordinatore in `Packages/GlobyCore/`; shell macOS in `Globy.xcodeproj`
+- Stato: coordinatore in `Packages/GlobyCore/`; shell macOS in `Globy.xcodeproj`; Windows e
+  Linux in `desktop/` (ADR 0005)
 - Risponde a: responsabilità interne, dipendenze e flusso dello stato
 
 ## Principio centrale
@@ -120,6 +121,28 @@ pausa notifiche, avvio al login, saluto già mostrato) restano in `UserDefaults`
 Il posizionamento deve usare l'area visibile dello schermo scelto, non coordinate
 globali fisse: Dock, notch, ridimensionamento e più monitor cambiano l'angolo realmente
 utilizzabile.
+
+## Windows e Linux
+
+`desktop/` ripete la stessa architettura in un'app Tauri (ADR 0005):
+
+| Mac | Windows e Linux |
+|---|---|
+| `Packages/GlobyCore` | `desktop/globy-core` (Rust), stessi test e fixture |
+| `AppSession`, `PollingScheduler` | `src-tauri/src/session.rs` |
+| `StatusItemController`, `MenuBarView` | `src-tauri/src/tray.rs`, `windows.rs`, `src/menu` |
+| `SettingsView`, `PreferenceStore` | `src/settings`, `src-tauri/src/prefs.rs` |
+| `MascotView`, `MascotWindowController` | `src/mascot`, `src-tauri/src/mascot.rs` |
+
+La logica di Globy (coda, saluti, tempi, disegno) sta nella pagina; il lato Rust fa
+ciò che una pagina non può: posizione e forma della finestra, clic che passano, puntatore
+fuori dalla finestra, comparsa senza fuoco. Il risveglio dallo stop si riconosce dal
+salto dell'orologio di sistema, perché non esiste un avviso comune ai due sistemi.
+
+Differenze volute: su Windows la finestra di Globy ha la forma di globo e fumetto
+(vetro solo lì, clic che passano fuori); su Linux X11 i clic che passano si calcolano
+dal puntatore; con Wayland la finestra la posiziona il sistema e gli occhi non seguono
+il puntatore. Su Linux l'icona di sistema apre solo un menu, con «Ultimi VOX» in cima.
 
 ## Confini futuri
 

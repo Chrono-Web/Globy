@@ -1,7 +1,8 @@
 # Sviluppo
 
 - Aggiornato: 2026-09-17
-- Stato: progetto Xcode nativo; Debug usa fixture in processo, senza rete
+- Stato: progetto Xcode nativo per il Mac, app Tauri in `desktop/` per Windows e Linux;
+  Debug usa fixture in processo, senza rete
 - Risponde a: come preparare, eseguire e verificare Globy in locale
 
 ## Scelte chiuse il 2026-09-16
@@ -82,6 +83,48 @@ Opzioni di avvio, solo in Debug, per provare l'app senza aspettare eventi reali
 rete. `xcodebuild … test` ha eseguito `GlobyTests` sullo stesso toolchain.
 
 La suite automatica non apre connessioni di rete e non pubblica contenuti reali.
+
+## Windows e Linux (`desktop/`)
+
+App Tauri 2 (ADR 0005). Serve Rust (`rustup`, canale stable) e Node 22. Si sviluppa
+anche dal Mac: tray, finestre e globo girano, ma vetro Acrylic, forma della finestra e
+Wayland si vedono solo sui sistemi veri (collaudo in `docs/COLLAUDO_DESKTOP.md`).
+
+```text
+desktop/
+├── globy-core/        # porting di GlobyCore, senza grafica; test con le fixture Swift
+├── src-tauri/         # app: sessione, tray, finestre, preferenze, forma di Globy
+├── src/               # pagine: elenco (menu), Impostazioni (settings), Globy (mascot)
+└── *.html             # una pagina per finestra
+```
+
+Comandi, dalla cartella `desktop/`:
+
+```bash
+npm ci
+cargo test -p globy-core
+cargo test -p globy-core --test live -- --ignored
+cargo test -p globy
+npm run tauri dev
+npx tauri build
+```
+
+Il test `live` legge Chronocol pubblico ed è escluso di default. Il resto non usa la rete.
+
+In sviluppo l'app usa la fixture in processo, con dati in `content-fixture.json`.
+Variabili, solo nelle build di debug salvo `GLOBY_SURFACE`:
+
+| Variabile o opzione | Effetto |
+|---|---|
+| `GLOBY_LIVE=1` | legge Chronocol pubblico invece della fixture |
+| `GLOBY_POLL_SECONDS=S` | controllo periodico ogni S secondi |
+| `GLOBY_SIMULATE_VOX=N` | pubblica N VOX sulla fixture 4 secondi dopo l'avvio |
+| `globy --simulate-vox N` | con Globy già aperto, pubblica N VOX sulla copia aperta |
+| `GLOBY_SURFACE=dark` | superficie scura anche dove c'è il vetro, per confrontare |
+
+Dati di sviluppo: sul Mac `~/Library/Application Support/com.chronocol.globy/`.
+Regole e testi comuni stanno in `globy-core`: una modifica a una politica va fatta in
+`Packages/GlobyCore` e in `desktop/globy-core`, con lo stesso test.
 
 ## Ambiente
 

@@ -3,13 +3,16 @@
 - Aggiornato: 2026-09-17
 - Risponde a: che cosa è Globy, a che punto è e dove trovare ogni documento
 
-Per scaricare e installare Globy basta il [README](../README.md) (il pulsante scarica
-`Globy.dmg` dall'ultima Release GitHub). Questa guida è per chi vuole capire il
+Per scaricare e installare Globy basta il [README](../README.md) (i pulsanti scaricano
+dall'ultima Release GitHub la versione per Mac, Windows o Linux). Questa guida è per chi vuole capire il
 progetto o lavorarci.
 
 > **Stato: pre-alpha, versione 0.1.1.** Le fasi 0–3 sono chiuse. L'app legge Chronocol
 > pubblico con sole GET ed è stata collaudata a mano; arrivi reali, rientro e rete sono
 > la fase 4. Il DMG non è firmato né notarizzato.
+>
+> **In preparazione: 0.2.0 per Windows e Linux** (ramo `desktop`, ADR 0005). L'app Tauri
+> in `desktop/` è costruita; manca il collaudo umano (`docs/COLLAUDO_DESKTOP.md`).
 
 Globy è il compagno ufficiale macOS di [Chronocol](https://chronocol.com): vive nella
 barra dei menu e raccoglie i VOX più recenti. Quando arriva un nuovo VOX confermato,
@@ -65,6 +68,7 @@ La roadmap è in [`docs/ROADMAP.md`](ROADMAP.md). Il brief è in
 | [`docs/TRAPPOLE.md`](TRAPPOLE.md) | Assunzioni apparentemente vere che possono rompere Globy |
 | [`docs/ROADMAP.md`](ROADMAP.md) | Fasi, gate e stato reale |
 | [`docs/COLLAUDO_FASE3.md`](COLLAUDO_FASE3.md) | Collaudo umano della fase 3 ed esito |
+| [`docs/COLLAUDO_DESKTOP.md`](COLLAUDO_DESKTOP.md) | Collaudo umano di Windows e Linux |
 | [`CHANGELOG.md`](../CHANGELOG.md) | Che cosa è cambiato in ogni versione |
 | [`docs/adr/`](adr/) | Perché una decisione interna è stata presa |
 

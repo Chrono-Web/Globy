@@ -7,6 +7,7 @@
 - Vincolante per: prodotto, shell macOS, mascotte
 - Nasce da: fondazione iniziale della repository
 - Sostituisce: nulla
+- Esteso da: [0005](0005-globy-su-windows-e-linux-con-tauri.md), Windows e Linux
 
 ## Contesto
 

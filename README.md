@@ -5,26 +5,55 @@
 <h1 align="center">Globy</h1>
 
 <p align="center">
-  I VOX di <a href="https://chronocol.com">Chronocol</a> sul tuo Mac: nella barra dei menu e,<br>
+  I VOX di <a href="https://chronocol.com">Chronocol</a> sul tuo computer: a portata di clic e,<br>
   quando ne esce uno nuovo, con un piccolo globo che te lo legge.
 </p>
 
 <p align="center">
-  <a href="https://github.com/Chrono-Web/GLOBY/releases/latest/download/Globy.dmg"><b>⬇ Scarica Globy per macOS</b></a>
+  <a href="https://github.com/Chrono-Web/Globy/releases/latest/download/Globy.dmg"><b>⬇ Scarica per Mac</b></a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/Chrono-Web/Globy/releases/latest/download/Globy-Windows.exe"><b>⬇ Scarica per Windows</b></a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/Chrono-Web/Globy/releases/latest/download/Globy-Linux.AppImage"><b>⬇ Scarica per Linux</b></a>
   <br>
-  <sub>Versione 0.1.1 · macOS 15 o successivo · gratuito e open source</sub>
+  <sub>Versione 0.2.0 · macOS 15+, Windows 10/11, Linux a 64 bit · gratuito e open source</sub>
 </p>
 
 ## Installare
+
+### Mac
 
 1. Apri `Globy.dmg` e trascina Globy nella cartella **Applicazioni**.
 2. Apri Globy. La prima volta il Mac lo blocca perché non è ancora firmato da Apple:
    vai in **Impostazioni di Sistema › Privacy e sicurezza** e premi **Apri comunque**.
 3. Globy compare in alto nella barra dei menu e si presenta in basso a destra.
 
+### Windows
+
+1. Apri `Globy-Windows.exe`. Windows avvisa che l'app non è riconosciuta perché non è
+   firmata: premi **Ulteriori informazioni** e poi **Esegui comunque**.
+2. L'installazione non chiede permessi di amministratore.
+3. Globy compare tra le icone vicino all'orologio (se non la vedi, apri la freccia **^**)
+   e si presenta in basso a destra.
+
+### Linux
+
+1. Scarica `Globy-Linux.AppImage`, poi rendilo eseguibile: tasto destro › Proprietà ›
+   **Consenti l'esecuzione come programma**, oppure `chmod +x Globy-Linux.AppImage`.
+2. Aprilo con un doppio clic.
+3. Su Ubuntu, Debian e Mint puoi usare invece il
+   [pacchetto `.deb`](https://github.com/Chrono-Web/Globy/releases/latest/download/Globy-Linux.deb):
+   doppio clic per installarlo.
+
+Globy compare tra le icone di sistema. Su GNOME serve l'estensione
+**AppIndicator** (su Ubuntu c'è già). Con Wayland il globo appare in una piccola
+finestra che il sistema posiziona da sé.
+
 ## Disinstallare
 
-Clic su Globy nella barra dei menu › **Impostazioni…** › **Disinstalla Globy…**
+Apri **Impostazioni…** dall'icona di Globy › **Disinstalla Globy…**. Su Windows parte il
+programma di disinstallazione; su Linux cancella poi il file AppImage, oppure
+`sudo apt remove globy` se hai usato il `.deb`.
 
 ---
 

@@ -1,7 +1,8 @@
 # Distribuzione
 
 - Aggiornato: 2026-09-17
-- Stato: canale scelto; DMG su GitHub Releases (`Globy.dmg`) non firmato; pipeline automatica di release non costruita
+- Stato: canale scelto; su GitHub Releases DMG manuale (`Globy.dmg`) e installer Windows e
+  Linux creati dalla CI, tutti non firmati
 - Risponde a: come una build diventa una release installabile e aggiornabile
 
 ## Decisione
@@ -36,6 +37,24 @@ La disinstallazione normale sta nell'app: Impostazioni › «Disinstalla Globy�
 l'avvio al login e le notifiche consegnate, cancella dati e impostazioni e sposta l'app
 nel Cestino. Il permesso notifiche resta nelle Impostazioni di Sistema.
 
+## Windows e Linux
+
+`.github/workflows/desktop.yml` crea gli installer da `desktop/` (ADR 0005):
+
+| File nella Release | Sistema | Formato |
+|---|---|---|
+| `Globy-Windows.exe` | Windows 10 e 11 | installer NSIS per l'utente corrente, senza amministratore |
+| `Globy-Linux.AppImage` | Linux a 64 bit | un solo file eseguibile |
+| `Globy-Linux.deb` | Ubuntu, Debian, Mint | pacchetto |
+
+I nomi sono fissi a ogni versione, come `Globy.dmg`: il README punta a
+`/releases/latest/download/<nome>`. Nessuno è firmato: Windows mostra SmartScreen
+(«Ulteriori informazioni › Esegui comunque»). La build Linux gira su Ubuntu 22.04,
+così l'AppImage funziona anche sulle distribuzioni più nuove.
+
+Ogni push sui rami `main` e `desktop` che tocca `desktop/` produce gli installer come
+artifact dell'esecuzione: servono al collaudo (`docs/COLLAUDO_DESKTOP.md`).
+
 ## Requisiti comuni
 
 - bundle identifier stabile: `com.chronocol.globy`, casa `docs/SVILUPPO.md`;
@@ -61,9 +80,18 @@ L'asset da allegare si chiama **`Globy.dmg`**, non solo `Globy-<versione>.dmg`: 
 nome nel link del README. Non segnare la Release come pre-release: GitHub esclude
 le pre-release da `/releases/latest`, e il pulsante «Scarica» andrebbe a vuoto.
 
+Dalla 0.2.0 una versione esce per i tre sistemi insieme:
+
+1. stessa versione in `Globy.xcodeproj` (`MARKETING_VERSION`),
+   `desktop/src-tauri/tauri.conf.json`, `desktop/package.json` e `desktop/Cargo.toml`;
+2. tag e push: la CI crea la Release in bozza e allega Windows e Linux;
+3. DMG del Mac allegato a mano, poi la bozza si pubblica come ultima versione:
+
 ```bash
+git tag v0.2.0 && git push origin v0.2.0
 ./scripts/crea-dmg.sh
-gh release create v0.1.1 --title "Globy 0.1.1" --latest build/Globy.dmg
+gh release upload v0.2.0 build/Globy.dmg
+gh release edit v0.2.0 --draft=false --latest --notes-file note.md
 ```
 
 Il numero è `CFBundleShortVersionString`. Le note si copiano da `CHANGELOG.md`.

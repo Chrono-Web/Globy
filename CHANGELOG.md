@@ -2,6 +2,20 @@
 
 Le modifiche rilevanti a Globy sono registrate qui.
 
+## 0.2.0 — in preparazione
+
+Globy arriva su Windows e Linux (ADR 0005). Il Mac non cambia.
+
+### Aggiunto
+
+- **Windows e Linux:** app in `desktop/` con icona di sistema, elenco dei VOX,
+  Impostazioni, notifiche di sistema, avvio all'accesso e Globy con fumetto, coda,
+  saluti e onboarding. Vetro Acrylic su Windows; con Wayland un Globy ridotto.
+- **Nucleo in Rust:** `desktop/globy-core`, stesse regole e stessi test di GlobyCore.
+- **Installer:** `Globy-Windows.exe`, `Globy-Linux.AppImage` e `Globy-Linux.deb` creati
+  dalla CI, non firmati.
+- **README:** pulsanti di download per Mac, Windows e Linux.
+
 ## 0.1.1 — 2026-09-17
 
 Pre-alpha. DMG non firmato e non notarizzato; macOS 15 o successivo.

@@ -18,7 +18,8 @@ Leggi, nell'ordine:
 7. gli ADR pertinenti in `docs/adr/`.
 
 Non trattare gli spike come se fossero l'app: `Packages/GlobyCore/` e
-`Spikes/MascotSpike/` restano libreria e prototipo. L'app è `Globy.xcodeproj`.
+`Spikes/MascotSpike/` restano libreria e prototipo. L'app Mac è `Globy.xcodeproj`;
+Windows e Linux sono l'app Tauri in `desktop/` (ADR 0005).
 
 ## Identità del progetto
 
@@ -49,6 +50,7 @@ degli eventi persi.
 | `docs/TRAPPOLE.md` | Errori ricorrenti e assunzioni vietate |
 | `docs/ROADMAP.md` | Stato reale e criteri di completamento |
 | `docs/COLLAUDO_FASE3.md` | Checklist del collaudo umano che chiude la fase 3 |
+| `docs/COLLAUDO_DESKTOP.md` | Checklist del collaudo umano su Windows e Linux |
 | `docs/adr/` | Perché una decisione interna è stata presa |
 
 Un fatto deve avere una casa sola. Gli altri documenti lo collegano, non lo copiano.
