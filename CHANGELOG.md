@@ -1,57 +1,43 @@
 # Changelog
 
-Le modifiche rilevanti a Globy sono registrate qui. Non c'è ancora un
-versionamento pubblico.
+Le modifiche rilevanti a Globy sono registrate qui.
 
-## Non rilasciato
+## 0.1.0 — 2026-09-17
+
+Prima versione, pre-alpha. DMG non firmato e non notarizzato; macOS 15 o successivo.
 
 ### Aggiunto
 
-- Fondazione documentale del progetto.
-- Brief di prodotto, architettura e contratto API osservato.
-- Regole per agenti, contributi, sicurezza, privacy e distribuzione.
-- Roadmap verificabile e registro delle decisioni architetturali.
-- Spike usa e getta della mascotte 2D in `Spikes/MascotSpike/`.
-- Saluto di rientro a ogni avvio e risveglio: «non ti sei perso nulla» o i VOX
-  nuovi dietro la freccia.
-- Al primo avvio il globo chiede se mostrare gli ultimi 5 VOX pubblicati («Sì, partiamo»
-  / «No, grazie»); la fixture Debug ha 6 VOX per provarlo.
-- Il fumetto resta a schermo in base alla lunghezza del testo, non più 6 s fissi.
-- Impostazioni «Dimensioni personalizzate» per testo e pulsanti del fumetto, con
-  anteprima dal vivo sul globo.
-- La Release legge Chronocol pubblico (solo GET); «Simula…» resta nella Debug.
-- L'archivio del primo avvio non conta più tra i non letti.
-- Fumetto, menu e banner mostrano i VOX senza fonti e link, con il testo intero
-  (limite di sicurezza a 16 righe).
-- Onboarding raccontato da Globy: presentazione, menu, Impostazioni, poi i 5 VOX recenti.
-- Globy più piccolo di default (70 pt di disco); i VOX in sequenza vanno sempre dal
-  più vecchio al più recente.
-- DMG con finestra curata (sfondo, freccia, icone) e istruzioni di installazione e
-  disinstallazione (`scripts/crea-dmg.sh`).
-- Icona dell’app: il globo di Globy in vetro trasparente su sfondo grigio molto scuro.
-- «Preferenze» diventano «Impostazioni», con «Disinstalla Globy…» in fondo.
-- Una sola copia di Globy alla volta. Fase 3 chiusa dopo il collaudo umano.
-- Clic destro su Globy: «Impostazioni…» e «Nascondi Globy». Feedback aptico sui cursori
-  delle dimensioni.
-- Impostazioni riorganizzate: sezione Globy (mostra sempre, login, suono), grandezza di
-  Globy tra le dimensioni, «Notifiche di sistema» come modalità al posto di Globy.
-- Checklist di collaudo della fase 3 in `docs/COLLAUDO_FASE3.md`.
-- Controllo periodico ogni 5 minuti mentre il Mac è acceso, con backoff sugli errori
-  e sync immediata al ritorno della rete.
-- Licenza GNU GPL versione 3.
-- Fase 0 chiusa: macOS 15, `com.chronocol.globy`, GitHub non firmato, ADR 0001 e 0002 accettati.
-- Spike di sincronizzazione in `Packages/GlobyCore/`: baseline, catch-up, hint SSE e
-  suite di 29 test senza rete.
-- Spike mascotte 2D: coda, permanenza, frecce di coda, saluto di primo avvio
-  (fessura arcuata, non è un VOX). RealityKit scartato (ADR 0003). Fase 2 chiusa.
-- Store locale JSON dietro `ContentStore` (ADR 0004), con test di round-trip.
-- App macOS (`Globy.xcodeproj`): barra dei menu, store JSON, saluto, preferenze,
-  notifiche locali senza suono e mascotte sulle fixture in processo. Fase 3 `[~]`.
+- **App nella barra dei menu:** elenco degli ultimi VOX con i non letti in evidenza,
+  permalink nel browser, store locale JSON (ADR 0004), una sola copia alla volta.
+- **Sincronizzazione:** lettura pubblica di Chronocol con sole GET (RSS, elenco JSON
+  per i buchi), baseline senza notificare l'archivio, controllo ogni 5 minuti con
+  jitter e backoff, sync al risveglio e al ritorno della rete (ADR 0002).
+- **Globy:** globo 2D in vetro in basso a destra (ADR 0003), fumetto che resta il
+  tempo di leggerlo, coda dal VOX più vecchio al più recente, testo senza fonti né
+  link, trascinabile, clic destro con «Impostazioni…» e «Nascondi Globy».
+- **Primo avvio:** onboarding raccontato da Globy (menu, Impostazioni) e proposta
+  «Sì / No» degli ultimi 5 VOX come recenti.
+- **Saluto di rientro** a ogni avvio e risveglio, con l'esito della sincronizzazione;
+  senza novità non si ripete entro 10 minuti.
+- **Impostazioni:** Mostra sempre Globy, avvio al login, suono; dimensioni di Globy,
+  testo e pulsanti con anteprima dal vivo e aptica; «Notifiche di sistema» come
+  modalità al posto di Globy; azzera dati; «Disinstalla Globy…».
+- **Distribuzione:** DMG con finestra curata e istruzioni (`scripts/crea-dmg.sh`),
+  icona di Globy in vetro su grigio molto scuro.
+- **Progetto:** documentazione, ADR 0001–0004, spike di sincronizzazione e mascotte,
+  39 test di GlobyCore più i test dell'app, collaudo umano della fase 3
+  (`docs/COLLAUDO_FASE3.md`). Licenza GNU GPL versione 3.
 
-### Corretto
+### Corretto durante il collaudo
 
-- File di comunità e contratto API allineati a ciò che esiste oggi: niente canali,
-  SLA o bug di un'app inesistente.
-- Spike mascotte: globo e fumetto restano nella `visibleFrame`; il fumetto si
-  centra sopra il globo e passa sotto se in alto non c'è spazio. Comparsa e
-  scomparsa non spostano più il globo.
+- Vetro del globo e del menu tornati dopo il passaggio al progetto Xcode; menu non
+  più tagliato né con il bordo squadrato.
+- VOX reali lunghi e pieni di link nel fumetto; archivio del primo avvio contato tra
+  i non letti; «Heilà» ripetuto a ogni riavvio; onboarding nell'ordine sbagliato.
+- «VOX» usato al femminile in interfaccia e documentazione: è maschile.
+
+### Non ancora verificato
+
+Arrivo di un VOX nuovo reale, notifica di sistema per un VOX nuovo, rientro dallo
+stop e cambio rete: sono nella fase 4 di `docs/ROADMAP.md`.

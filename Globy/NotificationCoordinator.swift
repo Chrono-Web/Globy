@@ -50,7 +50,7 @@ final class NotificationCoordinator: NSObject, UNUserNotificationCenterDelegate 
         let info = response.notification.request.content.userInfo
         guard let raw = info["permalink"] as? String, let url = URL(string: raw) else { return }
         await MainActor.run {
-            NSWorkspace.shared.open(url)
+            _ = NSWorkspace.shared.open(url)
         }
     }
 }
