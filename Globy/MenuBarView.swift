@@ -83,11 +83,11 @@ struct MenuBarView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Due cose, poi basta")
                 .font(.headline)
-            Text("Globy legge i VOX pubblici di Chronocol. L’archivio già presente non viene notificato: al primo avvio il globo ti chiede soltanto se vuoi vedere gli ultimi \(WelcomePolicy.tourSize) VOX pubblicati, e puoi dire di no.")
+            Text("Globy legge i VOX pubblici di Chronocol. L’archivio già presente non viene notificato: in questo menu trovi gli ultimi VOX, con in evidenza quelli nuovi non letti.")
                 .font(.callout)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
-            Text("Se vuoi, dopo questa spiegazione può chiedere il permesso per le notifiche locali. Negarlo non è un errore: il menu continua a funzionare.")
+            Text("Qui sotto ci sono le Preferenze (mascotte, suono, dimensioni). Se vuoi, Globy può avvisarti anche con una notifica di sistema senza suono: negarla non è un errore.")
                 .font(.callout)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)

@@ -18,6 +18,8 @@ struct Vox: Equatable {
     var kind: Kind = .publication
     /// Il fumetto mostra «Sì» e «No» invece della freccia.
     var asksChoice = false
+    var yesTitle = "Sì, partiamo"
+    var noTitle = "No, grazie"
 
     /// Saluto di primo avvio: non è un VOX e non nasce dalla sincronizzazione.
     static let greeting = Vox(
@@ -27,8 +29,10 @@ struct Vox: Equatable {
     )
 
     /// Saluto di rientro, all'avvio o al risveglio: il testo viene da `WelcomePolicy`.
-    static func welcome(_ text: String, asksChoice: Bool = false) -> Vox {
-        Vox(text: text, permalink: URL(string: "https://chronocol.com/it")!, kind: .greeting, asksChoice: asksChoice)
+    static func welcome(_ text: String, asksChoice: Bool = false,
+                        yesTitle: String = "Sì, partiamo", noTitle: String = "No, grazie") -> Vox {
+        Vox(text: text, permalink: URL(string: "https://chronocol.com/it")!, kind: .greeting,
+            asksChoice: asksChoice, yesTitle: yesTitle, noTitle: noTitle)
     }
 
     static let preview = Vox(
@@ -92,8 +96,9 @@ final class VoxLayout {
     /// Fine di ogni carattere, calcolata una volta sola: `carets[n]` segue l'n-esimo.
     private let carets: [CGPoint]
 
-    /// Righe massime nel fumetto: oltre, il testo finisce con «…» e il resto è su Chronocol.
-    static let maxLines = 8
+    /// Limite di sicurezza: senza fonti un VOX sta quasi sempre sotto. Oltre, «…» e il
+    /// resto è su Chronocol.
+    static let maxLines = 16
 
     init(_ vox: Vox) {
         self.vox = vox
@@ -218,8 +223,8 @@ struct VoxCard: View {
                 // Solo disegno: i clic li prendono i bersagli AppKit sopra, come per X e frecce.
                 HStack(spacing: VoxLayout.choiceSpacing) {
                     Spacer(minLength: 0)
-                    ChoicePill(title: "No, grazie", prominent: false, width: VoxLayout.noWidth, scale: textScale)
-                    ChoicePill(title: "Sì, partiamo", prominent: true, width: VoxLayout.yesWidth, scale: textScale)
+                    ChoicePill(title: layout.vox.noTitle, prominent: false, width: VoxLayout.noWidth, scale: textScale)
+                    ChoicePill(title: layout.vox.yesTitle, prominent: true, width: VoxLayout.yesWidth, scale: textScale)
                 }
                 .frame(height: VoxLayout.choiceHeight)
             }

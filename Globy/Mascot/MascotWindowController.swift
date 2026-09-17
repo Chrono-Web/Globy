@@ -35,6 +35,13 @@ final class MascotWindowController {
     private var greetingItems: [Vox] = []
     /// Il saluto chiede «Sì / No» invece di offrire la freccia.
     private var greetingAsksChoice = false
+    /// Fumetti che seguono questo saluto (onboarding): il numerino sulla freccia.
+    private var greetingSteps = 0
+    private var greetingCompletion: ((GreetingOutcome) -> Void)?
+    /// Da eseguire quando il globo avrebbe finito e starebbe per uscire.
+    private var whenIdle: (() -> Void)?
+
+    enum GreetingOutcome { case accepted, declined, timedOut }
     /// Anteprima delle dimensioni, finché le Preferenze sono aperte.
     private var previewing = false
     /// Le Preferenze sono aperte: finito un saluto o un VOX, l'anteprima torna.
@@ -177,7 +184,14 @@ final class MascotWindowController {
         syncCornerButtons()
     }
 
-    func presentGreeting(_ greeting: Vox = .greeting, then items: [Vox] = []) {
+    /// Esegue `action` al posto dell'uscita del globo, una volta sola: per concatenare
+    /// presentazione e onboarding senza farlo sparire e ricomparire.
+    func afterCurrentPresentation(_ action: @escaping () -> Void) {
+        whenIdle = action
+    }
+
+    func presentGreeting(_ greeting: Vox = .greeting, then items: [Vox] = [], followingSteps: Int = 0,
+                         completion: ((GreetingOutcome) -> Void)? = nil) {
         guard current == nil else {
             summonBurst(items)
             return
@@ -185,7 +199,13 @@ final class MascotWindowController {
         previewing = false
         queue.append(contentsOf: items)
         greetingItems.append(contentsOf: items)
-        greetingAsksChoice = greeting.asksChoice && !items.isEmpty
+        greetingSteps = followingSteps
+        greetingCompletion = completion
+        greetingAsksChoice = greeting.asksChoice && (!items.isEmpty || completion != nil)
+        yesButton.toolTip = greeting.yesTitle
+        yesButton.setAccessibilityLabel(greeting.yesTitle)
+        noButton.toolTip = greeting.noTitle
+        noButton.setAccessibilityLabel(greeting.noTitle)
         showingGreeting = true
         model.setSmiling(true)
         if model.phase == .hidden || model.phase == .leaving {
@@ -201,7 +221,9 @@ final class MascotWindowController {
             cancelHide()
         } else {
             // A una domanda si lascia più tempo per rispondere.
-            scheduleHide(after: readingDone + (greetingAsksChoice ? Self.choiceLinger : ReadingPolicy.linger(forText: VoxLayout.fitted(greeting.text))))
+            // A una domanda, o a un passo dell'onboarding, si lascia più tempo.
+            let waitsForUser = greetingAsksChoice || greetingSteps > 0
+            scheduleHide(after: readingDone + (waitsForUser ? Self.choiceLinger : ReadingPolicy.linger(forText: VoxLayout.fitted(greeting.text))))
         }
     }
 
@@ -210,7 +232,7 @@ final class MascotWindowController {
         if previewing { return }
         if showingGreeting {
             // Con «Sì / No» si risponde dai pulsanti, non con un clic qualsiasi sul fumetto.
-            if !queue.isEmpty, !greetingAsksChoice { acceptGreeting() }
+            if !queue.isEmpty || greetingSteps > 0, !greetingAsksChoice { acceptGreeting() }
             return
         }
         guard let current else { return }
@@ -225,8 +247,7 @@ final class MascotWindowController {
         }
         if showingGreeting {
             // X sul saluto vuol dire «dopo»: i VOX portati restano nel menu.
-            dropGreetingItems()
-            endGreeting()
+            finishGreeting(.declined)
             return
         }
         if !queue.isEmpty { queue.removeFirst() }
@@ -248,6 +269,7 @@ final class MascotWindowController {
     private func endGreeting() {
         greetingItems.removeAll()
         greetingAsksChoice = false
+        greetingSteps = 0
         showingGreeting = false
         model.setSmiling(false)
         model.dismissVox()
@@ -265,13 +287,26 @@ final class MascotWindowController {
     /// «No»: chiude il fumetto e, senza permanenza, il globo esce poco dopo.
     private func declineGreeting() {
         closeVoxOnly()
-        if !permanence, current == nil { scheduleHide(after: 1.2) }
+        if !permanence, current == nil, !showingGreeting { scheduleHide(after: 1.2) }
     }
 
     /// «Sì» o freccia sul saluto: parte la coda che il saluto ha portato.
     private func acceptGreeting() {
         guard showingGreeting else { return }
+        finishGreeting(.accepted)
+    }
+
+    /// Chiude il saluto e avvisa chi l'ha chiesto; `completion` può presentarne un altro.
+    private func finishGreeting(_ outcome: GreetingOutcome) {
+        let completion = greetingCompletion
+        greetingCompletion = nil
+        if outcome != .accepted { dropGreetingItems() }
         endGreeting()
+        completion?(outcome)
+        // Risposta data e niente altro da dire: il globo esce poco dopo.
+        if outcome != .timedOut, !showingGreeting, current == nil, queue.isEmpty, !permanence {
+            scheduleHide(after: 1.2)
+        }
     }
 
     private func goToNext() {
@@ -343,9 +378,8 @@ final class MascotWindowController {
         hideWork = nil
         if permanence || previewing { return }
         if showingGreeting {
-            dropGreetingItems()
-            endGreeting()
-            if queue.isEmpty { dismiss() }
+            finishGreeting(.timedOut)
+            if queue.isEmpty, !showingGreeting { dismiss() }
             return
         }
         if model.reading != nil, queue.count > 1, let shown = queue.first {
@@ -384,7 +418,7 @@ final class MascotWindowController {
             return
         }
         if showingGreeting {
-            model.remaining = greetingAsksChoice ? 0 : queue.count
+            model.remaining = greetingAsksChoice ? 0 : (greetingItems.isEmpty ? greetingSteps : queue.count)
             model.previous = 0
             let label = queue.count == 1 ? "Mostra il VOX" : "Mostra i \(queue.count) VOX"
             nextButton.toolTip = label
@@ -423,6 +457,11 @@ final class MascotWindowController {
     }
 
     private func dismiss() {
+        if let next = whenIdle, current == nil, !showingGreeting, !previewing {
+            whenIdle = nil
+            next()
+            return
+        }
         if previewRequested, !previewing, current == nil, !showingGreeting {
             showPreview()
             return

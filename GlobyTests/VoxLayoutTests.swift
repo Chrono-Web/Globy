@@ -16,10 +16,10 @@ struct VoxLayoutTests {
     Fonti: https://www.lemonde.fr/international/article/2026/09/16/a-gaza · https://www.bbc.co.uk/news/articles/cvp8d00j9gg5o
     """
 
-    @Test("un VOX lungo resta entro le righe massime e finisce con «…»")
+    @Test("un VOX lungo perde le fonti e resta entro le righe massime")
     func longVoxIsCapped() {
         let layout = VoxLayout(Vox(record: record(longVox)))
-        #expect(layout.text.hasSuffix("…"))
+        #expect(layout.text.hasSuffix("dal 7 ottobre."))
         #expect(!layout.text.contains("http"))
         let lineHeight = NSLayoutManager().defaultLineHeight(for: .systemFont(ofSize: VoxLayout.fontSize))
         #expect(layout.textHeight <= lineHeight * CGFloat(VoxLayout.maxLines) + 4)

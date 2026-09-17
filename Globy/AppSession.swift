@@ -315,6 +315,24 @@ final class AppSession: ObservableObject {
     }
     #endif
 
+    /// Tre fumetti dopo la presentazione. Ignorato o chiuso con la X, resta il blocco in
+    /// cima al menu; «No» alle notifiche vale come onboarding concluso.
+    private func startOnboardingGuide() {
+        guard preferences.mascotEnabled, !preferences.didOnboard else { return }
+        let steps = WelcomePolicy.onboarding
+        mascot.presentGreeting(.welcome(steps[0]), followingSteps: 2) { [weak self] outcome in
+            guard outcome == .accepted, let self else { return }
+            self.mascot.presentGreeting(.welcome(steps[1]), followingSteps: 1) { [weak self] outcome in
+                guard outcome == .accepted, let self else { return }
+                let question = Vox.welcome(steps[2], asksChoice: true, yesTitle: "Sì, attivale", noTitle: "No, grazie")
+                self.mascot.presentGreeting(question) { [weak self] outcome in
+                    guard outcome != .timedOut else { return }
+                    Task { await self?.finishOnboarding(requestNotifications: outcome == .accepted) }
+                }
+            }
+        }
+    }
+
     private func presentGreetingIfNeeded() {
         guard preferences.mascotEnabled, !preferences.didGreet else { return }
         preferences.didGreet = true
@@ -322,7 +340,9 @@ final class AppSession: ObservableObject {
         let latest = recent.prefix(WelcomePolicy.tourSize).map { Vox(record: $0, kind: .recent) }
         let greeting = Vox.welcome(WelcomePolicy.introduction(latestCount: latest.count), asksChoice: true)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in
-            self?.mascot.presentGreeting(greeting, then: latest)
+            guard let self else { return }
+            self.mascot.afterCurrentPresentation { [weak self] in self?.startOnboardingGuide() }
+            self.mascot.presentGreeting(greeting, then: latest)
         }
     }
 

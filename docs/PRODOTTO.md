@@ -92,7 +92,8 @@ Decisioni di comportamento chiuse il 2026-09-16 (ADR 0003 per il motore):
   i numeretti indicano quanti ce ne sono da quella parte.
 - Testo di fumetto, menu e banner: senza la sezione «Fonti:» e senza link
   (`VoxText.readable`); le fonti restano nel VOX completo su Chronocol. Il fumetto
-  mostra al massimo 8 righe, poi «…»; il clic apre il VOX intero.
+  mostra il testo intero; solo oltre 16 righe, caso estremo, finisce con «…». Il clic
+  apre il VOX su Chronocol.
 - Gli angoli del fumetto appartengono a X e frecce: testo, intestazione e pulsanti
   interni non entrano mai in quelle zone (`VoxLayout.cornerClearance`), anche
   quando le frecce non sono visibili.
@@ -117,6 +118,11 @@ breve:
    recente, con l'etichetta «VOX recente · già uscito»: non sono notifiche, non
    segnano `notifiedAt` e non producono banner. «No», la X o nessuna risposta entro
    circa 20 s chiudono la presentazione. Se la baseline è vuota la domanda non c'è.
+4. finita la presentazione, il globo racconta l'onboarding in tre fumetti: dove
+   trovarlo nella barra dei menu e cosa c'è nel menu; le Preferenze; la domanda
+   «Le attivo?» sulle notifiche («Sì, attivale» chiede il permesso di sistema).
+   Si avanza con la freccia. Se viene ignorato o chiuso con la X, lo stesso
+   contenuto resta in cima al menu finché non si sceglie sulle notifiche.
 
 Niente wizard a più schermate. Il permesso negato non è un errore: casa
 `docs/TRAPPOLE.md` e `docs/PRIVACY.md`.

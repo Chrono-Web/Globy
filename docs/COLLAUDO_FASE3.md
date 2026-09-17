@@ -41,7 +41,11 @@ Segna ogni riga con ✅, ❌ (con una nota su cosa è successo) o «non provato�
       gli ultimi 5 VOX pubblicati?».
 - [ ] «Sì, partiamo»: passano 5 VOX veri, intestazione «VOX recente · già uscito»,
       frecce con numerini, nessun banner di sistema.
-- [ ] I VOX lunghi restano al massimo 8 righe con «…», senza «Fonti:» né link.
+- [ ] I VOX si leggono interi, senza «Fonti:» né link.
+- [ ] Finita la presentazione, il globo spiega in tre fumetti barra dei menu, menu e
+      Preferenze; la freccia avanza, il numerino dice quanti ne mancano.
+- [ ] Terzo fumetto «Le attivo?»: «Sì, attivale» mostra la richiesta di sistema; «No,
+      grazie» chiude. Dopo la risposta il blocco in cima al menu non c'è più.
 - [ ] Clic su un VOX recente: apre il permalink giusto nel browser.
 - [ ] Esci e riapri Globy: la presentazione **non** ricompare; compare il saluto di
       rientro («Non ti sei perso nulla…» se non è uscito niente).
@@ -52,7 +56,8 @@ Segna ogni riga con ✅, ❌ (con una nota su cosa è successo) o «non provato�
 
 - [ ] Clic sul globo: pannello in vetro con angoli arrotondati, nessun bordo squadrato.
 - [ ] Al primo avvio l'intestazione dice «Nessun VOX non letto»: l'archivio non conta.
-- [ ] Onboarding «Due cose, poi basta» in cima: «Non ora» lo chiude.
+- [ ] Se l'onboarding del globo è stato chiuso con la X, «Due cose, poi basta» resta in
+      cima al menu; «Non ora» lo chiude.
 - [ ] (Da zero) «Consenti notifiche»: compare la richiesta di sistema; negarla mostra la
       nota, il menu continua a funzionare.
 - [ ] L'elenco scorre; intestazione, Preferenze ed Esci restano visibili.
