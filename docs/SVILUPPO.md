@@ -69,6 +69,7 @@ Opzioni di avvio, solo in Debug, per provare l'app senza aspettare eventi reali
 
 | Opzione | Effetto |
 |---|---|
+| `--render-icon FILE` | disegna l'icona 1024 × 1024 in FILE (vedi `docs/ASSET.md`) |
 | `--live` | legge Chronocol pubblico (solo GET) invece della fixture; dati in `content-live.json` |
 | `--open-menu` | apre il pannello della barra dei menu |
 | `--open-preferences` | apre la finestra delle Impostazioni |

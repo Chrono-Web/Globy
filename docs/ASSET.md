@@ -1,7 +1,7 @@
 # Asset e attribuzioni
 
 - Aggiornato: 2026-09-17
-- Stato: nessun file grafico in repository; politica scelta
+- Stato: icona dell'app e sfondo del DMG, originali e generati dal codice
 - Risponde a: da dove provengono grafica, font, suoni e modelli e come possono essere usati
 
 ## Regola
@@ -14,10 +14,13 @@ terzi entra solo con una licenza compatibile e riga in questa tabella.
 
 ## Stato attuale
 
-Non sono presenti grafica, font, suoni o modelli. Il globo (spike e app) è disegnato dal
-codice, quindi non c'è un file da registrare. Quando verrà aggiunto il primo asset, la
-sezione registro diventa una tabella con file, autore, fonte, licenza, modifiche e
-attribuzione richiesta.
+Nessun asset di terzi: niente font, suoni, modelli o immagini esterne. Il globo (spike e
+app) è disegnato dal codice.
+
+| File | Autore | Fonte | Licenza | Note |
+|---|---|---|---|---|
+| `Globy/Assets.xcassets/AppIcon.appiconset/*.png` | progetto Globy | `AppIconArt` in `Globy/Mascot/MascotView.swift`, `Globy --render-icon` (Debug) poi `sips` | GPL-3.0 | Il vetro è imitato: il vetro di sistema non passa in un'immagine |
+| sfondo del DMG (generato a ogni build) | progetto Globy | `scripts/dmg/sfondo.swift` | GPL-3.0 | Font di sistema, non incluso nel file |
 
 ## Chronocol
 

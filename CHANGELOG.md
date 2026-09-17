@@ -26,7 +26,9 @@ versionamento pubblico.
 - Onboarding raccontato da Globy: presentazione, menu, Impostazioni, poi i 5 VOX recenti.
 - Globy più piccolo di default (70 pt di disco); i VOX in sequenza vanno sempre dal
   più vecchio al più recente.
-- DMG con istruzioni di installazione e disinstallazione (`scripts/crea-dmg.sh`).
+- DMG con finestra curata (sfondo, freccia, icone) e istruzioni di installazione e
+  disinstallazione (`scripts/crea-dmg.sh`).
+- Icona dell'app: il globo di Globy in vetro.
 - «Preferenze» diventano «Impostazioni», con «Disinstalla Globy…» in fondo.
 - Una sola copia di Globy alla volta. Fase 3 chiusa dopo il collaudo umano.
 - Clic destro su Globy: «Impostazioni…» e «Nascondi Globy». Feedback aptico sui cursori

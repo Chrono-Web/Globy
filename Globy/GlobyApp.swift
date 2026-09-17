@@ -1,4 +1,5 @@
 import AppKit
+import SwiftUI
 
 /// Avvio AppKit: niente `MenuBarExtra` né scena Settings.
 @main
@@ -52,6 +53,15 @@ final class GlobyAppDelegate: NSObject, NSApplicationDelegate {
                 try? await Task.sleep(for: .seconds(3))
                 await session.publishWithoutSync()
             }
+        }
+        if let i = CommandLine.arguments.firstIndex(of: "--render-icon"), i + 1 < CommandLine.arguments.count {
+            let renderer = ImageRenderer(content: AppIconArt())
+            renderer.scale = 1
+            if let cg = renderer.cgImage,
+               let png = NSBitmapImageRep(cgImage: cg).representation(using: .png, properties: [:]) {
+                try? png.write(to: URL(fileURLWithPath: CommandLine.arguments[i + 1]))
+            }
+            NSApp.terminate(nil)
         }
         if CommandLine.arguments.contains("--simulate-vox") {
             Task { [session] in await session.simulatePublication() }

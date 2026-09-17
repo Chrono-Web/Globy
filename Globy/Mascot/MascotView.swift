@@ -678,6 +678,42 @@ private var caretCheck: some View {
         }
 }
 
+/// Icona dell'app, 1024 × 1024: il globo vero di Globy su un riquadro chiaro con gli
+/// angoli di macOS. Si rigenera con `--render-icon` (solo Debug).
+struct AppIconArt: View {
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 186, style: .continuous)
+                .fill(LinearGradient(
+                    colors: [Color(red: 0.97, green: 0.98, blue: 1.0), Color(red: 0.78, green: 0.84, blue: 0.94)],
+                    startPoint: .top, endPoint: .bottom))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 186, style: .continuous)
+                        .strokeBorder(.white.opacity(0.7), lineWidth: 4)
+                }
+                .frame(width: 824, height: 824)
+                .shadow(color: .black.opacity(0.28), radius: 18, y: 10)
+            // Il vetro di sistema non passa in un'immagine: lo imita un disco sfocato e
+            // colorato sotto le stesse velature, griglia e occhi del globo in vetro.
+            ZStack {
+                GeometryReader { geo in
+                    let r = Globe.radius(geo.size), c = Globe.center(geo.size)
+                    Circle()
+                        .fill(RadialGradient(
+                            colors: [Color(red: 0.40, green: 0.42, blue: 0.47), Color(red: 0.11, green: 0.12, blue: 0.14)],
+                            center: UnitPoint(x: 0.35, y: 0.3), startRadius: 0, endRadius: r * 2))
+                        .frame(width: 2 * r, height: 2 * r)
+                        .position(c)
+                }
+                GlobeCanvas(surface: .liquidGlass, gaze: CGVector(dx: 0.12, dy: -0.18), eyeOpen: 1)
+            }
+            .frame(width: 650, height: 650)
+            .offset(y: -6)
+        }
+        .frame(width: 1024, height: 1024)
+    }
+}
+
 /// Foglio di controllo per `--snapshot`: superficie scura su sfondo chiaro e scuro, e
 /// velature del vetro su uno sfondo colorato.
 struct SnapshotSheet: View {

@@ -19,7 +19,10 @@ aggiornamento: per ora l'aggiornamento è scaricare la release successiva.
 
 ## DMG
 
-`scripts/crea-dmg.sh` compila la Release e crea `build/Globy-<versione>.dmg` con:
+`scripts/crea-dmg.sh` compila la Release e crea `build/Globy-<versione>.dmg`. La
+finestra ha sfondo con titolo e freccia (`scripts/dmg/sfondo.swift`), icone grandi e
+nessuna barra degli strumenti; la disposizione la scrive il Finder, quindi la prima
+volta macOS chiede il permesso di controllarlo. Contiene:
 
 - `Globy.app`, firmata solo localmente, non notarizzata;
 - un collegamento «Applicazioni» per installare trascinando;
