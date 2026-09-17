@@ -120,6 +120,7 @@ Variabili, solo nelle build di debug salvo `GLOBY_SURFACE`:
 | `GLOBY_POLL_SECONDS=S` | controllo periodico ogni S secondi |
 | `GLOBY_SIMULATE_VOX=N` | pubblica N VOX sulla fixture 4 secondi dopo l'avvio |
 | `globy --simulate-vox N` | con Globy già aperto, pubblica N VOX sulla copia aperta |
+| `globy --open-settings` | con Globy già aperto, apre le Impostazioni |
 | `GLOBY_SURFACE=dark` | superficie scura anche dove c'è il vetro, per confrontare |
 
 Dati di sviluppo: sul Mac `~/Library/Application Support/com.chronocol.globy/`.

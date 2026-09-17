@@ -19,8 +19,13 @@ pub fn run() {
         // Una sola copia di Globy: due globi e due sincronizzazioni si pesterebbero i piedi.
         // Riaprirlo mostra l'elenco dei VOX.
         .plugin(tauri_plugin_single_instance::init(|app, args, _cwd| {
-            // Solo sviluppo: `globy --simulate-vox N` sulla copia già aperta pubblica N VOX.
+            // Solo sviluppo, sulla copia già aperta: `globy --simulate-vox N` pubblica N VOX,
+            // `globy --open-settings` apre le Impostazioni.
             if cfg!(debug_assertions) {
+                if args.iter().any(|a| a == "--open-settings") {
+                    windows::show_settings(app);
+                    return;
+                }
                 if let Some(count) = args.iter().position(|a| a == "--simulate-vox").and_then(|i| args.get(i + 1)) {
                     if let (Ok(count), Some(session)) = (count.parse(), app.try_state::<Arc<session::Session>>()) {
                         let session = Arc::clone(&session);
