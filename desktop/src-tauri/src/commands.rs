@@ -71,11 +71,6 @@ pub fn quit(app: AppHandle) {
 }
 
 #[tauri::command]
-pub fn mascot_ready(app: AppHandle) {
-    windows::mascot_ready(&app);
-}
-
-#[tauri::command]
 pub async fn simulate_publication(session: S<'_>, count: usize) -> Result<(), ()> {
     session.inner().simulate_publication(count).await;
     Ok(())

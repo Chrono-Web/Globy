@@ -2,6 +2,7 @@
 //! finestre, preferenze, avvio al login e notifiche.
 
 mod commands;
+mod mascot;
 mod platform;
 mod prefs;
 mod session;
@@ -23,7 +24,8 @@ pub fn run() {
         .plugin(tauri_plugin_autostart::init(MacosLauncher::LaunchAgent, None))
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_opener::init())
-        .manage(windows::MascotBridge::default())
+        .manage(mascot::MascotBridge::default())
+        .on_menu_event(|app, event| mascot::handle_menu_event(app, event.id.as_ref()))
         .invoke_handler(tauri::generate_handler![
             commands::get_state,
             commands::has_glass,
@@ -37,7 +39,12 @@ pub fn run() {
             commands::show_settings,
             commands::hide_menu,
             commands::quit,
-            commands::mascot_ready,
+            mascot::mascot_ready,
+            mascot::mascot_screen,
+            mascot::mascot_layout,
+            mascot::mascot_set_visible,
+            mascot::mascot_follow_pointer,
+            mascot::mascot_context_menu,
             commands::simulate_publication,
         ])
         .setup(|app| {
@@ -48,6 +55,7 @@ pub fn run() {
             app.manage(Arc::clone(&session));
             tray::install(app.handle())?;
             windows::prepare_mascot(app.handle());
+            mascot::start_pointer_loop(app.handle().clone());
             session.start();
             Ok(())
         })

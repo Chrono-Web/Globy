@@ -1,6 +1,5 @@
 //! Finestre: elenco dei VOX vicino all'icona, Impostazioni, Globy.
 
-use std::sync::Mutex;
 use tauri::{
     AppHandle, Emitter, Manager, PhysicalPosition, PhysicalSize, Rect, WebviewUrl, WebviewWindow,
     WebviewWindowBuilder, WindowEvent,
@@ -31,7 +30,7 @@ fn menu_window(app: &AppHandle) -> tauri::Result<WebviewWindow> {
         .shadow(true)
         .visible(false)
         .build()?;
-    crate::platform::apply_glass(&window);
+    let _ = crate::platform::apply_glass(&window);
     // Come un menu: sparisce quando si clicca altrove.
     let handle = window.clone();
     window.on_window_event(move |event| {
@@ -121,58 +120,16 @@ pub fn show_settings(app: &AppHandle) {
 
 // MARK: Globy
 
-/// Richieste arrivate prima che la finestra di Globy fosse pronta.
-#[derive(Default)]
-pub struct MascotBridge {
-    ready: Mutex<bool>,
-    pending: Mutex<Vec<MascotRequest>>,
-}
-
-fn mascot_window(app: &AppHandle) -> tauri::Result<WebviewWindow> {
-    if let Some(window) = app.get_webview_window(MASCOT) {
-        return Ok(window);
-    }
-    let window = WebviewWindowBuilder::new(app, MASCOT, WebviewUrl::App("mascot.html".into()))
-        .title("Globy")
-        .inner_size(420.0, 360.0)
-        .decorations(false)
-        .resizable(false)
-        .skip_taskbar(true)
-        .always_on_top(!crate::session::Platform::current().wayland)
-        .transparent(true)
-        .shadow(false)
-        .focused(false)
-        .visible(false)
-        .build()?;
-    Ok(window)
+/// All'avvio: la finestra di Globy esiste da subito, nascosta, così la prima richiesta
+/// non aspetta il caricamento della pagina.
+pub fn prepare_mascot(app: &AppHandle) {
+    let _ = crate::mascot::window(app);
 }
 
 pub fn present_mascot(app: &AppHandle, request: MascotRequest) {
-    let bridge = app.state::<MascotBridge>();
-    if !*bridge.ready.lock().unwrap() {
-        bridge.pending.lock().unwrap().push(request);
-        let _ = mascot_window(app);
-        return;
-    }
-    let _ = app.emit_to(MASCOT, "mascot-request", request);
-}
-
-/// La finestra di Globy ha caricato la pagina: consegna ciò che aspettava.
-pub fn mascot_ready(app: &AppHandle) {
-    let bridge = app.state::<MascotBridge>();
-    *bridge.ready.lock().unwrap() = true;
-    let pending: Vec<MascotRequest> = std::mem::take(&mut *bridge.pending.lock().unwrap());
-    for request in pending {
-        let _ = app.emit_to(MASCOT, "mascot-request", request);
-    }
+    crate::mascot::present(app, request);
 }
 
 pub fn dismiss_mascot(app: &AppHandle) {
     let _ = app.emit_to(MASCOT, "mascot-dismiss", ());
-}
-
-/// All'avvio: la finestra di Globy esiste da subito, nascosta, così la prima richiesta
-/// non aspetta il caricamento della pagina.
-pub fn prepare_mascot(app: &AppHandle) {
-    let _ = mascot_window(app);
 }

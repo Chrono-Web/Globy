@@ -1,0 +1,99 @@
+# Globy per Windows e Linux (cartella desktop/): test del nucleo, build e, sui tag,
+# installer allegati alla Release. Il DMG del Mac resta manuale (docs/DISTRIBUZIONE.md).
+
+name: Desktop
+
+on:
+  push:
+    branches: [ "main", "desktop" ]
+    tags: [ "v*" ]
+    paths:
+      - "desktop/**"
+      - "Packages/GlobyCore/Tests/GlobyCoreTests/Fixtures/**"
+      - ".github/workflows/desktop.yml"
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - "desktop/**"
+      - ".github/workflows/desktop.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  core:
+    name: Nucleo (globy-core)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: desktop
+      - name: Test
+        # Le fixture sono quelle del pacchetto Swift, lette dal percorso relativo.
+        run: cargo test -p globy-core --manifest-path desktop/Cargo.toml
+
+  app:
+    name: App ${{ matrix.name }}
+    needs: core
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows
+            os: windows-latest
+          - name: Linux
+            # La più vecchia supportata: l'AppImage gira sulle distribuzioni più nuove, non il contrario.
+            os: ubuntu-22.04
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: desktop
+        shell: bash
+    steps:
+      - uses: actions/checkout@v5
+      - name: Librerie di sistema (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libssl-dev build-essential
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: desktop
+      - run: npm ci
+      - name: Test dell'app
+        run: cargo test -p globy
+      - name: Build
+        run: npx tauri build
+      - name: Nomi fissi
+        # Gli stessi a ogni versione: il README punta a /releases/latest/download/<nome>.
+        run: |
+          mkdir -p out
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            cp target/release/bundle/nsis/*-setup.exe out/Globy-Windows.exe
+          else
+            cp target/release/bundle/appimage/*.AppImage out/Globy-Linux.AppImage
+            cp target/release/bundle/deb/*.deb out/Globy-Linux.deb
+          fi
+          ls -la out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Globy-${{ matrix.name }}
+          path: desktop/out/*
+      - name: Allega alla Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          # Se la Release non c'è ancora la crea in bozza: il DMG del Mac si aggiunge a mano.
+          gh release view "$tag" >/dev/null 2>&1 || gh release create "$tag" --draft --title "Globy ${tag#v}" --notes "In preparazione."
+          gh release upload "$tag" out/* --clobber
