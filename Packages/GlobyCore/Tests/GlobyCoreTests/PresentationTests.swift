@@ -59,9 +59,9 @@ struct PresentationTests {
 
     @Test("il primo avvio propone i VOX recenti solo se ce ne sono")
     func introductionOffer() {
-        #expect(!WelcomePolicy.introduction(latestCount: 0).contains("?"))
-        #expect(WelcomePolicy.introduction(latestCount: 1).hasSuffix("Partiamo con l'ultimo VOX pubblicato?"))
-        #expect(WelcomePolicy.introduction(latestCount: 5).hasSuffix("Partiamo con gli ultimi 5 VOX pubblicati?"))
+        #expect(WelcomePolicy.tourOffer(latestCount: 0) == nil)
+        #expect(WelcomePolicy.tourOffer(latestCount: 1)?.hasSuffix("Partiamo con l'ultimo VOX pubblicato?") == true)
+        #expect(WelcomePolicy.tourOffer(latestCount: 5)?.hasSuffix("Partiamo con gli ultimi 5 VOX pubblicati?") == true)
     }
 
     @Test("il fumetto resta quanto serve a leggerlo, entro i limiti")

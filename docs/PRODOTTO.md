@@ -113,16 +113,17 @@ breve:
 
 1. Globy legge i VOX pubblici di Chronocol;
 2. non notifica l'archivio; chiede il permesso notifiche solo dopo questa spiegazione;
-3. il fumetto di presentazione chiede «Partiamo con gli ultimi 5 VOX pubblicati?» con
+3. per chiudere l'onboarding (punto 4) il globo chiede «Partiamo con gli ultimi 5 VOX pubblicati?» con
    «Sì, partiamo» e «No, grazie». Solo con «Sì» il globo li mostra in coda, dal più
    recente, con l'etichetta «VOX recente · già uscito»: non sono notifiche, non
    segnano `notifiedAt` e non producono banner. «No», la X o nessuna risposta entro
    circa 20 s chiudono la presentazione. Se la baseline è vuota la domanda non c'è.
-4. finita la presentazione, il globo racconta l'onboarding in tre fumetti: dove
-   trovarlo nella barra dei menu e cosa c'è nel menu; le Preferenze; la domanda
-   «Le attivo?» sulle notifiche («Sì, attivale» chiede il permesso di sistema).
-   Si avanza con la freccia. Se viene ignorato o chiuso con la X, lo stesso
-   contenuto resta in cima al menu finché non si sceglie sulle notifiche.
+4. ordine dei fumetti, avanzando con la freccia: presentazione di Globy; dove
+   trovarlo nella barra dei menu e cosa c'è nel menu; le Preferenze; «Le attivo?»
+   sulle notifiche («Sì, attivale» chiede il permesso di sistema); infine la
+   proposta dei VOX recenti del punto 3. Se un fumetto viene ignorato o chiuso con
+   la X la sequenza si ferma, e la spiegazione resta in cima al menu finché non si
+   sceglie sulle notifiche.
 
 Niente wizard a più schermate. Il permesso negato non è un errore: casa
 `docs/TRAPPOLE.md` e `docs/PRIVACY.md`.

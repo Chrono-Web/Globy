@@ -95,17 +95,15 @@ public enum WelcomePolicy {
     /// Quanti VOX recenti il globo propone di mostrare al primo avvio.
     public static let tourSize = 5
 
-    /// Presentazione di primo avvio. Se ci sono VOX, chiede se mostrarli: è una scelta,
-    /// non una notifica dell'archivio.
-    public static func introduction(latestCount: Int) -> String {
-        let intro = "Ciao, sono Globy, la mascotte di Chronocol. Quando esce un nuovo VOX vengo un attimo qui, in basso a destra."
+    /// Primo fumetto del primo avvio: chi è Globy. Poi vengono i passi di `onboarding`.
+    public static let introduction = "Ciao, sono Globy, la mascotte di Chronocol. Quando esce un nuovo VOX vengo un attimo qui, in basso a destra. Ti spiego in breve come funziono."
+
+    /// Chiusura dell'onboarding: propone i VOX recenti. `nil` se non ce ne sono.
+    public static func tourOffer(latestCount: Int) -> String? {
         switch latestCount {
-        case ...0:
-            return intro
-        case 1:
-            return intro + " Partiamo con l'ultimo VOX pubblicato?"
-        default:
-            return intro + " Partiamo con gli ultimi \(latestCount) VOX pubblicati?"
+        case ...0: nil
+        case 1: "Tutto qui. Partiamo con l'ultimo VOX pubblicato?"
+        default: "Tutto qui. Partiamo con gli ultimi \(latestCount) VOX pubblicati?"
         }
     }
 

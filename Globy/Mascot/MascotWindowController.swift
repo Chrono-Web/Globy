@@ -38,8 +38,6 @@ final class MascotWindowController {
     /// Fumetti che seguono questo saluto (onboarding): il numerino sulla freccia.
     private var greetingSteps = 0
     private var greetingCompletion: ((GreetingOutcome) -> Void)?
-    /// Da eseguire quando il globo avrebbe finito e starebbe per uscire.
-    private var whenIdle: (() -> Void)?
 
     enum GreetingOutcome { case accepted, declined, timedOut }
     /// Anteprima delle dimensioni, finché le Preferenze sono aperte.
@@ -182,12 +180,6 @@ final class MascotWindowController {
     func metricsDidChange() {
         model.refreshLayout()
         syncCornerButtons()
-    }
-
-    /// Esegue `action` al posto dell'uscita del globo, una volta sola: per concatenare
-    /// presentazione e onboarding senza farlo sparire e ricomparire.
-    func afterCurrentPresentation(_ action: @escaping () -> Void) {
-        whenIdle = action
     }
 
     func presentGreeting(_ greeting: Vox = .greeting, then items: [Vox] = [], followingSteps: Int = 0,
@@ -457,11 +449,6 @@ final class MascotWindowController {
     }
 
     private func dismiss() {
-        if let next = whenIdle, current == nil, !showingGreeting, !previewing {
-            whenIdle = nil
-            next()
-            return
-        }
         if previewRequested, !previewing, current == nil, !showingGreeting {
             showPreview()
             return

@@ -37,15 +37,13 @@ Segna ogni riga con ✅, ❌ (con una nota su cosa è successo) o «non provato�
 ## 1. Primo avvio
 
 - [ ] Compare il globo nella barra dei menu; nessuna icona nel Dock.
-- [ ] Dopo pochi secondi il globo in basso a destra si presenta e chiede «Partiamo con
-      gli ultimi 5 VOX pubblicati?».
+- [ ] Dopo pochi secondi il globo in basso a destra si presenta; la freccia (numerino 3)
+      porta a: barra dei menu e menu, Preferenze, domanda «Le attivo?» sulle notifiche.
+- [ ] «Sì, attivale» mostra la richiesta di sistema; «No, grazie» va avanti senza.
+- [ ] Per ultimo chiede «Partiamo con gli ultimi 5 VOX pubblicati?».
 - [ ] «Sì, partiamo»: passano 5 VOX veri, intestazione «VOX recente · già uscito»,
       frecce con numerini, nessun banner di sistema.
 - [ ] I VOX si leggono interi, senza «Fonti:» né link.
-- [ ] Finita la presentazione, il globo spiega in tre fumetti barra dei menu, menu e
-      Preferenze; la freccia avanza, il numerino dice quanti ne mancano.
-- [ ] Terzo fumetto «Le attivo?»: «Sì, attivale» mostra la richiesta di sistema; «No,
-      grazie» chiude. Dopo la risposta il blocco in cima al menu non c'è più.
 - [ ] Clic su un VOX recente: apre il permalink giusto nel browser.
 - [ ] Esci e riapri Globy: la presentazione **non** ricompare; compare il saluto di
       rientro («Non ti sei perso nulla…» se non è uscito niente).
