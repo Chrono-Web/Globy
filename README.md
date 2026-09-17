@@ -17,6 +17,8 @@
   <a href="https://github.com/Chrono-Web/Globy/releases/latest/download/Globy-Linux.AppImage"><b>⬇ Scarica per Linux</b></a>
   <br>
   <sub>Versione 0.2.0 · macOS 15+, Windows 10/11, Linux a 64 bit · gratuito e open source</sub>
+  <br>
+  <sub>🧪 Windows e Linux sono <b>in test</b>: se qualcosa non va, <a href="docs/SEGNALARE.md">segnalalo</a>.</sub>
 </p>
 
 ## Installare
@@ -28,7 +30,7 @@
    vai in **Impostazioni di Sistema › Privacy e sicurezza** e premi **Apri comunque**.
 3. Globy compare in alto nella barra dei menu e si presenta in basso a destra.
 
-### Windows
+### Windows (in test)
 
 1. Apri `Globy-Windows.exe`. Windows avvisa che l'app non è riconosciuta perché non è
    firmata: premi **Ulteriori informazioni** e poi **Esegui comunque**.
@@ -36,7 +38,7 @@
 3. Globy compare tra le icone vicino all'orologio (se non la vedi, apri la freccia **^**)
    e si presenta in basso a destra.
 
-### Linux
+### Linux (in test)
 
 1. Scarica `Globy-Linux.AppImage`, poi rendilo eseguibile: tasto destro › Proprietà ›
    **Consenti l'esecuzione come programma**, oppure `chmod +x Globy-Linux.AppImage`.
@@ -54,6 +56,11 @@ finestra che il sistema posiziona da sé.
 Apri **Impostazioni…** dall'icona di Globy › **Disinstalla Globy…**. Su Windows parte il
 programma di disinstallazione; su Linux cancella poi il file AppImage, oppure
 `sudo apt remove globy` se hai usato il `.deb`.
+
+## Segnalare un problema
+
+Qualcosa non funziona? Apri una [issue con il modulo «Problema»](https://github.com/Chrono-Web/Globy/issues/new?template=problema.yml):
+la [guida](docs/SEGNALARE.md) spiega cosa scrivere.
 
 ---
 

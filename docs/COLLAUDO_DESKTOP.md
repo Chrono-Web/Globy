@@ -1,7 +1,7 @@
 # Collaudo di Globy per Windows e Linux
 
 - Aggiornato: 2026-09-17
-- Vale per: gli installer creati dalla CI (`.github/workflows/desktop.yml`) dal ramo `desktop`
+- Vale per: gli installer della Release 0.2.0 e quelli creati dalla CI (`.github/workflows/desktop.yml`)
 - Ruolo: checklist del collaudo umano prima di pubblicare la 0.2.0
 
 Chi sviluppa lavora su un Mac e non vede Windows e Linux: questa prova la fanno persone
@@ -10,9 +10,11 @@ ritirare VOX per far scattare una prova (`AGENTS.md`, regola 5).
 
 ## Dove prendere gli installer
 
-GitHub › **Actions** › workflow **Desktop** › l'ultima esecuzione verde › in fondo,
-**Artifacts**: `Globy-Windows` (dentro `Globy-Windows.exe`) e `Globy-Linux` (dentro
-`Globy-Linux.AppImage` e `Globy-Linux.deb`).
+Dai pulsanti del README (ultima Release). Per provare una modifica non ancora
+pubblicata: GitHub › **Actions** › workflow **Desktop** › l'ultima esecuzione verde ›
+**Artifacts** (`Globy-Windows`, `Globy-Linux`).
+
+Ogni riga ❌ diventa una issue con il modulo «Problema» (`docs/SEGNALARE.md`).
 
 Segna ogni riga con ✅, ❌ (con una nota e, se puoi, uno screenshot) o «non provato».
 Scrivi anche sistema e versione: Windows 10 o 11; per Linux distribuzione, ambiente

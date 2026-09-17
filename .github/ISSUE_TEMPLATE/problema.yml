@@ -1,0 +1,74 @@
+name: Problema
+description: Qualcosa in Globy non funziona come dovrebbe (Mac, Windows o Linux)
+title: "[Problema] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: >
+        Grazie! Una segnalazione precisa si corregge in fretta. La guida è in
+        `docs/SEGNALARE.md`. Non incollare password, token o dati personali.
+  - type: dropdown
+    id: system
+    attributes:
+      label: Sistema
+      options:
+        - Mac
+        - Windows 11
+        - Windows 10
+        - Linux con X11
+        - Linux con Wayland
+        - Linux, non so quale sessione
+    validations:
+      required: true
+  - type: input
+    id: details
+    attributes:
+      label: Versioni
+      description: Versione di Globy (nelle note della Release) e del sistema. Per Linux anche distribuzione e ambiente, per esempio «Ubuntu 24.04, GNOME».
+      placeholder: Globy 0.2.0, Windows 11 24H2
+    validations:
+      required: true
+  - type: input
+    id: install
+    attributes:
+      label: Installazione
+      description: Da quale file hai installato Globy?
+      placeholder: Globy-Windows.exe, Globy-Linux.AppImage, Globy-Linux.deb o Globy.dmg
+  - type: textarea
+    id: steps
+    attributes:
+      label: Cosa hai fatto
+      description: I passaggi, uno per riga, per arrivare al problema.
+      placeholder: |
+        1. Ho aperto Globy
+        2. Ho cliccato sulla freccia del fumetto
+    validations:
+      required: true
+  - type: textarea
+    id: happened
+    attributes:
+      label: Cosa è successo
+      description: Con uno screenshot o un breve video, se puoi (trascinali qui).
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Cosa ti aspettavi
+    validations:
+      required: true
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: Succede sempre?
+      options:
+        - Sempre
+        - A volte
+        - Una volta sola
+  - type: textarea
+    id: extra
+    attributes:
+      label: Altro
+      description: Impostazioni attive (Mostra sempre Globy, dimensioni personalizzate, notifiche di sistema…), più schermi, zoom dello schermo, antivirus.

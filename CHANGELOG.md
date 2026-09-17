@@ -2,9 +2,10 @@
 
 Le modifiche rilevanti a Globy sono registrate qui.
 
-## 0.2.0 — in preparazione
+## 0.2.0 — 2026-09-17
 
-Globy arriva su Windows e Linux (ADR 0005). Il Mac non cambia.
+Globy arriva su Windows e Linux (ADR 0005), **in test**: nessuno l'ha ancora collaudato
+su quei sistemi. DMG e installer non firmati. Il Mac cambia solo numero di versione.
 
 ### Aggiunto
 
@@ -15,6 +16,7 @@ Globy arriva su Windows e Linux (ADR 0005). Il Mac non cambia.
 - **Installer:** `Globy-Windows.exe`, `Globy-Linux.AppImage` e `Globy-Linux.deb` creati
   dalla CI, non firmati.
 - **README:** pulsanti di download per Mac, Windows e Linux.
+- **Segnalazioni:** modulo «Problema» nelle issue e guida in `docs/SEGNALARE.md`.
 
 ## 0.1.1 — 2026-09-17
 

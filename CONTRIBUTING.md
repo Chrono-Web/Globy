@@ -44,9 +44,9 @@ documentato è stato realmente verificato.
 
 ## Issue
 
-Per correzioni e proposte usa i template in `.github/ISSUE_TEMPLATE/`. Oggi
-servono a errori documentali e a proposte di perimetro, non a bug di un'app
-inesistente. Per questioni di sicurezza segui `SECURITY.md`.
+Per problemi, correzioni e proposte usa i template in `.github/ISSUE_TEMPLATE/`.
+Come segnalare un problema dell'app: `docs/SEGNALARE.md`. Per questioni di sicurezza
+segui `SECURITY.md`.
 
 ## Licenza
 

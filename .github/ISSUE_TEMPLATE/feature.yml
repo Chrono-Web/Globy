@@ -7,8 +7,8 @@ body:
   - type: markdown
     attributes:
       value: >
-        Non esiste ancora un'app compilabile. Una proposta utile cambia un requisito
-        o una decisione, non chiede di implementare la roadmap come se fosse già codice.
+        Una proposta utile cambia un comportamento, un requisito o una decisione. Se
+        qualcosa non funziona, usa invece il modulo «Problema».
   - type: textarea
     id: problem
     attributes:
