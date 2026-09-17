@@ -86,6 +86,7 @@ final class AppSession: ObservableObject {
         mascot.surface = .systemDefault
         mascot.soundEnabled = preferences.mascotSoundEnabled
         mascot.permanence = preferences.permanence
+        mascot.gazeFollowsPointer = preferences.gazeFollowsPointer
 
         preferences.objectWillChange.sink { [weak self] _ in
             self?.objectWillChange.send()
@@ -99,6 +100,9 @@ final class AppSession: ObservableObject {
         }.store(in: &cancellables)
         preferences.$permanence.sink { [weak self] value in
             self?.mascot.permanence = value
+        }.store(in: &cancellables)
+        preferences.$gazeFollowsPointer.sink { [weak self] value in
+            self?.mascot.gazeFollowsPointer = value
         }.store(in: &cancellables)
         preferences.$mascotSoundEnabled.sink { [weak self] value in
             self?.mascot.soundEnabled = value

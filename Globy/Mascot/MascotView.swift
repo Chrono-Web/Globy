@@ -48,6 +48,17 @@ final class MascotModel: ObservableObject {
     private var blinkTimer: Timer?
     private var blinkCount = 0
     private var mouseMonitors: [Any] = []
+    /// Gli occhi inseguono il puntatore; spento, a riposo guardano chi osserva e il
+    /// movimento del mouse non risveglia il render loop.
+    var followsPointer = true {
+        didSet {
+            guard followsPointer != oldValue, blinkTimer != nil else { return }
+            followsPointer ? startMouseMonitors() : stopMouseMonitors()
+            wake(for: 0.8)
+        }
+    }
+    /// Direzione dello sguardo all'ultimo risveglio dovuto al mouse.
+    private var lastMouseGoal: CGVector?
 
     func enter() {
         generation += 1
@@ -140,12 +151,13 @@ final class MascotModel: ObservableObject {
     /// osserva, poi il puntatore.
     func gazeTarget(at t: TimeInterval) -> GazeTarget {
         if smileAmount(at: t) > 0.12 { return .viewer }
-        guard let reading else { return .cursor }
+        let rest: GazeTarget = followsPointer ? .cursor : .viewer
+        guard let reading else { return rest }
         let typingEnd = typingStart + reading.typingDuration
         if t < typingEnd {
             return .point(caretOnScreen(reading, count: reading.typedCount(elapsed: t - typingStart)))
         }
-        return t < typingEnd + Self.lookAtViewer ? .viewer : .cursor
+        return t < typingEnd + Self.lookAtViewer ? .viewer : rest
     }
 
     var globeCenter: CGPoint {
@@ -197,8 +209,13 @@ final class MascotModel: ObservableObject {
                 self.blink(double: self.blinkCount % 3 == 0)
             }
         }
+        if followsPointer { startMouseMonitors() }
+    }
+
+    private func startMouseMonitors() {
+        guard mouseMonitors.isEmpty else { return }
         let handler: (NSEvent) -> Void = { [weak self] _ in
-            MainActor.assumeIsolated { self?.wake(for: 0.8) }
+            MainActor.assumeIsolated { self?.mouseMoved() }
         }
         let events: NSEvent.EventTypeMask = [.mouseMoved, .leftMouseDragged]
         if let global = NSEvent.addGlobalMonitorForEvents(matching: events, handler: handler) {
@@ -209,14 +226,35 @@ final class MascotModel: ObservableObject {
         }
     }
 
+    /// Il puntatore si è mosso: si ridisegna solo se lo sguardo cambia in modo visibile.
+    /// Da lontano il cursore sposta la direzione di pochissimo e il loop resta fermo.
+    private func mouseMoved() {
+        let now = Date.timeIntervalSinceReferenceDate
+        guard case .cursor = gazeTarget(at: now) else { wake(for: 0.8); return }
+        let goal = GazeTracker.cursorGoal(from: globeCenter)
+        if let last = lastMouseGoal, hypot(goal.dx - last.dx, goal.dy - last.dy) < Self.gazeWakeThreshold {
+            return
+        }
+        lastMouseGoal = goal
+        wake(for: 0.8)
+    }
+
+    /// Variazione minima dello sguardo, in radianti, che risveglia il render loop.
+    static let gazeWakeThreshold = 0.012
+
     private func stopLife() {
         blinkTimer?.invalidate()
         blinkTimer = nil
-        mouseMonitors.forEach(NSEvent.removeMonitor)
-        mouseMonitors = []
+        stopMouseMonitors()
         sleepWork?.cancel()
         collapseWork?.cancel()
         animating = false
+    }
+
+    private func stopMouseMonitors() {
+        mouseMonitors.forEach(NSEvent.removeMonitor)
+        mouseMonitors = []
+        lastMouseGoal = nil
     }
 
     private func blink(double: Bool) {
@@ -264,7 +302,7 @@ final class GazeTracker {
         case .viewer:
             goal = .zero
         case .cursor:
-            goal = Self.direction(to: NSEvent.mouseLocation, from: center, falloff: 500, reach: 0.45)
+            goal = Self.cursorGoal(from: center)
         case .point(let p):
             // Il testo è vicino: più sensibile, così la lettura si vede.
             goal = Self.direction(to: p, from: center, falloff: 260, reach: 0.5)
@@ -275,6 +313,10 @@ final class GazeTracker {
         value.dx += (goal.dx - value.dx) * k
         value.dy += (goal.dy - value.dy) * k
         return value
+    }
+
+    static func cursorGoal(from center: CGPoint) -> CGVector {
+        direction(to: NSEvent.mouseLocation, from: center, falloff: 500, reach: 0.45)
     }
 
     private static func direction(to p: CGPoint, from center: CGPoint, falloff: Double, reach: Double) -> CGVector {
@@ -316,7 +358,8 @@ struct MascotView: View {
                 GlobeGlass(surface: model.surface)
             }
             GlobeBody(surface: model.surface)
-            TimelineView(.animation(paused: !model.animating || reduceMotion)) { context in
+            // Con ProMotion il loop andrebbe a 120 Hz: 30 bastano per sguardo smorzato e battiti.
+            TimelineView(.animation(minimumInterval: 1.0 / 30, paused: !model.animating || reduceMotion)) { context in
                 let t = context.date.timeIntervalSinceReferenceDate
                 let blink = reduceMotion ? 1 : Self.eyeOpen(t - model.blinkStart, double: model.doubleBlink)
                 let smile = reduceMotion ? (model.smiling ? 1 : 0) : model.smileAmount(at: t)
@@ -513,7 +556,8 @@ struct GlobeFeatures: View {
     /// Tre nastri sovrapposti danno la sezione rotonda: bordo, corpo e riflesso spostato
     /// verso la luce (in alto a sinistra). Sopra, l'ombreggiatura della sfera.
     private static func drawGrid(in ctx: inout GraphicsContext, glass: Bool, gaze: CGVector, center c: CGPoint, radius r: Double) {
-        let steps = 120
+        // 72 segmenti per giro: sul globo di 70 pt i lati restano sotto i 3 pt.
+        let steps = 72
         // Semilarghezza angolare: al centro il tubicino è largo circa 0,062 r,
         // cioè 1/4 della larghezza degli occhi.
         let hw = 0.031
@@ -574,10 +618,8 @@ struct GlobeFeatures: View {
             l.clip(to: disk)
             l.fill(edge, with: .color(Color(white: glass ? 0.62 : 0.16)))
             l.fill(core, with: .color(Color(white: glass ? 0.85 : 0.30)))
-            l.drawLayer { hi in
-                hi.addFilter(.blur(radius: r * 0.006))
-                hi.fill(shine, with: .color(Color(white: glass ? 1 : 0.62)))
-            }
+            // Niente sfocatura: a questa scala sarebbe sotto il pixel e costa un passaggio.
+            l.fill(shine, with: .color(Color(white: glass ? 1 : 0.62)))
             // Stessa luce della sfera: i tubicini si scuriscono lontano dalla luce.
             l.blendMode = .sourceAtop
             l.fill(disk, with: .radialGradient(
@@ -629,15 +671,13 @@ struct GlobeFeatures: View {
             }
             eyes.closeSubpath()
         }
-        if glass {
-            // Alone scuro morbido: gli occhi restano leggibili anche su sfondi chiari.
-            ctx.drawLayer { halo in
-                halo.addFilter(.blur(radius: r * 0.12))
-                halo.fill(eyes, with: .color(.black.opacity(0.35)))
-            }
-        }
+        // Alone e bagliore in un solo strato sfocato: una sfocatura per fotogramma invece di due.
         ctx.drawLayer { glow in
             glow.addFilter(.blur(radius: r * 0.13))
+            if glass {
+                // Alone scuro morbido: gli occhi restano leggibili anche su sfondi chiari.
+                glow.fill(eyes, with: .color(.black.opacity(0.35)))
+            }
             glow.fill(eyes, with: .color(.white.opacity(0.55)))
         }
         ctx.fill(eyes, with: .color(.white))

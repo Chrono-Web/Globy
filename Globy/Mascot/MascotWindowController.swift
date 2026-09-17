@@ -57,6 +57,11 @@ final class MascotWindowController {
 
     var soundEnabled = true
 
+    var gazeFollowsPointer: Bool {
+        get { model.followsPointer }
+        set { model.followsPointer = newValue }
+    }
+
     /// Se attiva, il globo resta a schermo come prima: la X chiude solo il fumetto.
     /// Se disattiva, dopo un trascinamento restano 5 secondi in più prima di scomparire.
     var permanence = false {
@@ -626,17 +631,18 @@ final class MascotWindowController {
 
     /// Con il click-through la finestra ignora i clic, tranne globo, fumetto e i tre dischi.
     private func updateIgnoresMouseEvents() {
-        guard clickThrough else {
-            panel.ignoresMouseEvents = false
-            return
-        }
+        let ignores = shouldIgnoreMouseEvents()
+        // Scrivere la proprietà parla con il window server: solo quando cambia davvero.
+        if panel.ignoresMouseEvents != ignores { panel.ignoresMouseEvents = ignores }
+    }
+
+    private func shouldIgnoreMouseEvents() -> Bool {
+        guard clickThrough else { return false }
         let mouse = NSEvent.mouseLocation
         if [closeButton, nextButton, backButton, yesButton, noButton].contains(where: { isHot($0, mouse: mouse) }) {
-            panel.ignoresMouseEvents = false
-            return
+            return false
         }
-        let local = panel.convertPoint(fromScreen: mouse)
-        panel.ignoresMouseEvents = !isInteractive(at: local)
+        return !isInteractive(at: panel.convertPoint(fromScreen: mouse))
     }
 
     private func isHot(_ button: VoxCornerButton, mouse: NSPoint) -> Bool {
@@ -649,9 +655,17 @@ final class MascotWindowController {
         NSSound(named: "Tink")?.play()
     }
 
+    private var mouseUpdatePending = false
+
     private func startMouseTracking() {
+        // Molti movimenti arrivano nello stesso giro: un solo aggiornamento in coda.
         let update: (NSEvent) -> Void = { [weak self] _ in
-            DispatchQueue.main.async { self?.updateIgnoresMouseEvents() }
+            guard let self, !self.mouseUpdatePending else { return }
+            self.mouseUpdatePending = true
+            DispatchQueue.main.async { [weak self] in
+                self?.mouseUpdatePending = false
+                self?.updateIgnoresMouseEvents()
+            }
         }
         if let global = NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved, .leftMouseDragged], handler: update) {
             mouseMonitors.append(global)

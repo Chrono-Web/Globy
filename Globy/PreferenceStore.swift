@@ -19,6 +19,12 @@ final class PreferenceStore: ObservableObject {
         didSet { defaults.set(mascotSoundEnabled, forKey: Keys.mascotSound) }
     }
 
+    /// Gli occhi del globo seguono il puntatore. Spento, il globo si ridisegna solo per
+    /// battiti, saluti e lettura: meno lavoro per CPU e GPU mentre il mouse si muove.
+    @Published var gazeFollowsPointer: Bool {
+        didSet { defaults.set(gazeFollowsPointer, forKey: Keys.gazeFollowsPointer) }
+    }
+
     /// Il saluto della mascotte è già comparso una volta.
     @Published var didGreet: Bool {
         didSet { defaults.set(didGreet, forKey: Keys.didGreet) }
@@ -58,6 +64,7 @@ final class PreferenceStore: ObservableObject {
         mascotEnabled = defaults.object(forKey: Keys.mascotEnabled) as? Bool ?? true
         permanence = defaults.bool(forKey: Keys.permanence)
         mascotSoundEnabled = defaults.object(forKey: Keys.mascotSound) as? Bool ?? true
+        gazeFollowsPointer = defaults.object(forKey: Keys.gazeFollowsPointer) as? Bool ?? true
         didGreet = defaults.bool(forKey: Keys.didGreet)
         didOnboard = defaults.bool(forKey: Keys.didOnboard)
         customSizesEnabled = defaults.bool(forKey: Keys.customSizes)
@@ -71,6 +78,7 @@ final class PreferenceStore: ObservableObject {
         mascotEnabled = true
         permanence = false
         mascotSoundEnabled = true
+        gazeFollowsPointer = true
         didGreet = false
         didOnboard = false
         customSizesEnabled = false
@@ -83,6 +91,7 @@ final class PreferenceStore: ObservableObject {
         static let mascotEnabled = "mascotEnabled"
         static let permanence = "permanence"
         static let mascotSound = "mascotSoundEnabled"
+        static let gazeFollowsPointer = "gazeFollowsPointer"
         static let didGreet = "didGreet"
         static let didOnboard = "didOnboard"
         static let customSizes = "customSizesEnabled"
@@ -91,7 +100,7 @@ final class PreferenceStore: ObservableObject {
         // Nuova chiave: la vecchia scala era relativa a un globo standard più grande.
         static let globeScale = "globySizeScale"
         static let lastWelcomeAt = "lastWelcomeAt"
-        static let all = [mascotEnabled, permanence, mascotSound, didGreet, didOnboard,
+        static let all = [mascotEnabled, permanence, mascotSound, gazeFollowsPointer, didGreet, didOnboard,
                           customSizes, textScale, buttonScale, globeScale, lastWelcomeAt]
     }
 }

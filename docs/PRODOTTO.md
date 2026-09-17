@@ -140,7 +140,9 @@ Prima versione:
 
 Nell'interfaccia il nome è sempre Globy: niente «mascotte» né «globo».
 
-- sezione Globy: «Mostra sempre Globy» (permanenza), «Apri Globy al login», «Suono»;
+- sezione Globy: «Mostra sempre Globy» (permanenza), «Apri Globy al login», «Suono»,
+  «Gli occhi seguono il puntatore»; con Globy sempre visibile, nota sul consumo della
+  batteria;
 - dimensioni personalizzate: interruttore più tre cursori, Globy (75–250% di uno
   standard di 70 pt), testo
   del fumetto (85–150%) e pulsanti X e frecce (80–160%). Spento, valgono le

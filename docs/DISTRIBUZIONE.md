@@ -63,7 +63,7 @@ le pre-release da `/releases/latest`, e il pulsante «Scarica» andrebbe a vuoto
 
 ```bash
 ./scripts/crea-dmg.sh
-gh release create v0.1.0 --title "Globy 0.1.0" --latest build/Globy.dmg
+gh release create v0.1.1 --title "Globy 0.1.1" --latest build/Globy.dmg
 ```
 
 Il numero è `CFBundleShortVersionString`. Le note si copiano da `CHANGELOG.md`.

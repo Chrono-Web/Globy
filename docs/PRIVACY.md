@@ -1,7 +1,7 @@
 # Privacy
 
 - Aggiornato: 2026-09-17
-- Stato: vale per la versione 0.1.0
+- Stato: vale per le versioni 0.1.0 e 0.1.1
 - Risponde a: quali dati tratta Globy e dove restano
 
 ## Sintesi
@@ -32,7 +32,7 @@ Globy contatta la base URL Chronocol configurata per:
   ritorno della rete e circa ogni 5 minuti; l'elenco JSON solo per coprire un buco;
 - aprire nel browser il permalink di un VOX scelto dall'utente.
 
-La versione 0.1.0 non usa lo stream SSE.
+Le versioni 0.1.0 e 0.1.1 non usano lo stream SSE.
 
 Il server e gli intermediari possono osservare metadati ordinari di rete, compreso
 l'indirizzo IP. Globy non deve aggiungere un identificativo persistente del dispositivo

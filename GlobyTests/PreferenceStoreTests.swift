@@ -14,11 +14,13 @@ struct PreferenceStoreTests {
         store.didGreet = true
         store.didOnboard = true
         store.permanence = true
+        store.gazeFollowsPointer = false
         store.reset()
         #expect(!store.didGreet)
         #expect(!store.didOnboard)
         #expect(!store.permanence)
         #expect(store.mascotEnabled)
+        #expect(store.gazeFollowsPointer)
         defaults.removePersistentDomain(forName: suite)
     }
 

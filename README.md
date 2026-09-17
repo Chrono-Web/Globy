@@ -12,7 +12,7 @@
 <p align="center">
   <a href="https://github.com/Chrono-Web/GLOBY/releases/latest/download/Globy.dmg"><b>⬇ Scarica Globy per macOS</b></a>
   <br>
-  <sub>Versione 0.1.0 · macOS 15 o successivo · gratuito e open source</sub>
+  <sub>Versione 0.1.1 · macOS 15 o successivo · gratuito e open source</sub>
 </p>
 
 ## Installare

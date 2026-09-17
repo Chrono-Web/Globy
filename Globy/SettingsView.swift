@@ -21,11 +21,17 @@ struct SettingsView: View {
                 Toggle("Apri Globy al login", isOn: launchAtLoginBinding)
                 Toggle("Suono", isOn: $preferences.mascotSoundEnabled)
                     .disabled(!preferences.mascotEnabled)
+                Toggle("Gli occhi seguono il puntatore", isOn: $preferences.gazeFollowsPointer)
+                    .disabled(!preferences.mascotEnabled)
             } header: {
                 Text("Globy")
             } footer: {
                 if !preferences.mascotEnabled {
                     footnote("Globy è spento mentre sono attive le notifiche di sistema.")
+                } else if preferences.permanence {
+                    footnote(preferences.gazeFollowsPointer
+                        ? "Con Globy sempre visibile potrebbe aumentare il consumo della batteria, soprattutto se gli occhi seguono il puntatore: si ridisegnano a ogni movimento del mouse."
+                        : "Con Globy sempre visibile potrebbe aumentare un po' il consumo della batteria.")
                 }
             }
             Section {

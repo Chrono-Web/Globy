@@ -7,7 +7,7 @@ Per scaricare e installare Globy basta il [README](../README.md) (il pulsante sc
 `Globy.dmg` dall'ultima Release GitHub). Questa guida è per chi vuole capire il
 progetto o lavorarci.
 
-> **Stato: pre-alpha, versione 0.1.0.** Le fasi 0–3 sono chiuse. L'app legge Chronocol
+> **Stato: pre-alpha, versione 0.1.1.** Le fasi 0–3 sono chiuse. L'app legge Chronocol
 > pubblico con sole GET ed è stata collaudata a mano; arrivi reali, rientro e rete sono
 > la fase 4. Il DMG non è firmato né notarizzato.
 
@@ -16,7 +16,7 @@ barra dei menu e raccoglie i VOX più recenti. Quando arriva un nuovo VOX confer
 un piccolo globo compare brevemente nell'angolo inferiore destro dello schermo e poi
 scompare.
 
-## Che cosa fa la 0.1.0
+## Che cosa fa la 0.1.1
 
 - mostra nella barra dei menu gli ultimi VOX, con in evidenza quelli nuovi non letti;
 - controlla Chronocol all'avvio, al risveglio e circa ogni 5 minuti, senza notificare

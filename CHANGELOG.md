@@ -2,6 +2,25 @@
 
 Le modifiche rilevanti a Globy sono registrate qui.
 
+## 0.1.1 — 2026-09-17
+
+Pre-alpha. DMG non firmato e non notarizzato; macOS 15 o successivo.
+
+### Aggiunto
+
+- **Impostazioni:** «Gli occhi seguono il puntatore». Spento, gli occhi di Globy
+  guardano verso chi osserva e il movimento del mouse non lo fa più ridisegnare.
+- **Avviso sulla batteria** sotto la sezione Globy quando «Mostra sempre Globy» è
+  acceso.
+
+### Migliorato
+
+- **Consumi:** Globy si ridisegna al massimo 30 volte al secondo, solo quando lo
+  sguardo cambia in modo visibile, con una sfocatura in meno per fotogramma e linee
+  più leggere. La finestra aggiorna i clic una volta per gruppo di movimenti del mouse.
+  Con Globy sempre visibile e il mouse in movimento la CPU scende da circa 22% a 18%,
+  e a circa 4% con gli occhi che non seguono il puntatore.
+
 ## 0.1.0 — 2026-09-17
 
 Prima versione, pre-alpha. DMG non firmato e non notarizzato; macOS 15 o successivo.
