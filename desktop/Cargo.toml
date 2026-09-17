@@ -1,0 +1,10 @@
+# Globy per Windows e Linux. Il nucleo sta in `globy-core`, senza dipendenze grafiche:
+# i suoi test girano ovunque. L'app Tauri si aggiunge come secondo membro.
+[workspace]
+resolver = "3"
+members = ["globy-core"]
+
+[workspace.package]
+version = "0.2.0"
+edition = "2024"
+license = "GPL-3.0-only"
