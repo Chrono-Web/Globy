@@ -61,7 +61,7 @@ La roadmap è in [`docs/ROADMAP.md`](docs/ROADMAP.md). Il brief è in
 ## Contribuire e sicurezza
 
 Vedi [`CONTRIBUTING.md`](CONTRIBUTING.md) e [`SECURITY.md`](SECURITY.md). I contributi
-esterni di codice restano chiusi finché la fase 3 non ha il collaudo umano. Non c'è
+esterni di codice per ora sono chiusi: il progetto è piccolo e non servono. Non c'è
 un indirizzo di sicurezza dedicato.
 
 ## Licenza

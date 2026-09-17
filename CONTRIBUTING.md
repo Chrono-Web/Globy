@@ -1,8 +1,8 @@
 # Contribuire a Globy
 
-Globy è in pre-alpha. La licenza è GNU GPL versione 3. Il progetto Xcode esiste;
-i contributi esterni di codice restano chiusi finché la fase 3 non ha il collaudo
-umano della roadmap. Issue che correggono fatti, chiariscono requisiti o mettono
+Globy è in pre-alpha. La licenza è GNU GPL versione 3. I contributi esterni di
+codice sono chiusi: il progetto è piccolo e per ora non servono (decisione del
+2026-09-17, dopo la chiusura della fase 3). Issue che correggono fatti, chiariscono requisiti o mettono
 in discussione una decisione sono benvenute.
 
 `Packages/GlobyCore/` è verificabile con `swift test --package-path Packages/GlobyCore`.
