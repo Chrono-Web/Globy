@@ -1,8 +1,8 @@
 # Globy
 
-> **Stato: pre-alpha.** Le fasi 0–2 sono chiuse. La fase 3 ha un progetto Xcode
-> compilabile; la Debug usa fixture in processo e non è una build installabile
-> collaudata. Chronocol in produzione è la fase 4.
+> **Stato: pre-alpha.** Le fasi 0–3 sono chiuse. La Release legge Chronocol pubblico
+> con sole GET ed è stata collaudata a mano; arrivi reali, rientro e rete sono la
+> fase 4. Non c'è ancora una build firmata da distribuire.
 
 Globy è il compagno ufficiale macOS di [Chronocol](https://chronocol.com): vive nella
 barra dei menu e raccoglie i VOX più recenti. Quando arriva un nuovo VOX confermato,
@@ -25,8 +25,8 @@ o notifiche remote ad applicazione terminata.
 
 La fondazione (fase 0), lo spike di sincronizzazione (fase 1) e lo spike della
 mascotte (fase 2) sono verificati. Gli ADR 0001, 0002, 0003 e 0004 sono **accettati**.
-L'app esiste come `Globy.xcodeproj` (fase 3, `[~]`): menu, store JSON, saluto,
-preferenze e mascotte sulle fixture. `Packages/GlobyCore/` e `Spikes/MascotSpike/`
+L'app è `Globy.xcodeproj` (fase 3 chiusa): menu, store JSON, onboarding raccontato da
+Globy, saluto di rientro, controllo periodico, Preferenze e modalità notifiche di sistema. `Packages/GlobyCore/` e `Spikes/MascotSpike/`
 non sono il prodotto.
 
 Requisiti di piattaforma e canale: macOS 15 o successivo, identificatore

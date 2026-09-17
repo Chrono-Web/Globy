@@ -26,6 +26,7 @@ versionamento pubblico.
 - Onboarding raccontato da Globy: presentazione, menu, Preferenze, poi i 5 VOX recenti.
 - Globy più piccolo di default (70 pt di disco); i VOX in sequenza vanno sempre dal
   più vecchio al più recente.
+- Una sola copia di Globy alla volta. Fase 3 chiusa dopo il collaudo umano.
 - Clic destro su Globy: «Preferenze…» e «Nascondi Globy». Feedback aptico sui cursori
   delle dimensioni.
 - Preferenze riorganizzate: sezione Globy (mostra sempre, login, suono), grandezza di

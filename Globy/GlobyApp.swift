@@ -6,6 +6,13 @@ enum GlobyMain {
     nonisolated(unsafe) private static var delegate: GlobyAppDelegate?
 
     static func main() {
+        // Una sola copia di Globy: due globi e due sincronizzazioni si pesterebbero i piedi.
+        let runningTests = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+        if !runningTests, let bundleId = Bundle.main.bundleIdentifier,
+           NSRunningApplication.runningApplications(withBundleIdentifier: bundleId)
+               .contains(where: { $0.processIdentifier != ProcessInfo.processInfo.processIdentifier }) {
+            return
+        }
         let app = NSApplication.shared
         let delegate = GlobyAppDelegate()
         self.delegate = delegate

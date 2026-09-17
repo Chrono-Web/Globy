@@ -58,34 +58,37 @@ schermo: globo e fumetto non escono dall'area visibile durante lo spostamento.
 
 ## Fase 3 — MVP macOS
 
-- [~] Creare app e target di test.
-- [~] Aggiungere pulsante persistente nella barra dei menu ed elenco recente al clic.
-- [~] Persistenza locale di contenuti, letto e notificato.
-- [~] Saluto di primo avvio (una volta, non è un VOX) e onboarding breve:
-      cosa legge, baseline senza raffica, permesso notifiche dopo la spiegazione,
-      domanda «Sì / No» per vedere gli ultimi 5 VOX come recenti.
-- [~] Saluto di rientro a ogni avvio e risveglio, con esito della sincronizzazione
+- [x] Creare app e target di test.
+- [x] Aggiungere pulsante persistente nella barra dei menu ed elenco recente al clic.
+- [x] Persistenza locale di contenuti, letto e notificato.
+- [x] Primo avvio: presentazione e onboarding raccontati da Globy (menu, Preferenze),
+      baseline senza raffica, poi «Sì / No» per vedere gli ultimi 5 VOX come recenti.
+- [x] Saluto di rientro a ogni avvio e risveglio, con esito della sincronizzazione
       e freccia verso i VOX nuovi.
-- [~] Controllo periodico a macchina accesa (5 min, jitter, backoff), pausa durante
+- [x] Controllo periodico a macchina accesa (5 min, jitter, backoff), pausa durante
       lo stop e sync al ritorno della rete.
-- [~] Preferenze: mascotte, permanenza, suono, dimensioni personalizzate con anteprima dal vivo, pausa notifiche, avvio al login,
-      azzera dati.
-- [~] Notifiche locali senza suono per impostazione iniziale.
-- [~] Apertura del permalink nel browser.
-- [~] Mascotte transitoria, disattivabile e indipendente dalla sincronizzazione.
+- [x] Preferenze: Mostra sempre Globy, login, suono, dimensioni personalizzate (Globy,
+      testo, pulsanti) con anteprima dal vivo e aptica, azzera dati.
+- [x] Modalità «Notifiche di sistema» senza suono, al posto di Globy.
+- [x] Apertura del permalink nel browser.
+- [x] Globy transitorio, con menu contestuale, indipendente dalla sincronizzazione;
+      una sola copia dell'app alla volta.
 
-**Verifica:** il 2026-09-17 `xcodebuild -project Globy.xcodeproj -scheme Globy
--destination 'platform=macOS' build` e `test` passano su Xcode 26.6; Debug usa
-fixture in processo, senza rete (`--live` per leggere Chronocol vero). Release legge
-Chronocol pubblico con sole GET: basta per il collaudo, non è ancora la fase 4
-(frequenza da concordare, SSE assente, modifiche e ritiri non verificati). Resta il
-collaudo umano con la checklist in `docs/COLLAUDO_FASE3.md`.
+**Verifica:** il 2026-09-17 `xcodebuild … build` e `test` passano su Xcode 26.6 e il
+collaudo umano sulla Release con Chronocol pubblico (sole GET) ha dato esito positivo
+per primo avvio e onboarding, menu, Globy e Preferenze (`docs/COLLAUDO_FASE3.md`).
+Non provati, e spostati alla fase 4: arrivo di un VOX nuovo reale, notifica di sistema
+per un VOX nuovo, rientro dallo stop e cambio rete. Fase 3 chiusa.
 
 ## Fase 4 — Collegamento e affidabilità
 
-- [ ] Collegare le letture pubbliche di Chronocol.
-- [ ] Verificare pubblicazione reale senza operazioni distruttive.
-- [ ] Verificare stop/risveglio e cambio rete.
+- [~] Collegare le letture pubbliche di Chronocol: la Release legge già RSS ed elenco
+      JSON con sole GET; restano frequenza concordata e SSE.
+- [ ] Verificare pubblicazione reale senza operazioni distruttive: Globy, menu non
+      letti e, in modalità notifiche di sistema, la notifica del Mac
+      (`docs/COLLAUDO_FASE3.md`, sezioni 3 e 6).
+- [ ] Verificare stop/risveglio, spegnimento dello schermo e cambio rete, compreso il
+      saluto di rientro (`docs/COLLAUDO_FASE3.md`, sezione 4).
 - [ ] Verificare riavvio di Globy e del backend.
 - [ ] Verificare riepilogo dopo molti arrivi.
 - [ ] Verificare modifica e ritiro.
