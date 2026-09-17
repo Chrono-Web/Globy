@@ -86,6 +86,8 @@ periodico passa ogni 5 minuti circa.
 
 - [ ] Trascinamento del globo: globo e fumetto non escono dallo schermo.
 - [ ] X: chiude solo il fumetto.
+- [ ] Clic destro su Globy o sul fumetto: menu «Preferenze…» (apre le Preferenze) e
+      «Nascondi Globy» (esce subito; torna al prossimo VOX).
 - [ ] In un'app a tutto schermo e in un altro Space il globo compare sopra.
 - [ ] Fuori da globo, fumetto, X e frecce i clic passano all'app sotto.
 - [ ] Impostazioni di Sistema › Accessibilità › Schermo › Riduci movimento: solo
@@ -98,6 +100,8 @@ periodico passa ogni 5 minuti circa.
 - [ ] Mentre è aperta, in basso a destra c'è il fumetto «Anteprima».
 - [ ] «Dimensioni personalizzate» acceso: i cursori Globy, Testo e Pulsanti cambiano
       subito globo, fumetto, X e frecce; il testo non viene mai tagliato né tocca le frecce.
+- [ ] Trascinando i cursori con il trackpad si sente un tocco a ogni scatto, più forte
+      al 100%.
 - [ ] Spento: tornano le dimensioni standard; riacceso, tornano quelle scelte.
 - [ ] «Mostra sempre Globy»: Globy resta a schermo; la X chiude solo il fumetto.
 - [ ] «Suono» spento: nessun suono all'arrivo.

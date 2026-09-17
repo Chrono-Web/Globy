@@ -29,6 +29,7 @@ final class StatusItemController: NSObject {
         host = NSHostingView(rootView: MenuBarView(session: session, onPreferences: {}, onDismiss: {}))
         super.init()
         configureStatusItem()
+        session.mascot.onOpenPreferences = { [weak self] in self?.showPreferences() }
         configurePanel()
         session.objectWillChange
             .sink { [weak self] _ in

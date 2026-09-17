@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 struct SettingsView: View {
@@ -101,7 +102,7 @@ struct SettingsView: View {
 
     private func scaleSlider(_ value: Binding<Double>, range: ClosedRange<Double>) -> some View {
         HStack(spacing: 8) {
-            Slider(value: value, in: range, step: 0.05) {
+            Slider(value: haptic(value), in: range, step: 0.05) {
                 EmptyView()
             } minimumValueLabel: {
                 Text("A").font(.system(size: 10))
@@ -114,6 +115,20 @@ struct SettingsView: View {
                 .foregroundStyle(.secondary)
                 .frame(width: 42, alignment: .trailing)
         }
+    }
+
+    /// Un tocco del trackpad a ogni scatto del cursore, più marcato sul 100%.
+    private func haptic(_ value: Binding<Double>) -> Binding<Double> {
+        Binding(
+            get: { value.wrappedValue },
+            set: { new in
+                let old = value.wrappedValue
+                value.wrappedValue = new
+                guard abs(new - old) > 0.001 else { return }
+                let pattern: NSHapticFeedbackManager.FeedbackPattern = abs(new - 1) < 0.001 ? .levelChange : .alignment
+                NSHapticFeedbackManager.defaultPerformer.perform(pattern, performanceTime: .now)
+            }
+        )
     }
 
     private var isStandardSize: Bool {

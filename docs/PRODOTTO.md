@@ -89,6 +89,9 @@ Decisioni di comportamento chiuse il 2026-09-16 (ADR 0003 per il motore):
   successivo, quella in basso a sinistra torna al precedente; senza
   permanenza, dopo la lettura resta una pausa di circa 1 s.
 - Clic su globo o fumetto: apre il VOX visibile su Chronocol.
+- Clic destro su globo o fumetto: menu con «Preferenze…» e «Nascondi Globy». Nascondere
+  lo fa uscire subito con fumetto e coda; i VOX restano nel menu e Globy torna al
+  prossimo arrivo.
 - La X chiude solo il fumetto. Con più VOX, due frecce in basso (stessa
   distanza dagli angoli che ha la X in alto a destra): indietro e avanti;
   i numeretti indicano quanti ce ne sono da quella parte.
@@ -143,7 +146,7 @@ Nell'interfaccia il nome è sempre Globy: niente «mascotte» né «globo».
   del fumetto (85–150%) e pulsanti X e frecce (80–160%). Spento, valgono le
   dimensioni standard ma i valori scelti restano salvati. Finché le Preferenze sono
   aperte Globy mostra un fumetto di anteprima con X e frecce finte, che cambia dal
-  vivo;
+  vivo. Ogni scatto dei cursori dà un tocco aptico sul trackpad, più marcato al 100%;
 - «Notifiche di sistema»: modalità alternativa a Globy. Accenderla chiede conferma
   («Attivando le notifiche di sistema, disattiverai la visualizzazione di Globy») e
   il permesso del Mac; con il permesso negato Globy resta attivo e compare una nota.

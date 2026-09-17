@@ -100,6 +100,7 @@ final class MascotWindowController {
         hitView.autoresizingMask = [.width, .height]
         hitView.frame = root.bounds
         hitView.onClick = { [weak self] in self?.openCurrent() }
+        hitView.contextMenu = { [weak self] in self?.makeContextMenu() }
         hitView.onDrag = { [weak self] event in self?.drag(with: event) }
         hitView.onDragEnd = { [weak self] in self?.extendHideAfterDrag() }
         hitView.isInteractive = { [weak self] point in self?.isInteractive(at: point) ?? false }
@@ -449,6 +450,49 @@ final class MascotWindowController {
         dismiss()
     }
 
+    /// Da impostare da chi possiede la finestra delle Preferenze.
+    var onOpenPreferences: () -> Void = {}
+
+    /// Clic destro su Globy o sul fumetto.
+    private func makeContextMenu() -> NSMenu {
+        let menu = NSMenu()
+        let prefs = NSMenuItem(title: "Preferenze…", action: #selector(ContextMenuTarget.fire(_:)), keyEquivalent: "")
+        prefs.target = contextTarget
+        prefs.representedObject = { [weak self] in self?.onOpenPreferences() } as () -> Void
+        menu.addItem(prefs)
+        let hide = NSMenuItem(title: "Nascondi Globy", action: #selector(ContextMenuTarget.fire(_:)), keyEquivalent: "")
+        hide.target = contextTarget
+        hide.representedObject = { [weak self] in self?.hideNow() } as () -> Void
+        menu.addItem(hide)
+        return menu
+    }
+
+    private let contextTarget = ContextMenuTarget()
+
+    /// «Nascondi Globy»: esce subito con fumetto e coda. I VOX restano nel menu; Globy
+    /// torna al prossimo arrivo.
+    func hideNow() {
+        cancelHide()
+        previewing = false
+        previewRequested = false
+        greetingCompletion = nil
+        greetingItems.removeAll()
+        greetingAsksChoice = false
+        greetingSteps = 0
+        showingGreeting = false
+        model.setSmiling(false)
+        queue.removeAll()
+        history.removeAll()
+        current = nil
+        model.dismissVox()
+        refreshChrome()
+        model.leave { [weak self] in
+            self?.layoutCardHeight = nil
+            self?.panel.orderOut(nil)
+            self?.movedThisAppearance = false
+        }
+    }
+
     private func dismiss() {
         if previewRequested, !previewing, current == nil, !showingGreeting {
             showPreview()
@@ -622,8 +666,20 @@ final class MascotWindowController {
 }
 
 /// Clic e trascinamento su globo e fumetto. Fuori da quei rettangoli non intercetta nulla.
+final class ContextMenuTarget: NSObject {
+    @objc func fire(_ sender: NSMenuItem) {
+        (sender.representedObject as? () -> Void)?()
+    }
+}
+
 final class MascotHitView: NSView {
     var isInteractive: (CGPoint) -> Bool = { _ in false }
+    var contextMenu: () -> NSMenu? = { nil }
+
+    override func rightMouseDown(with event: NSEvent) {
+        guard let menu = contextMenu() else { return }
+        NSMenu.popUpContextMenu(menu, with: event, for: self)
+    }
     var onClick: () -> Void = {}
     var onDrag: (NSEvent) -> Void = { _ in }
     var onDragEnd: () -> Void = {}
