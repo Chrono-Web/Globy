@@ -44,13 +44,12 @@ nel Cestino. Il permesso notifiche resta nelle Impostazioni di Sistema.
 | File nella Release | Sistema | Formato |
 |---|---|---|
 | `Globy-Windows.exe` | Windows 10 e 11 | installer NSIS per l'utente corrente, senza amministratore |
-| `Globy-Linux.AppImage` | Linux a 64 bit | un solo file eseguibile |
-| `Globy-Linux.deb` | Ubuntu, Debian, Mint | pacchetto |
+| `Globy-Linux.deb` | Ubuntu, Debian, Mint | pacchetto (~4 MB; usa WebKitGTK del sistema). È il download Linux consigliato nel README. |
+| `Globy-Linux.AppImage` | Linux a 64 bit | un solo file eseguibile (~78 MB: `linuxdeploy` ci mette WebKit). Secondo download Linux nel README, per chi non ha il `.deb`. |
 
 I nomi sono fissi a ogni versione, come `Globy.dmg`: il README punta a
 `/releases/latest/download/<nome>`. Nessuno è firmato: Windows mostra SmartScreen
-(«Ulteriori informazioni › Esegui comunque»). La build Linux gira su Ubuntu 22.04,
-così l'AppImage funziona anche sulle distribuzioni più nuove.
+(«Ulteriori informazioni › Esegui comunque»). La build Linux gira su Ubuntu 22.04.
 
 Ogni push sui rami `main` e `desktop` che tocca `desktop/` produce gli installer come
 artifact dell'esecuzione: servono al collaudo (`docs/COLLAUDO_DESKTOP.md`).

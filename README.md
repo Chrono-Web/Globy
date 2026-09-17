@@ -13,10 +13,14 @@
   <a href="https://github.com/Chrono-Web/Globy/releases/latest/download/Globy.dmg"><b>⬇ Scarica per Mac</b></a>
   &nbsp;·&nbsp;
   <a href="https://github.com/Chrono-Web/Globy/releases/latest/download/Globy-Windows.exe"><b>⬇ Scarica per Windows</b></a>
+  <br>
+  <a href="https://github.com/Chrono-Web/Globy/releases/latest/download/Globy-Linux.deb"><b>⬇ Linux (.deb, ~4&nbsp;MB)</b></a>
   &nbsp;·&nbsp;
-  <a href="https://github.com/Chrono-Web/Globy/releases/latest/download/Globy-Linux.AppImage"><b>⬇ Scarica per Linux</b></a>
+  <a href="https://github.com/Chrono-Web/Globy/releases/latest/download/Globy-Linux.AppImage"><b>⬇ Linux (AppImage, ~78&nbsp;MB)</b></a>
   <br>
   <sub>Versione 0.2.0 · macOS 15+, Windows 10/11, Linux a 64 bit · gratuito e open source</sub>
+  <br>
+  <sub>Su Ubuntu, Debian e Mint preferisci il <b>.deb</b>. L'AppImage porta WebKit dentro e pesa di più.</sub>
   <br>
   <sub>🧪 Windows e Linux sono <b>in test</b>: se qualcosa non va, <a href="docs/SEGNALARE.md">segnalalo</a>.</sub>
 </p>
@@ -40,16 +44,13 @@
 
 ### Linux (in test)
 
-1. Scarica `Globy-Linux.AppImage`, poi rendilo eseguibile: tasto destro › Proprietà ›
-   **Consenti l'esecuzione come programma**, oppure `chmod +x Globy-Linux.AppImage`.
-2. Aprilo con un doppio clic.
-3. Su Ubuntu, Debian e Mint puoi usare invece il
-   [pacchetto `.deb`](https://github.com/Chrono-Web/Globy/releases/latest/download/Globy-Linux.deb):
-   doppio clic per installarlo.
-
-Globy compare tra le icone di sistema. Su GNOME serve l'estensione
-**AppIndicator** (su Ubuntu c'è già). Con Wayland il globo appare in una piccola
-finestra che il sistema posiziona da sé.
+1. **Ubuntu, Debian, Mint:** scarica `Globy-Linux.deb` (~4 MB) e aprilo con un doppio clic.
+2. **Altre distro:** scarica `Globy-Linux.AppImage` (~78 MB), rendilo eseguibile
+   (tasto destro › Proprietà › **Consenti l'esecuzione come programma**, oppure
+   `chmod +x Globy-Linux.AppImage`) e aprilo con un doppio clic.
+3. Globy compare tra le icone di sistema. Su GNOME serve l'estensione **AppIndicator**
+   (su Ubuntu c'è già). Con Wayland il globo appare in una piccola finestra che il
+   sistema posiziona da sé.
 
 ## Disinstallare
 
