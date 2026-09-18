@@ -2,6 +2,19 @@
 
 Le modifiche rilevanti a Globy sono registrate qui.
 
+## 0.3.0 — non pubblicata
+
+### Aggiunto
+
+- **Aggiornamenti automatici su Mac, Windows e Linux:** Globy controlla una volta al giorno se c'è una versione
+  nuova. Se c'è, Globy lo dice nel fumetto e si aggiorna con «Aggiornati»; intanto
+  compaiono un pallino arancione sul globo nella barra dei menu e una riga nel menu. In
+  Impostazioni › Aggiornamenti si scarica e installa con un clic e Globy si riapre da
+  solo. Ogni aggiornamento è verificato con una firma. Su Linux il pacchetto `.deb`
+  chiede la password di amministratore.
+- Da questa versione in poi gli aggiornamenti arrivano da soli; per passare dalla 0.2.1
+  alla 0.3.0 serve ancora scaricare l'installer a mano.
+
 ## 0.2.1 — 2026-09-18
 
 Correzioni per Mac, Windows e Linux. DMG e installer non firmati.

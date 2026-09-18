@@ -1,6 +1,6 @@
 # Distribuzione
 
-- Aggiornato: 2026-09-17
+- Aggiornato: 2026-09-18
 - Stato: canale scelto; su GitHub Releases DMG manuale (`Globy.dmg`) e installer Windows e
   Linux creati dalla CI, tutti non firmati
 - Risponde a: come una build diventa una release installabile e aggiornabile
@@ -17,7 +17,35 @@ contestuale). Compilare da sorgente resta il percorso senza quel blocco.
 
 Questa scelta si può sostituire in seguito con Developer ID e notarizzazione, senza
 passare dallo Store. Firma e notarizzazione non costituiscono da sole un sistema di
-aggiornamento: per ora l'aggiornamento è scaricare la release successiva.
+aggiornamento.
+
+## Aggiornamenti sul Mac
+
+Dalla 0.3.0 Globy si aggiorna da solo con Sparkle (ADR 0006): legge
+`https://github.com/Chrono-Web/GLOBY/releases/latest/download/appcast.xml`, scarica il
+`Globy.dmg` della Release e ne verifica la firma EdDSA. La chiave privata sta nel
+Portachiavi di chi pubblica, account `globy`; senza quella non si pubblicano
+aggiornamenti. Tienine una copia di sicurezza fuori dalla repository:
+
+```bash
+~/Library/Developer/Xcode/DerivedData/Globy-*/SourcePackages/artifacts/sparkle/Sparkle/bin/generate_keys --account globy -x globy-sparkle.key
+```
+
+Chi ha la 0.2.1 o precedenti aggiorna a mano una volta.
+
+## Aggiornamenti su Windows e Linux
+
+Dalla 0.3.0 il plugin updater di Tauri legge
+`https://github.com/Chrono-Web/GLOBY/releases/latest/download/latest.json` e installa
+`Globy-Windows.exe`, `Globy-Linux.AppImage` o `Globy-Linux.deb`, secondo come Globy è
+installato. Ogni file ha la sua firma `.sig`; la chiave pubblica sta in
+`desktop/src-tauri/tauri.conf.json`.
+
+La chiave privata (`~/.tauri/globy-updater.key` di chi l'ha creata, senza password) va
+nel secret **`TAURI_SIGNING_PRIVATE_KEY`** del repository. Con il secret la CI firma gli
+installer e, sui tag, allega `latest.json`; senza, le build restano possibili ma i tag
+falliscono al passo «Feed degli aggiornamenti». Tienine una copia di sicurezza fuori
+dalla repository.
 
 ## DMG
 
@@ -83,15 +111,21 @@ Dalla 0.2.0 una versione esce per i tre sistemi insieme:
 
 1. stessa versione in `Globy.xcodeproj` (`MARKETING_VERSION`),
    `desktop/src-tauri/tauri.conf.json`, `desktop/package.json` e `desktop/Cargo.toml`;
+   in `Globy.xcodeproj` anche `CURRENT_PROJECT_VERSION` cresce di uno, perché Sparkle
+   confronta il numero di build;
 2. tag e push: la CI crea la Release in bozza e allega Windows e Linux;
-3. DMG del Mac allegato a mano, poi la bozza si pubblica come ultima versione:
+3. DMG del Mac e appcast allegati a mano, poi la bozza si pubblica come ultima versione:
 
 ```bash
-git tag v0.2.0 && git push origin v0.2.0
+git tag v0.3.0 && git push origin v0.3.0
 ./scripts/crea-dmg.sh
-gh release upload v0.2.0 build/Globy.dmg
-gh release edit v0.2.0 --draft=false --latest --notes-file note.md
+./scripts/crea-appcast.sh > build/appcast.xml
+gh release upload v0.3.0 build/Globy.dmg build/appcast.xml  # latest.json lo allega la CI
+gh release edit v0.3.0 --draft=false --latest --notes-file note.md
 ```
+
+`crea-appcast.sh` firma `build/Globy.dmg`: il DMG caricato deve essere esattamente
+quello, altrimenti la firma non corrisponde e gli utenti vedono un errore.
 
 Il numero è `CFBundleShortVersionString`. Le note si copiano da `CHANGELOG.md`.
 

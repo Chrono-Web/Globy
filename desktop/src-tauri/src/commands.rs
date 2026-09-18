@@ -4,6 +4,7 @@ use std::sync::Arc;
 use tauri::{AppHandle, State};
 
 use crate::session::{AppState, Session};
+use crate::updates::Updates;
 use crate::windows;
 
 type S<'a> = State<'a, Arc<Session>>;
@@ -73,6 +74,18 @@ pub fn hide_menu(app: AppHandle) {
 #[tauri::command]
 pub fn quit(app: AppHandle) {
     app.exit(0);
+}
+
+#[tauri::command]
+pub async fn check_updates(updates: State<'_, Arc<Updates>>) -> Result<(), ()> {
+    updates.inner().check(true).await;
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn install_update(updates: State<'_, Arc<Updates>>) -> Result<(), ()> {
+    updates.inner().install().await;
+    Ok(())
 }
 
 #[tauri::command]

@@ -11,7 +11,8 @@ type Request =
   | { kind: "burst"; voxes: VoxView[] }
   | { kind: "welcome"; text: string; voxes: VoxView[] }
   | { kind: "onboarding"; introduction: string; steps: string[]; offer: string | null; latest: VoxView[] }
-  | { kind: "show"; vox: VoxView };
+  | { kind: "show"; vox: VoxView }
+  | { kind: "update"; text: string };
 
 interface Screen {
   workArea: Environment["workArea"];
@@ -26,15 +27,29 @@ const toVox = (view: VoxView, kind: Vox["kind"] = "publication"): Vox => ({
   kind,
 });
 
-const welcome = (text: string, asksChoice = false): Vox => ({
+const welcome = (text: string, asksChoice = false, yesTitle = "Sì, partiamo", noTitle = "No, grazie"): Vox => ({
   id: `greeting-${Math.random()}`,
   text,
   permalink: null,
   kind: "greeting",
   asksChoice,
-  yesTitle: "Sì, partiamo",
-  noTitle: "No, grazie",
+  yesTitle,
+  noTitle,
 });
+
+/** Nuova versione: «Aggiornati» scarica e installa e apre le Impostazioni. Se Globy sta
+ *  già parlando, riprova tra 30 secondi; «Più tardi» o la X lasciano il pallino. */
+function presentUpdate(mascot: Mascot, text: string): void {
+  if (mascot.isBusy) {
+    setTimeout(() => presentUpdate(mascot, text), 30_000);
+    return;
+  }
+  mascot.presentGreeting(welcome(text, true, "Aggiornati", "Più tardi"), [], 0, (outcome) => {
+    if (outcome !== "accepted") return;
+    commands.installUpdate();
+    commands.showSettings();
+  });
+}
 
 /** Misure del fumetto come variabili CSS, ricalcolate a ogni cambio di scala. */
 function applyScaleVariables(): void {
@@ -115,6 +130,9 @@ async function start(): Promise<void> {
         break;
       case "show":
         ready.showNow(toVox(payload.vox));
+        break;
+      case "update":
+        presentUpdate(ready, payload.text);
         break;
     }
   });

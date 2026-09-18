@@ -1,6 +1,6 @@
 # Privacy
 
-- Aggiornato: 2026-09-17
+- Aggiornato: 2026-09-18
 - Stato: vale fino alla versione 0.2.0, su Mac, Windows e Linux
 - Risponde a: quali dati tratta Globy e dove restano
 
@@ -40,6 +40,12 @@ Globy contatta la base URL Chronocol configurata per:
 - leggere contenuti pubblici con sole GET: il feed RSS all'avvio, al risveglio, al
   ritorno della rete e circa ogni 5 minuti; l'elenco JSON solo per coprire un buco;
 - aprire nel browser il permalink di un VOX scelto dall'utente.
+
+Dalla 0.3.0 Globy contatta anche GitHub per gli aggiornamenti: legge dall'ultima
+Release `appcast.xml` (Mac) o `latest.json` (Windows e Linux) una volta al giorno e quando
+l'utente sceglie «Controlla ora», e scarica il pacchetto solo dopo «Scarica e installa» o
+«Aggiornati». La richiesta non porta dati sull'utente né il profilo di sistema di
+Sparkle. Il controllo automatico si spegne in Impostazioni › Aggiornamenti.
 
 Nessuna versione fino alla 0.2.0 usa lo stream SSE.
 

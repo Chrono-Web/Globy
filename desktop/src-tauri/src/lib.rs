@@ -8,6 +8,7 @@ mod prefs;
 mod session;
 mod tray;
 mod tray_icon;
+mod updates;
 mod windows;
 
 use std::sync::Arc;
@@ -20,10 +21,19 @@ pub fn run() {
         // Riaprirlo mostra l'elenco dei VOX.
         .plugin(tauri_plugin_single_instance::init(|app, args, _cwd| {
             // Solo sviluppo, sulla copia già aperta: `globy --simulate-vox N` pubblica N VOX,
-            // `globy --open-settings` apre le Impostazioni.
+            // `globy --open-settings` apre le Impostazioni, `globy --install-update` fa come
+            // «Aggiornati» nel fumetto.
             if cfg!(debug_assertions) {
                 if args.iter().any(|a| a == "--open-settings") {
                     windows::show_settings(app);
+                    return;
+                }
+                if args.iter().any(|a| a == "--install-update") {
+                    if let Some(updates) = app.try_state::<Arc<updates::Updates>>() {
+                        let updates = Arc::clone(&updates);
+                        windows::show_settings(app);
+                        tauri::async_runtime::spawn(async move { updates.install().await });
+                    }
                     return;
                 }
                 if let Some(count) = args.iter().position(|a| a == "--simulate-vox").and_then(|i| args.get(i + 1)) {
@@ -39,6 +49,7 @@ pub fn run() {
         .plugin(tauri_plugin_autostart::init(MacosLauncher::LaunchAgent, None))
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .manage(mascot::MascotBridge::default())
         .on_menu_event(|app, event| mascot::handle_menu_event(app, event.id.as_ref()))
         .invoke_handler(tauri::generate_handler![
@@ -62,6 +73,8 @@ pub fn run() {
             mascot::mascot_set_visible,
             mascot::mascot_follow_pointer,
             mascot::mascot_context_menu,
+            commands::check_updates,
+            commands::install_update,
             commands::simulate_publication,
         ])
         .setup(|app| {
@@ -74,6 +87,9 @@ pub fn run() {
             windows::prepare_mascot(app.handle());
             mascot::start_pointer_loop(app.handle().clone());
             session.start();
+            let updates = updates::Updates::new(app.handle().clone());
+            app.manage(Arc::clone(&updates));
+            updates.start();
             Ok(())
         })
         .build(tauri::generate_context!())

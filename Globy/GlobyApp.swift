@@ -26,12 +26,32 @@ enum GlobyMain {
 @MainActor
 final class GlobyAppDelegate: NSObject, NSApplicationDelegate {
     let session = AppSession()
+    let updates = UpdateController()
     private var statusItem: StatusItemController?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
-        statusItem = StatusItemController(session: session)
+        let controller = StatusItemController(session: session, updates: updates)
+        statusItem = controller
+        updates.onShowPreferences = { [weak controller] in controller?.showPreferences() }
+        updates.onAnnounce = { [session, updates, weak controller] version in
+            // Con Globy a schermo lo dice lui; in modalità notifiche di sistema, il Mac.
+            guard session.preferences.mascotEnabled else {
+                session.notifications.postUpdate(version: version)
+                return true
+            }
+            guard !session.mascot.isBusy else { return false }
+            let text = "È uscita una nuova versione di me, la \(version)! Vuoi che mi aggiorni? Ci metto un attimo e poi torno qui."
+            session.mascot.presentGreeting(.welcome(text, asksChoice: true, yesTitle: "Aggiornati", noTitle: "Più tardi")) { [weak controller] outcome in
+                guard outcome == .accepted else { return }
+                updates.install()
+                controller?.showPreferences()
+            }
+            return true
+        }
+        session.notifications.onOpenUpdate = { [weak controller] in controller?.showPreferences() }
         session.start()
+        updates.start()
         #if DEBUG
         if CommandLine.arguments.contains("--open-menu") {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in

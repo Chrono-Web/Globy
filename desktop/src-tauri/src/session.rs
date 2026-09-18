@@ -73,6 +73,7 @@ pub struct AppState {
     pub launch_at_login: bool,
     pub uses_fixture: bool,
     pub platform: Platform,
+    pub update: Option<crate::updates::UpdateState>,
 }
 
 #[derive(Debug, Clone, Copy, Serialize)]
@@ -105,6 +106,8 @@ pub enum MascotRequest {
     Onboarding { introduction: String, steps: Vec<String>, offer: Option<String>, latest: Vec<VoxView> },
     /// VOX scelto dal menu: passa davanti alla coda.
     Show { vox: VoxView },
+    /// Nuova versione di Globy: «Aggiornati» o «Più tardi» (ADR 0006).
+    Update { text: String },
 }
 
 pub struct Session {
@@ -217,6 +220,7 @@ impl Session {
             launch_at_login: self.app.autolaunch().is_enabled().unwrap_or(false),
             uses_fixture: self.uses_fixture,
             platform: Platform::current(),
+            update: self.app.try_state::<Arc<crate::updates::Updates>>().map(|updates| updates.state()),
         }
     }
 

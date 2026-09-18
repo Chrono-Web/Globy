@@ -1,6 +1,6 @@
 # Roadmap
 
-- Aggiornato: 2026-09-17
+- Aggiornato: 2026-09-18
 - Risponde a: che cosa viene prima, quale prova chiude ogni fase e qual è lo stato reale
 
 ## Legenda
@@ -101,7 +101,7 @@ SSE disabilitato e non supera la frequenza HTTP concordata.
 
 - [~] CI per build e test: `.github/workflows/swift.yml` (GlobyCore e app, senza firma su macos-26).
 - [ ] Firma e notarizzazione o flusso Mac App Store.
-- [ ] Meccanismo di aggiornamento.
+- [~] Meccanismo di aggiornamento (ADR 0006): Sparkle sul Mac e updater di Tauri su Windows e Linux, provati con feed locale sul Mac; mancano una Release vera e il collaudo su Windows e Linux.
 - [ ] Licenze e attribuzioni complete.
 - [ ] Test su installazione e utente puliti.
 - [ ] Misure energetiche entro le soglie decise.

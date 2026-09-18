@@ -148,3 +148,14 @@ body.glass #menu {
   font-size: 11px;
   color: var(--secondary);
 }
+
+/* Versione nuova di Globy: stesso pallino dell'icona. */
+.action .update-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-left: 6px;
+  border-radius: 50%;
+  background: #ff9500;
+  vertical-align: 1px;
+}

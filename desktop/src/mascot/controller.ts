@@ -163,6 +163,11 @@ export class Mascot {
     else this.presentNext(!this.current, false);
   }
 
+  /** Sta leggendo un VOX, un saluto o ha una coda: un avviso che non è un VOX aspetta. */
+  get isBusy(): boolean {
+    return !!this.current || this.showingGreeting || this.queue.length > 0;
+  }
+
   summonBurst(items: Vox[]): void {
     items.forEach((vox) => this.summon(vox));
   }

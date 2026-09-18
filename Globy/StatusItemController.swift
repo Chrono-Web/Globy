@@ -8,6 +8,7 @@ import SwiftUI
 @MainActor
 final class StatusItemController: NSObject {
     private let session: AppSession
+    private let updates: UpdateController
     private let item: NSStatusItem
     private let panel: MenuPanel
     private let host: NSHostingView<MenuBarView>
@@ -16,9 +17,11 @@ final class StatusItemController: NSObject {
     private var outsideMonitor: Any?
     private var keyMonitor: Any?
     private var cancellables: [AnyCancellable] = []
+    private let updateDot = UpdateDotView()
 
-    init(session: AppSession) {
+    init(session: AppSession, updates: UpdateController) {
         self.session = session
+        self.updates = updates
         item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         panel = MenuPanel(
             contentRect: NSRect(x: 0, y: 0, width: 360, height: 280),
@@ -26,7 +29,7 @@ final class StatusItemController: NSObject {
             backing: .buffered,
             defer: false
         )
-        host = NSHostingView(rootView: MenuBarView(session: session, onPreferences: {}, onDismiss: {}))
+        host = NSHostingView(rootView: MenuBarView(session: session, updates: updates, onPreferences: {}, onDismiss: {}))
         super.init()
         configureStatusItem()
         session.mascot.onOpenPreferences = { [weak self] in self?.showPreferences() }
@@ -34,6 +37,14 @@ final class StatusItemController: NSObject {
         session.objectWillChange
             .sink { [weak self] _ in
                 // `objectWillChange` arriva prima del cambiamento: misura al giro successivo.
+                DispatchQueue.main.async {
+                    self?.relayoutIfVisible()
+                    self?.refreshStatusAccessibility()
+                }
+            }
+            .store(in: &cancellables)
+        updates.objectWillChange
+            .sink { [weak self] _ in
                 DispatchQueue.main.async {
                     self?.relayoutIfVisible()
                     self?.refreshStatusAccessibility()
@@ -82,12 +93,27 @@ final class StatusItemController: NSObject {
         button.target = self
         button.action = #selector(togglePopover(_:))
         button.sendAction(on: [.leftMouseUp])
+        updateDot.translatesAutoresizingMaskIntoConstraints = false
+        updateDot.isHidden = true
+        button.addSubview(updateDot)
+        // In basso a destra del globo, dove non copre il disegno delle meridiane.
+        NSLayoutConstraint.activate([
+            updateDot.widthAnchor.constraint(equalToConstant: UpdateDotView.size),
+            updateDot.heightAnchor.constraint(equalToConstant: UpdateDotView.size),
+            updateDot.centerXAnchor.constraint(equalTo: button.centerXAnchor, constant: 6),
+            updateDot.centerYAnchor.constraint(equalTo: button.centerYAnchor, constant: 5),
+        ])
         refreshStatusAccessibility()
     }
 
     private func refreshStatusAccessibility() {
         let unread = session.unreadCount
-        item.button?.setAccessibilityLabel(unread == 0 ? "Globy" : (unread == 1 ? "Globy, 1 VOX non letto" : "Globy, \(unread) VOX non letti"))
+        var label = unread == 0 ? "Globy" : (unread == 1 ? "Globy, 1 VOX non letto" : "Globy, \(unread) VOX non letti")
+        if updates.hasUpdate {
+            label += ", aggiornamento disponibile"
+        }
+        item.button?.setAccessibilityLabel(label)
+        updateDot.isHidden = !updates.hasUpdate
     }
 
     private func configurePanel() {
@@ -103,6 +129,7 @@ final class StatusItemController: NSObject {
 
         host.rootView = MenuBarView(
             session: session,
+            updates: updates,
             onPreferences: { [weak self] in self?.showPreferences() },
             onDismiss: { [weak self] in self?.closePopover() }
         )
@@ -202,7 +229,7 @@ final class StatusItemController: NSObject {
     }
 
     private func makePreferencesWindow() -> NSWindow {
-        let hosting = NSHostingView(rootView: SettingsView(session: session))
+        let hosting = NSHostingView(rootView: SettingsView(session: session, updates: updates))
         let window = NSWindow(
             contentRect: NSRect(origin: .zero, size: hosting.fittingSize),
             styleMask: [.titled, .closable, .miniaturizable],
@@ -220,6 +247,29 @@ final class StatusItemController: NSObject {
     private static var surface: Surface { .systemDefault }
     private static let cornerRadius: CGFloat = 16
     private static let inset: CGFloat = 6
+}
+
+/// Pallino dell'aggiornamento sopra il globo: una vista a parte, così l'icona resta
+/// un'immagine template e segue da sola barra chiara, scura e con sfondo colorato.
+private final class UpdateDotView: NSView {
+    static let size: CGFloat = 7
+
+    override init(frame: NSRect) {
+        super.init(frame: frame)
+        wantsLayer = true
+    }
+
+    required init?(coder: NSCoder) { nil }
+
+    override var wantsUpdateLayer: Bool { true }
+
+    override func updateLayer() {
+        layer?.cornerRadius = Self.size / 2
+        layer?.backgroundColor = NSColor.systemOrange.cgColor
+    }
+
+    // Il clic passa al pulsante sotto.
+    override func hitTest(_ point: NSPoint) -> NSView? { nil }
 }
 
 /// Un pannello senza bordi non diventa key da solo: servono tastiera, hover e pulsante predefinito.

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		297D3E62305B50A1005007AC /* GlobyCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7A0100000000000000000026 /* GlobyCore */; };
+		7A0100000000000000000042 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 7A0100000000000000000041 /* Sparkle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,9 +26,22 @@
 		7A0100000000000000000005 /* GlobyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GlobyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		7A0100000000000000000043 /* Exceptions for "Globy" folder in "Globy" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 7A0100000000000000000002 /* Globy */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		7A0100000000000000000008 /* Globy */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				7A0100000000000000000043 /* Exceptions for "Globy" folder in "Globy" target */,
+			);
 			path = Globy;
 			sourceTree = "<group>";
 		};
@@ -44,6 +58,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				297D3E62305B50A1005007AC /* GlobyCore in Frameworks */,
+				7A0100000000000000000042 /* Sparkle in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,6 +111,7 @@
 			name = Globy;
 			packageProductDependencies = (
 				7A0100000000000000000026 /* GlobyCore */,
+				7A0100000000000000000041 /* Sparkle */,
 			);
 			productName = Globy;
 			productReference = 7A0100000000000000000004 /* Globy.app */;
@@ -153,6 +169,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				7A0100000000000000000025 /* XCLocalSwiftPackageReference "Packages/GlobyCore" */,
+				7A0100000000000000000040 /* XCRemoteSwiftPackageReference "Sparkle" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7A0100000000000000000007 /* Products */;
@@ -254,11 +271,12 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Globy/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Globy;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.news";
 				INFOPLIST_KEY_LSUIElement = YES;
@@ -268,7 +286,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 0.2.1;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.chronocol.globy.debug;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -287,11 +305,12 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Globy/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Globy;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.news";
 				INFOPLIST_KEY_LSUIElement = YES;
@@ -301,7 +320,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 0.2.1;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.chronocol.globy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -318,10 +337,10 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 0.2.1;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.chronocol.globy.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -337,10 +356,10 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 0.2.1;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.chronocol.globy.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -389,11 +408,27 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		7A0100000000000000000040 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.7.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		7A0100000000000000000026 /* GlobyCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 7A0100000000000000000025 /* XCLocalSwiftPackageReference "Packages/GlobyCore" */;
 			productName = GlobyCore;
+		};
+		7A0100000000000000000041 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7A0100000000000000000040 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

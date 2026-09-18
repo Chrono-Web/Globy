@@ -1,7 +1,43 @@
 //! Icona per l'area di notifica, disegnata dal codice come il globo: sfera scura con
 //! bordo chiaro, un parallelo, un meridiano e due occhi. Leggibile su barre chiare e scure.
 
-pub fn rgba(size: u32) -> Vec<u8> {
+/// Colore del pallino dell'aggiornamento, lo stesso arancione del Mac.
+const DOT: [f64; 3] = [255.0, 149.0, 0.0];
+
+/// Con `update_dot`, un pallino arancione in basso a destra, con un bordo trasparente
+/// che lo stacca dal globo.
+pub fn rgba(size: u32, update_dot: bool) -> Vec<u8> {
+    let mut pixels = globe(size);
+    if update_dot {
+        draw_dot(&mut pixels, size);
+    }
+    pixels
+}
+
+fn draw_dot(pixels: &mut [u8], size: u32) {
+    let s = size as f64;
+    let (cx, cy) = (s * 0.78, s * 0.78);
+    let r = s * 0.2;
+    let gap = s * 0.07;
+    for y in 0..size {
+        for x in 0..size {
+            let (px, py) = (x as f64 + 0.5 - cx, y as f64 + 0.5 - cy);
+            let d = (px * px + py * py).sqrt();
+            let i = ((y * size + x) * 4) as usize;
+            if d <= r + 0.5 {
+                let coverage = (r + 0.5 - d).clamp(0.0, 1.0);
+                for (c, value) in DOT.iter().enumerate() {
+                    pixels[i + c] = (*value * coverage + pixels[i + c] as f64 * (1.0 - coverage)) as u8;
+                }
+                pixels[i + 3] = pixels[i + 3].max((coverage * 255.0) as u8);
+            } else if d <= r + gap {
+                pixels[i + 3] = 0;
+            }
+        }
+    }
+}
+
+fn globe(size: u32) -> Vec<u8> {
     let s = size as f64;
     let c = s / 2.0;
     let r = s * 0.44;

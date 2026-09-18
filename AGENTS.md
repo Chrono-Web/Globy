@@ -60,7 +60,7 @@ Un fatto deve avere una casa sola. Gli altri documenti lo collegano, non lo copi
 
 1. **Niente eventi inventati.** La mascotte compare dopo la conferma autorevole di
    un nuovo VOX; un pacchetto SSE non basta. Eccezioni: il saluto di primo
-   avvio e il saluto di rientro, che non sono VOX (casa: `docs/PRODOTTO.md`).
+   avvio, il saluto di rientro e l'avviso di una nuova versione di Globy, che non sono VOX (casa: `docs/PRODOTTO.md`).
    **VOX è maschile**: il VOX, un nuovo VOX, i VOX non letti.
 2. **HTTP è autorevole, SSE è un indizio.** Ogni riconnessione, risveglio o evento SSE
    termina in una sincronizzazione idempotente. Il dettaglio è l'ADR 0002.

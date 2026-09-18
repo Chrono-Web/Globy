@@ -1,6 +1,6 @@
 // Elenco dei VOX vicino all'icona di sistema. Porting di `Globy/MenuBarView.swift`.
 import "./menu.css";
-import { commands, el, watchState, type AppState, type VoxView } from "../shared/api";
+import { commands, el, hasUpdate, watchState, type AppState, type VoxView } from "../shared/api";
 
 const root = document.getElementById("menu")!;
 
@@ -90,8 +90,13 @@ function render(state: AppState): void {
     );
   }
 
+  root.append(divider());
+  if (hasUpdate(state.update)) {
+    const update = action(`Aggiorna a Globy ${state.update.version}…`, () => commands.showSettings());
+    update.append(el("span", "update-dot"));
+    root.append(update);
+  }
   root.append(
-    divider(),
     action("Impostazioni…", () => commands.showSettings()),
     action("Esci", () => commands.quit()),
   );

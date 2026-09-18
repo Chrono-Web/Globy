@@ -1,6 +1,6 @@
 # Collaudo di Globy per Windows e Linux
 
-- Aggiornato: 2026-09-17
+- Aggiornato: 2026-09-18
 - Vale per: gli installer della Release 0.2.0 e quelli creati dalla CI (`.github/workflows/desktop.yml`)
 - Ruolo: checklist del collaudo umano prima di pubblicare la 0.2.0
 
@@ -82,6 +82,20 @@ Scrivi anche sistema e versione: Windows 10 o 11; per Linux distribuzione, ambie
 - [ ] Senza rete, il saluto dice che non riesce a raggiungere Chronocol.
 - [ ] Gestione attività (Windows) o `top` (Linux): con Globy nascosto la CPU sta vicino
       a 0%; con Globy a schermo e mouse fermo resta bassa.
+
+## 6. Aggiornamenti (dalla 0.3.0)
+
+Serve la versione installata precedente a quella della Release più recente.
+
+- [ ] Entro un minuto dall'avvio Globy dice «È uscita una nuova versione di me…» con
+      «Più tardi» e «Aggiornati»; sull'icona compare il pallino arancione.
+- [ ] «Più tardi»: il fumetto si chiude, il pallino resta; nell'elenco (Windows) o nel
+      menu dell'icona (Linux) c'è «Aggiorna a Globy X…». Al riavvio l'avviso non torna.
+- [ ] Impostazioni › Aggiornamenti in cima: «Scarica e installa» mostra la barra.
+- [ ] Windows: l'installer lavora senza domande e Globy si riapre alla versione nuova.
+- [ ] Linux AppImage: Globy si riapre alla versione nuova, dallo stesso file.
+- [ ] Linux `.deb`: il sistema chiede la password, poi Globy si riapre aggiornato.
+- [ ] «Controlla ora» sulla versione più recente: «Hai già l'ultima versione.»
 
 ## Esito
 

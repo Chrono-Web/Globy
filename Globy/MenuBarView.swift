@@ -5,6 +5,7 @@ import SwiftUI
 struct MenuBarView: View {
     static let width: CGFloat = 348
     @ObservedObject var session: AppSession
+    @ObservedObject var updates: UpdateController
     var onPreferences: () -> Void
     var onDismiss: () -> Void
 
@@ -46,6 +47,11 @@ struct MenuBarView: View {
             }
             #endif
             menuDivider
+            if updates.hasUpdate, let release = updates.release {
+                MenuActionRow(title: "Aggiorna a Globy \(release.version)…", dot: true) {
+                    onPreferences()
+                }
+            }
             MenuActionRow(title: "Impostazioni…") {
                 onPreferences()
             }
@@ -129,12 +135,18 @@ struct MenuBarView: View {
 
 private struct MenuActionRow: View {
     var title: String
+    var dot = false
     var action: () -> Void
     @State private var hovering = false
 
     var body: some View {
         Button(action: action) {
-            Text(title)
+            HStack(spacing: 6) {
+                Text(title)
+                if dot {
+                    Circle().fill(.orange).frame(width: 7, height: 7)
+                }
+            }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 7)

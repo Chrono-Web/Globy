@@ -20,6 +20,7 @@ mantiene soltanto il collegamento.
 | [0003](0003-la-mascotte-e-un-globo-2d.md) | accettato | La mascotte è un globo 2D, non RealityKit |
 | [0004](0004-store-locale-file-json.md) | accettato | Lo store locale è un file JSON dietro protocollo |
 | [0005](0005-globy-su-windows-e-linux-con-tauri.md) | accettato | Globy su Windows e Linux è un'app Tauri accanto all'app Mac |
+| [0006](0006-aggiornamenti-mac-con-sparkle.md) | accettato | Aggiornamenti automatici: Sparkle sul Mac, updater di Tauri su Windows e Linux |
 
 Usa [`0000-template.md`](0000-template.md) per una nuova decisione. Il numero viene
 assegnato una sola volta e gli ADR accettati non vengono rinumerati.

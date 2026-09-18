@@ -72,16 +72,33 @@ jobs:
       - name: Test dell'app
         run: cargo test -p globy
       - name: Build
-        run: npx tauri build
+        # Con la chiave (secret del repository) la build firma gli installer per gli
+        # aggiornamenti automatici; senza, per esempio da un fork, li crea senza firma.
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ""
+        run: |
+          if [ -n "$TAURI_SIGNING_PRIVATE_KEY" ]; then
+            npx tauri build
+          else
+            npx tauri build --config '{"bundle":{"createUpdaterArtifacts":false}}'
+          fi
       - name: Nomi fissi
         # Gli stessi a ogni versione: il README punta a /releases/latest/download/<nome>.
         run: |
           mkdir -p out
+          # Le firme `.sig` seguono il file: la firma è sul contenuto, non sul nome.
+          copy() {
+            for file in $1; do
+              cp "$file" "out/$2"
+              if [ -f "$file.sig" ]; then cp "$file.sig" "out/$2.sig"; fi
+            done
+          }
           if [ "$RUNNER_OS" = "Windows" ]; then
-            cp target/release/bundle/nsis/*-setup.exe out/Globy-Windows.exe
+            copy "target/release/bundle/nsis/*-setup.exe" Globy-Windows.exe
           else
-            cp target/release/bundle/appimage/*.AppImage out/Globy-Linux.AppImage
-            cp target/release/bundle/deb/*.deb out/Globy-Linux.deb
+            copy "target/release/bundle/appimage/*.AppImage" Globy-Linux.AppImage
+            copy "target/release/bundle/deb/*.deb" Globy-Linux.deb
           fi
           ls -la out
       - uses: actions/upload-artifact@v4
@@ -97,3 +114,30 @@ jobs:
           # Se la Release non c'è ancora la crea in bozza: il DMG del Mac si aggiunge a mano.
           gh release view "$tag" >/dev/null 2>&1 || gh release create "$tag" --draft --title "Globy ${tag#v}" --notes "In preparazione."
           gh release upload "$tag" out/* --clobber
+
+  feed:
+    name: Feed degli aggiornamenti
+    # latest.json per il plugin updater: dice a Windows e Linux quale versione esiste e
+    # dove scaricarla. Il Mac usa appcast.xml, allegato a mano (docs/DISTRIBUZIONE.md).
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: app
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          merge-multiple: true
+      - name: latest.json
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          ls out/*.sig >/dev/null 2>&1 || { echo "Nessuna firma: manca il secret TAURI_SIGNING_PRIVATE_KEY"; exit 1; }
+          node desktop/scripts/latest-json.mjs "${tag#v}" \
+            "https://github.com/Chrono-Web/GLOBY/releases/download/$tag" \
+            windows-x86_64-nsis=out/Globy-Windows.exe \
+            linux-x86_64-appimage=out/Globy-Linux.AppImage \
+            linux-x86_64-deb=out/Globy-Linux.deb > latest.json
+          cat latest.json
+          gh release upload "$tag" latest.json --clobber

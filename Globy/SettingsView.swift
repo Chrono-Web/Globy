@@ -3,18 +3,25 @@ import SwiftUI
 
 struct SettingsView: View {
     @ObservedObject var session: AppSession
+    @ObservedObject var updates: UpdateController
     @ObservedObject private var preferences: PreferenceStore
     @State private var confirmReset = false
     @State private var confirmSystemNotifications = false
     @State private var confirmUninstall = false
 
-    init(session: AppSession) {
+    init(session: AppSession, updates: UpdateController) {
         self.session = session
+        self.updates = updates
         _preferences = ObservedObject(wrappedValue: session.preferences)
     }
 
     var body: some View {
         Form {
+            // Con una versione nuova in attesa la sezione sale in cima: ci si arriva
+            // dalla notifica e dal menu.
+            if updates.hasUpdate {
+                updatesSection
+            }
             Section {
                 Toggle("Mostra sempre Globy", isOn: $preferences.permanence)
                     .disabled(!preferences.mascotEnabled)
@@ -74,6 +81,9 @@ struct SettingsView: View {
                     }
                 }
             }
+            if !updates.hasUpdate {
+                updatesSection
+            }
             Section {
                 LabeledContent("Dati locali") {
                     Button("Azzera…", role: .destructive) {
@@ -123,6 +133,86 @@ struct SettingsView: View {
             }
         } message: {
             Text("Vengono cancellati elenco, stati letto/notificato e le impostazioni di Globy. Poi parte di nuovo la baseline, senza notifiche sull’archivio.")
+        }
+    }
+
+    private var updatesSection: some View {
+        Section {
+            LabeledContent("Versione installata", value: updates.currentVersion)
+            updateStatus
+            Toggle("Controlla automaticamente", isOn: $updates.automaticChecks)
+        } header: {
+            Text("Aggiornamenti")
+        } footer: {
+            footnote("Una volta al giorno Globy chiede a GitHub se esiste una versione nuova, senza mandare dati su di te o sul Mac. Ogni aggiornamento è verificato con una firma prima di essere installato.")
+        }
+    }
+
+    @ViewBuilder
+    private var updateStatus: some View {
+        switch updates.phase {
+        case .idle, .checking:
+            LabeledContent {
+                HStack(spacing: 8) {
+                    if updates.phase == .checking {
+                        ProgressView().controlSize(.small)
+                    }
+                    Button("Controlla ora") { updates.checkNow() }
+                        .disabled(updates.phase == .checking)
+                }
+            } label: {
+                Text(updates.phase == .checking ? "Controllo in corso…" : (updates.lastResult ?? "Cerca una versione nuova"))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        case .available(let downloaded):
+            LabeledContent {
+                Button(downloaded ? "Installa" : "Scarica e installa") { updates.install() }
+                    .buttonStyle(.borderedProminent)
+            } label: {
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 6) {
+                        Circle().fill(.orange).frame(width: 7, height: 7)
+                        Text("Globy \(updates.release?.version ?? "") è disponibile")
+                    }
+                    if let url = updates.release?.notesURL {
+                        Link("Novità di questa versione", destination: url)
+                            .font(.caption)
+                    }
+                }
+            }
+        case .downloading(let progress):
+            LabeledContent {
+                Button("Annulla") { updates.cancel() }
+            } label: {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Scaricamento…")
+                    if let progress {
+                        ProgressView(value: progress)
+                    } else {
+                        ProgressView().progressViewStyle(.linear)
+                    }
+                }
+            }
+        case .extracting(let progress):
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Preparazione…")
+                ProgressView(value: progress)
+            }
+        case .readyToRelaunch:
+            LabeledContent {
+                Button("Riavvia Globy") { updates.install() }
+                    .buttonStyle(.borderedProminent)
+            } label: {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Globy \(updates.release?.version ?? "") è pronto")
+                    footnote("Se non riavvii ora, l’aggiornamento si installa quando esci da Globy.")
+                }
+            }
+        case .installing:
+            HStack(spacing: 8) {
+                ProgressView().controlSize(.small)
+                Text("Installazione… Globy si riapre da solo.")
+            }
         }
     }
 

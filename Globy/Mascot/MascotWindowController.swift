@@ -142,6 +142,11 @@ final class MascotWindowController {
         }
     }
 
+    /// Sta leggendo un VOX, un saluto o ha una coda: un avviso che non è un VOX aspetta.
+    var isBusy: Bool {
+        current != nil || showingGreeting || !queue.isEmpty
+    }
+
     /// Accoda un VOX. Se il globo è nascosto, parte il richiamo; se sta già leggendo,
     /// le successive aspettano con una pausa di un secondo tra una e l'altra.
     func summon(vox: Vox) {

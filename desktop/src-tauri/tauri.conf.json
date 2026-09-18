@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Globy",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "identifier": "com.chronocol.globy",
   "build": {
     "beforeDevCommand": "npm run dev",
@@ -18,23 +18,47 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["nsis", "appimage", "deb"],
+    "targets": [
+      "nsis",
+      "appimage",
+      "deb"
+    ],
     "publisher": "Chronocol",
     "copyright": "GNU GPL v3",
     "category": "News",
     "shortDescription": "I VOX di Chronocol sul tuo computer",
     "longDescription": "Globy legge i VOX pubblici di Chronocol e, quando ne esce uno nuovo, te lo mostra con un piccolo globo.",
-    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.png", "icons/icon.ico"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.png",
+      "icons/icon.ico"
+    ],
     "windows": {
       "nsis": {
         "installMode": "currentUser",
-        "languages": ["Italian"],
+        "languages": [
+          "Italian"
+        ],
         "displayLanguageSelector": false
       }
     },
     "linux": {
       "deb": {
         "section": "news"
+      }
+    },
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDNBQUQyNjEzQjAzRTNCQzMKUldURE96NndFeWF0T2pPamM5UHAxTVlZMHp2LzBjOHVLQlVSYk9XRjQ4TXljdnVOYS91T1JvOUQK",
+      "endpoints": [
+        "https://github.com/Chrono-Web/GLOBY/releases/latest/download/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
       }
     }
   }

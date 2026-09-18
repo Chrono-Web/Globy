@@ -23,6 +23,7 @@ export interface Preferences {
   textScale: number;
   buttonScale: number;
   globeScale: number;
+  updateChecksEnabled: boolean;
 }
 
 export interface Platform {
@@ -30,6 +31,20 @@ export interface Platform {
   linux: boolean;
   wayland: boolean;
 }
+
+/** Aggiornamenti (`src-tauri/src/updates.rs`). */
+export interface UpdateState {
+  currentVersion: string;
+  phase: "idle" | "checking" | "available" | "downloading" | "installing";
+  version: string | null;
+  notesUrl: string | null;
+  progress: number | null;
+  message: string | null;
+  needsPassword: boolean;
+}
+
+export const hasUpdate = (update: UpdateState | null): update is UpdateState =>
+  !!update && ["available", "downloading", "installing"].includes(update.phase);
 
 export interface AppState {
   recent: VoxView[];
@@ -40,6 +55,7 @@ export interface AppState {
   launchAtLogin: boolean;
   usesFixture: boolean;
   platform: Platform;
+  update: UpdateState | null;
 }
 
 export const getState = () => invoke<AppState>("get_state");
@@ -63,6 +79,8 @@ export const commands = {
   hideMenu: () => invoke("hide_menu"),
   quit: () => invoke("quit"),
   hasGlass: () => invoke<boolean>("has_glass"),
+  checkUpdates: () => invoke("check_updates"),
+  installUpdate: () => invoke("install_update"),
   simulatePublication: (count: number) => invoke("simulate_publication", { count }),
 };
 

@@ -1,6 +1,6 @@
 // Impostazioni. Porting di `Globy/SettingsView.swift`, con le differenze di Windows e Linux.
 import "./settings.css";
-import { commands, el, watchState, type AppState, type Preferences } from "../shared/api";
+import { commands, el, hasUpdate, watchState, type AppState, type Preferences, type UpdateState } from "../shared/api";
 
 const root = document.getElementById("settings")!;
 const RANGES = { globeScale: [0.75, 2.5], textScale: [0.85, 1.5], buttonScale: [0.8, 1.6] } as const;
@@ -41,9 +41,9 @@ function section(title: string, items: HTMLElement[], notes: string[] = []): HTM
   return node;
 }
 
-function item(label: string, control: HTMLElement, enabled = true): HTMLElement {
+function item(label: string, control: HTMLElement, enabled = true, labelNode?: HTMLElement): HTMLElement {
   const node = el("div", enabled ? "item" : "item disabled");
-  node.append(el("span", undefined, label), control);
+  node.append(labelNode ?? el("span", undefined, label), control);
   return node;
 }
 
@@ -84,6 +84,68 @@ function button(title: string, run: () => void, danger = false, enabled = true):
   return node;
 }
 
+// MARK: Aggiornamenti
+
+function updateStatus(update: UpdateState): HTMLElement {
+  const label = el("div", "update-label");
+  const line = (text: string, dot = false) => {
+    const node = el("div", "update-line", text);
+    if (dot) node.prepend(el("span", "update-dot"));
+    return node;
+  };
+  switch (update.phase) {
+    case "idle":
+    case "checking": {
+      const checking = update.phase === "checking";
+      label.append(line(checking ? "Controllo in corso…" : (update.message ?? "Cerca una versione nuova")));
+      return item("", button("Controlla ora", () => commands.checkUpdates(), false, !checking), true, label);
+    }
+    case "available": {
+      label.append(line(`Globy ${update.version} è disponibile`, true));
+      if (update.notesUrl) {
+        const notes = el("button", "link", "Novità di questa versione");
+        notes.addEventListener("click", () => commands.openPermalink(update.notesUrl!));
+        label.append(notes);
+      }
+      if (update.message) label.append(el("div", "update-error", update.message));
+      const install = button("Scarica e installa", () => commands.installUpdate());
+      install.classList.add("prominent");
+      return item("", install, true, label);
+    }
+    case "downloading": {
+      label.append(line("Scaricamento…"));
+      const bar = el("progress");
+      if (update.progress !== null) bar.value = update.progress;
+      label.append(bar);
+      return item("", el("span"), true, label);
+    }
+    case "installing":
+      label.append(line("Installazione… Globy si riapre da solo."));
+      return item("", el("div", "spinner"), true, label);
+  }
+}
+
+function updatesSection(state: AppState): HTMLElement {
+  const update = state.update!;
+  const notes = [
+    "Una volta al giorno Globy chiede a GitHub se esiste una versione nuova, senza mandare dati su di te o sul computer. Ogni aggiornamento è verificato con una firma prima di essere installato.",
+  ];
+  if (update.needsPassword) {
+    notes.push("Globy è installato come pacchetto: per aggiornarlo il sistema chiede la password di amministratore.");
+  }
+  return section(
+    "Aggiornamenti",
+    [
+      item("Versione installata", el("span", "value", update.currentVersion)),
+      updateStatus(update),
+      toggle("Controlla automaticamente", state.preferences.updateChecksEnabled, (on) =>
+        commands.setPreferences({ updateChecksEnabled: on }),
+      ),
+    ],
+    notes,
+  );
+}
+
 // MARK: Pagina
 
 function render(state: AppState): void {
@@ -117,7 +179,14 @@ function render(state: AppState): void {
     ? "Cancella VOX salvati, impostazioni e avvio all’accesso, poi apre il programma di disinstallazione di Windows."
     : "Cancella VOX salvati, impostazioni e avvio all’accesso e chiude Globy. Poi elimina il file AppImage, oppure rimuovi il pacchetto con «sudo apt remove globy».";
 
+  // Con una versione nuova in attesa la sezione sale in cima: ci si arriva dall'avviso di
+  // Globy, dall'elenco e dal menu dell'icona.
+  const updates = state.update ? updatesSection(state) : null;
+  const top = hasUpdate(state.update) ? updates : null;
+  const bottom = top ? null : updates;
+
   root.replaceChildren(
+    ...(top ? [top] : []),
     section(
       "Globy",
       [
@@ -166,6 +235,7 @@ function render(state: AppState): void {
       ],
       ["Al posto di Globy, i nuovi VOX arrivano come notifiche del sistema."],
     ),
+    ...(bottom ? [bottom] : []),
     section(
       "Dati",
       [

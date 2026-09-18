@@ -22,6 +22,10 @@ pub struct Preferences {
     pub globe_scale: f64,
     /// Ultimo saluto di rientro: riavvii ravvicinati non ripetono «Heilà».
     pub last_welcome_at: Option<DateTime<Utc>>,
+    /// Controllo giornaliero degli aggiornamenti (Impostazioni › Aggiornamenti).
+    pub update_checks_enabled: bool,
+    /// Ultima versione annunciata da Globy: l'avviso compare una volta sola.
+    pub announced_update: Option<String>,
 }
 
 impl Default for Preferences {
@@ -38,6 +42,8 @@ impl Default for Preferences {
             button_scale: 1.0,
             globe_scale: 1.0,
             last_welcome_at: None,
+            update_checks_enabled: true,
+            announced_update: None,
         }
     }
 }

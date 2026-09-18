@@ -1,6 +1,6 @@
 # Prodotto
 
-- Aggiornato: 2026-09-17
+- Aggiornato: 2026-09-18
 - Stato: bozza; le domande che bloccavano il progetto Xcode sono chiuse il 2026-09-16
 - Risponde a: che cosa è Globy, per chi esiste e dove finisce la prima versione
 
@@ -48,7 +48,7 @@ lettura completa.
 
 La mascotte è un avviso visivo transitorio, non il motore del prodotto.
 
-- Compare dopo la conferma autorevole di un nuovo VOX, con due eccezioni che non
+- Compare dopo la conferma autorevole di un nuovo VOX, con tre eccezioni che non
   sono VOX e non aprono un permalink (occhi chiusi come a metà battito, verso chi
   guarda):
   - il saluto di primo avvio, una volta sola;
@@ -61,6 +61,11 @@ La mascotte è un avviso visivo transitorio, non il motore del prodotto.
     Se non c'è niente di nuovo e un saluto è già comparso negli ultimi 10 minuti
     (anche prima di un riavvio), non si ripete.
     Il testo sta in `WelcomePolicy` (GlobyCore).
+  - l'avviso di una nuova versione di Globy, una volta sola per versione (ADR 0006):
+    «Aggiornati» scarica e installa e apre le Impostazioni, «Più tardi» o la X lasciano
+    il pallino sull'icona di Globy nella barra dei menu o nell'area di notifica. Se
+    Globy sta leggendo un VOX o un saluto, l'avviso aspetta. In modalità notifiche di
+    sistema arriva invece come notifica del sistema.
 - Entra nell'angolo inferiore destro della `visibleFrame` dello schermo col
   puntatore (margine 16 pt, Dock escluso) e si nasconde automaticamente.
   Globo e fumetto restano interamente in quell'area: il globo non esce dal
