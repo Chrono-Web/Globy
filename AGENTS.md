@@ -52,6 +52,7 @@ degli eventi persi.
 | `docs/COLLAUDO_FASE3.md` | Checklist del collaudo umano che chiude la fase 3 |
 | `docs/COLLAUDO_DESKTOP.md` | Checklist del collaudo umano su Windows e Linux |
 | `docs/SEGNALARE.md` | Come chi usa Globy segnala un problema |
+| `docs/PROPORRE.md` | Come chi usa Globy propone un'idea |
 | `docs/adr/` | Perché una decisione interna è stata presa |
 
 Un fatto deve avere una casa sola. Gli altri documenti lo collegano, non lo copiano.

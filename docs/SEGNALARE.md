@@ -37,6 +37,7 @@ se occorrono. Per un problema di sicurezza segui [`SECURITY.md`](../SECURITY.md)
 ## Proposte
 
 Un'idea o un comportamento diverso non è un problema: usa **New issue** › **Proposta**.
+La guida [`PROPORRE.md`](PROPORRE.md) spiega come.
 
 ## Chi collauda su richiesta
 

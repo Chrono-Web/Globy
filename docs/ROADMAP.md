@@ -122,6 +122,7 @@ ufficiale e completa un aggiornamento dalla versione precedente.
 - [x] Release 0.2.0 con i tre sistemi e i tre pulsanti del README, Windows e Linux
       dichiarati in test.
 - [x] Guida e modulo per segnalare problemi (`docs/SEGNALARE.md`).
+- [x] Guida per proporre idee (`docs/PROPORRE.md`).
 
 **Verifica:** collaudo registrato in `docs/COLLAUDO_DESKTOP.md` per Windows e per
 entrambe le sessioni Linux, poi installazione dai pulsanti del README.

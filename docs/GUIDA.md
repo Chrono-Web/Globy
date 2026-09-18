@@ -13,7 +13,8 @@ progetto o lavorarci.
 >
 > **Windows e Linux in test** dalla 0.2.0 (ADR 0005): l'app Tauri in `desktop/` è
 > pubblicata ma non ancora collaudata su quei sistemi (`docs/COLLAUDO_DESKTOP.md`).
-> I problemi si segnalano come spiega `docs/SEGNALARE.md`.
+> I problemi si segnalano come spiega `docs/SEGNALARE.md`, le idee come spiega
+> `docs/PROPORRE.md`.
 
 Globy è il compagno ufficiale macOS di [Chronocol](https://chronocol.com): vive nella
 barra dei menu e raccoglie i VOX più recenti. Quando arriva un nuovo VOX confermato,
@@ -71,6 +72,7 @@ La roadmap è in [`docs/ROADMAP.md`](ROADMAP.md). Il brief è in
 | [`docs/COLLAUDO_FASE3.md`](COLLAUDO_FASE3.md) | Collaudo umano della fase 3 ed esito |
 | [`docs/COLLAUDO_DESKTOP.md`](COLLAUDO_DESKTOP.md) | Collaudo umano di Windows e Linux |
 | [`docs/SEGNALARE.md`](SEGNALARE.md) | Come segnalare un problema |
+| [`docs/PROPORRE.md`](PROPORRE.md) | Come proporre un'idea |
 | [`CHANGELOG.md`](../CHANGELOG.md) | Che cosa è cambiato in ogni versione |
 | [`docs/adr/`](adr/) | Perché una decisione interna è stata presa |
 

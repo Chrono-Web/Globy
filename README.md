@@ -63,6 +63,11 @@ programma di disinstallazione; su Linux cancella poi il file AppImage, oppure
 Qualcosa non funziona? Apri una [issue con il modulo «Problema»](https://github.com/Chrono-Web/Globy/issues/new?template=problema.yml):
 la [guida](docs/SEGNALARE.md) spiega cosa scrivere.
 
+## Proporre un'idea
+
+Hai un'idea per Globy? Apri una [issue con il modulo «Proposta»](https://github.com/Chrono-Web/Globy/issues/new?template=feature.yml):
+la [guida](docs/PROPORRE.md) spiega come. Non serve saper programmare.
+
 ---
 
 Globy è in pre-alpha. Per capire com'è fatto o lavorarci c'è la

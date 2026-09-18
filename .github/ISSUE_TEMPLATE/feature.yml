@@ -1,5 +1,5 @@
 name: Proposta
-description: Proponi un comportamento, un chiarimento di perimetro o un miglioramento
+description: Hai un'idea per Globy? Proponila qui, anche se non è rotto niente
 title: "[Proposta] "
 labels:
   - enhancement
@@ -7,31 +7,34 @@ body:
   - type: markdown
     attributes:
       value: >
-        Una proposta utile cambia un comportamento, un requisito o una decisione. Se
-        qualcosa non funziona, usa invece il modulo «Problema».
+        Grazie! Non serve saper programmare né essere completi: le domande le facciamo
+        nei commenti. La guida `docs/PROPORRE.md` spiega cosa scrivere. Se invece
+        qualcosa non funziona, usa il modulo «Problema».
   - type: textarea
     id: problem
     attributes:
-      label: Problema
-      description: Quale bisogno concreto non è coperto?
+      label: Bisogno
+      description: Cosa ti manca o cosa vorresti fare? Racconta una situazione concreta.
     validations:
       required: true
   - type: textarea
     id: outcome
     attributes:
-      label: Esito desiderato
-      description: Descrivi il comportamento, non soltanto l'implementazione preferita.
+      label: Come te lo immagini
+      description: Cosa vedresti o faresti, a parole tue.
     validations:
       required: true
   - type: textarea
     id: alternatives
     attributes:
-      label: Alternative considerate
+      label: Alternative (facoltativo)
+      description: Cosa fai oggi al posto di questo, o altre idee che hai considerato.
   - type: dropdown
     id: area
     attributes:
       label: Area prevalente
       options:
+        - Non so
         - Prodotto
         - Sincronizzazione
         - Menu bar
@@ -45,7 +48,7 @@ body:
   - type: checkboxes
     id: scope
     attributes:
-      label: Perimetro
+      label: Controllo
       options:
-        - label: Ho controllato `docs/PRODOTTO.md` e `docs/ROADMAP.md`.
+        - label: Ho cercato tra le issue esistenti e non ho trovato la stessa idea.
           required: true

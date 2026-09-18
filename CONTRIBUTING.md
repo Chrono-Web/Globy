@@ -45,7 +45,8 @@ documentato è stato realmente verificato.
 ## Issue
 
 Per problemi, correzioni e proposte usa i template in `.github/ISSUE_TEMPLATE/`.
-Come segnalare un problema dell'app: `docs/SEGNALARE.md`. Per questioni di sicurezza
+Come segnalare un problema dell'app: `docs/SEGNALARE.md`; come proporre un'idea:
+`docs/PROPORRE.md`. Per questioni di sicurezza
 segui `SECURITY.md`.
 
 ## Licenza
