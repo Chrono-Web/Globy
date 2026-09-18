@@ -20,6 +20,8 @@ struct Vox: Equatable {
     var asksChoice = false
     var yesTitle = "Sì, partiamo"
     var noTitle = "No, grazie"
+    /// VOX reale di Chronocol: serve a segnarlo come letto.
+    var documentId: String?
 
     /// Saluto di primo avvio: non è un VOX e non nasce dalla sincronizzazione.
     static let greeting = Vox(

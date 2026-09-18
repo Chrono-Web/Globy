@@ -153,6 +153,18 @@ final class MascotWindowController {
         }
     }
 
+    /// VOX scelto dal menu: passa davanti alla coda e compare subito.
+    /// Durante un saluto aspetta il suo turno, come ogni altro VOX.
+    func showNow(_ vox: Vox) {
+        queue.removeAll { $0 == vox }
+        queue.insert(vox, at: 0)
+        if showingGreeting {
+            refreshChrome()
+            return
+        }
+        presentNext(fromHidden: current == nil, playSound: false)
+    }
+
     func summonBurst(_ items: [Vox]) {
         items.forEach(summon)
     }
@@ -235,7 +247,7 @@ final class MascotWindowController {
             return
         }
         guard let current else { return }
-        NSWorkspace.shared.open(current.permalink)
+        onOpen(current)
     }
 
     /// X: chiude solo il fumetto. Il globo resta se c'è la permanenza.
@@ -349,6 +361,7 @@ final class MascotWindowController {
         if playSound { playSoundIfAllowed() }
         refreshChrome()
         let readingDone = model.present(vox)
+        onShow(vox)
         if permanence {
             cancelHide()
         } else {
@@ -457,6 +470,10 @@ final class MascotWindowController {
 
     /// Da impostare da chi possiede la finestra delle Impostazioni.
     var onOpenPreferences: () -> Void = {}
+    /// Clic sul fumetto di un VOX: la sessione lo segna come letto e apre Chronocol.
+    var onOpen: (Vox) -> Void = { NSWorkspace.shared.open($0.permalink) }
+    /// Un VOX è comparso nel fumetto.
+    var onShow: (Vox) -> Void = { _ in }
 
     /// Clic destro su Globy o sul fumetto.
     private func makeContextMenu() -> NSMenu {
@@ -634,6 +651,23 @@ final class MascotWindowController {
         let ignores = shouldIgnoreMouseEvents()
         // Scrivere la proprietà parla con il window server: solo quando cambia davvero.
         if panel.ignoresMouseEvents != ignores { panel.ignoresMouseEvents = ignores }
+        updateCursor()
+    }
+
+    private var showsPointingHand = false
+
+    /// Manina su globo, fumetto e pulsanti. Il pannello non diventa mai finestra chiave,
+    /// quindi i cursor rect di AppKit non bastano: il cursore si imposta a mano.
+    private func updateCursor() {
+        let mouse = NSEvent.mouseLocation
+        let overButton = [closeButton, nextButton, backButton, yesButton, noButton].contains { isHot($0, mouse: mouse) }
+        let hot = panel.isVisible && (overButton || isInteractive(at: panel.convertPoint(fromScreen: mouse)))
+        if hot {
+            NSCursor.pointingHand.set()
+        } else if showsPointingHand {
+            NSCursor.arrow.set()
+        }
+        showsPointingHand = hot
     }
 
     private func shouldIgnoreMouseEvents() -> Bool {

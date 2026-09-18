@@ -10,7 +10,8 @@ import type { Vox } from "./vox";
 type Request =
   | { kind: "burst"; voxes: VoxView[] }
   | { kind: "welcome"; text: string; voxes: VoxView[] }
-  | { kind: "onboarding"; introduction: string; steps: string[]; offer: string | null; latest: VoxView[] };
+  | { kind: "onboarding"; introduction: string; steps: string[]; offer: string | null; latest: VoxView[] }
+  | { kind: "show"; vox: VoxView };
 
 interface Screen {
   workArea: Environment["workArea"];
@@ -111,6 +112,9 @@ async function start(): Promise<void> {
         break;
       case "onboarding":
         presentOnboarding(ready, payload);
+        break;
+      case "show":
+        ready.showNow(toVox(payload.vox));
         break;
     }
   });

@@ -46,6 +46,7 @@ pub fn run() {
             commands::has_glass,
             commands::open_vox,
             commands::open_permalink,
+            commands::mark_read,
             commands::set_preferences,
             commands::finish_onboarding,
             commands::set_launch_at_login,

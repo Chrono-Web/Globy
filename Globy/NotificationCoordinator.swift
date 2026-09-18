@@ -4,6 +4,9 @@ import UserNotifications
 /// Notifiche locali, senza suono. Il permesso si chiede solo dopo la spiegazione.
 @MainActor
 final class NotificationCoordinator: NSObject, UNUserNotificationCenterDelegate {
+    /// Clic sul banner: la sessione segna il VOX come letto e apre Chronocol.
+    var onOpen: (URL, String?) -> Void = { url, _ in NSWorkspace.shared.open(url) }
+
     override init() {
         super.init()
         UNUserNotificationCenter.current().delegate = self
@@ -49,8 +52,9 @@ final class NotificationCoordinator: NSObject, UNUserNotificationCenterDelegate 
     ) async {
         let info = response.notification.request.content.userInfo
         guard let raw = info["permalink"] as? String, let url = URL(string: raw) else { return }
+        let documentId = (info["documentId"] as? String).flatMap { $0 == "summary" ? nil : $0 }
         await MainActor.run {
-            _ = NSWorkspace.shared.open(url)
+            onOpen(url, documentId)
         }
     }
 }

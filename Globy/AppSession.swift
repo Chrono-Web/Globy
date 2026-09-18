@@ -87,6 +87,16 @@ final class AppSession: ObservableObject {
         mascot.soundEnabled = preferences.mascotSoundEnabled
         mascot.permanence = preferences.permanence
         mascot.gazeFollowsPointer = preferences.gazeFollowsPointer
+        // Un VOX letto nel fumetto è letto: non resta tra i non letti del menu.
+        mascot.onShow = { [weak self] vox in
+            if let id = vox.documentId { self?.markRead(documentId: id) }
+        }
+        mascot.onOpen = { [weak self] vox in
+            self?.open(permalink: vox.permalink, documentId: vox.documentId)
+        }
+        notifications.onOpen = { [weak self] permalink, documentId in
+            self?.open(permalink: permalink, documentId: documentId)
+        }
 
         preferences.objectWillChange.sink { [weak self] _ in
             self?.objectWillChange.send()
@@ -163,15 +173,29 @@ final class AppSession: ObservableObject {
         present(report, welcome: welcome)
     }
 
-    func open(_ record: VoxRecord) {
+    /// Clic sul menu: il VOX lo mostra Globy. Il sito si apre dal fumetto.
+    /// Con Globy spento (notifiche di sistema) resta solo il sito.
+    func show(_ record: VoxRecord) {
+        guard preferences.mascotEnabled else {
+            open(permalink: record.permalink, documentId: record.documentId)
+            return
+        }
+        mascot.showNow(Vox(record: record))
+    }
+
+    func markRead(documentId: String) {
         Task {
-            await store.markRead(documentId: record.documentId, at: Date())
+            await store.markRead(documentId: documentId, at: Date())
             await refreshRecords()
         }
+    }
+
+    func open(permalink: URL, documentId: String?) {
+        if let documentId { markRead(documentId: documentId) }
         NSApp.activate(ignoringOtherApps: true)
         let configuration = NSWorkspace.OpenConfiguration()
         configuration.activates = true
-        NSWorkspace.shared.open(record.permalink, configuration: configuration) { _, error in
+        NSWorkspace.shared.open(permalink, configuration: configuration) { _, error in
             if let error {
                 Task { @MainActor in
                     self.lastFailure = error.localizedDescription

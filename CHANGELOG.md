@@ -2,6 +2,18 @@
 
 Le modifiche rilevanti a Globy sono registrate qui.
 
+## 0.2.1 — 2026-09-18
+
+Correzioni per Mac, Windows e Linux. DMG e installer non firmati.
+
+### Corretto
+
+- **VOX non letti:** un VOX mostrato nel fumetto di Globy ora conta come letto; sul Mac
+  anche il clic sul fumetto e sul banner di notifica lo segna come letto.
+- **Menu:** il clic su un VOX lo fa mostrare a Globy invece di aprire il sito, che si
+  apre dal fumetto. Con Globy spento il menu apre ancora il sito.
+- **Mac:** il cursore diventa la manina su globo, fumetto e pulsanti.
+
 ## 0.2.0 — 2026-09-17
 
 Globy arriva su Windows e Linux (ADR 0005), **in test**: nessuno l'ha ancora collaudato

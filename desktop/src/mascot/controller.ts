@@ -154,6 +154,15 @@ export class Mascot {
     else this.refreshChrome();
   }
 
+  /** VOX scelto dal menu: passa davanti alla coda e compare subito.
+   *  Durante un saluto aspetta il suo turno, come ogni altro VOX. */
+  showNow(vox: Vox): void {
+    this.queue = this.queue.filter((queued) => queued.id !== vox.id);
+    this.queue.unshift(vox);
+    if (this.showingGreeting) this.refreshChrome();
+    else this.presentNext(!this.current, false);
+  }
+
   summonBurst(items: Vox[]): void {
     items.forEach((vox) => this.summon(vox));
   }
@@ -364,6 +373,8 @@ export class Mascot {
     if (playSound) this.playSound();
     this.refreshChrome();
     const readingDone = this.present(vox);
+    // Un VOX letto nel fumetto è letto: non resta tra i non letti del menu.
+    if (vox.kind === "publication") invoke("mark_read", { documentId: vox.id });
     if (this.permanenceOn) this.cancelHide();
     else this.scheduleHide(readingDone + ReadingPolicy.linger(vox.text));
   }

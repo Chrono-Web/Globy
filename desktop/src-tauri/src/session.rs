@@ -103,6 +103,8 @@ pub enum MascotRequest {
     Welcome { text: String, voxes: Vec<VoxView> },
     /// Primo avvio: presentazione, due passi e proposta dei VOX recenti.
     Onboarding { introduction: String, steps: Vec<String>, offer: Option<String>, latest: Vec<VoxView> },
+    /// VOX scelto dal menu: passa davanti alla coda.
+    Show { vox: VoxView },
 }
 
 pub struct Session {
@@ -353,6 +355,23 @@ impl Session {
     }
 
     // MARK: Azioni
+
+    /// Clic sul menu: il VOX lo mostra Globy, il sito si apre dal fumetto.
+    /// Con Globy spento (notifiche di sistema) resta solo il sito.
+    pub fn show(&self, document_id: &str) {
+        if !self.preferences().mascot_enabled {
+            return self.open(document_id);
+        }
+        let snapshot = self.coordinator.store().snapshot();
+        let Some(record) = snapshot.records.get(document_id) else { return };
+        windows::present_mascot(&self.app, MascotRequest::Show { vox: view(record, false) });
+    }
+
+    /// Un VOX comparso nel fumetto è letto: non resta tra i non letti del menu.
+    pub fn mark_read(&self, document_id: &str) {
+        self.coordinator.store().mark_read(document_id, Utc::now());
+        self.broadcast();
+    }
 
     pub fn open(&self, document_id: &str) {
         let snapshot = self.coordinator.store().snapshot();

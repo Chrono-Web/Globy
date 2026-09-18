@@ -20,8 +20,13 @@ pub fn has_glass() -> bool {
 
 #[tauri::command]
 pub fn open_vox(session: S, app: AppHandle, document_id: String) {
-    session.open(&document_id);
+    session.show(&document_id);
     windows::hide_menu(&app);
+}
+
+#[tauri::command]
+pub fn mark_read(session: S, document_id: String) {
+    session.mark_read(&document_id);
 }
 
 #[tauri::command]

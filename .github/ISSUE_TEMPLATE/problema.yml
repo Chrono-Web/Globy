@@ -27,7 +27,7 @@ body:
     attributes:
       label: Versioni
       description: Versione di Globy (nelle note della Release) e del sistema. Per Linux anche distribuzione e ambiente, per esempio «Ubuntu 24.04, GNOME».
-      placeholder: Globy 0.2.0, Windows 11 24H2
+      placeholder: Globy 0.2.1, Windows 11 24H2
     validations:
       required: true
   - type: input

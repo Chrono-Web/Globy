@@ -27,7 +27,7 @@ struct MenuBarView: View {
                     VStack(spacing: 0) {
                         ForEach(session.recent, id: \.documentId) { record in
                             Button {
-                                session.open(record)
+                                session.show(record)
                                 onDismiss()
                             } label: {
                                 VoxRow(record: record, isUnread: session.isUnread(record))
