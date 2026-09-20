@@ -15,6 +15,12 @@ final class PreferenceStore: ObservableObject {
         didSet { defaults.set(permanence, forKey: Keys.permanence) }
     }
 
+    /// Mostra il saluto di rientro dopo il risveglio del Mac o dello schermo.
+    /// La sincronizzazione al risveglio resta attiva anche quando il saluto è spento.
+    @Published var welcomesOnWake: Bool {
+        didSet { defaults.set(welcomesOnWake, forKey: Keys.welcomesOnWake) }
+    }
+
     @Published var mascotSoundEnabled: Bool {
         didSet { defaults.set(mascotSoundEnabled, forKey: Keys.mascotSound) }
     }
@@ -63,6 +69,7 @@ final class PreferenceStore: ObservableObject {
         self.defaults = defaults
         mascotEnabled = defaults.object(forKey: Keys.mascotEnabled) as? Bool ?? true
         permanence = defaults.bool(forKey: Keys.permanence)
+        welcomesOnWake = defaults.object(forKey: Keys.welcomesOnWake) as? Bool ?? true
         mascotSoundEnabled = defaults.object(forKey: Keys.mascotSound) as? Bool ?? true
         gazeFollowsPointer = defaults.object(forKey: Keys.gazeFollowsPointer) as? Bool ?? true
         didGreet = defaults.bool(forKey: Keys.didGreet)
@@ -77,6 +84,7 @@ final class PreferenceStore: ObservableObject {
         Keys.all.forEach { defaults.removeObject(forKey: $0) }
         mascotEnabled = true
         permanence = false
+        welcomesOnWake = true
         mascotSoundEnabled = true
         gazeFollowsPointer = true
         didGreet = false
@@ -90,6 +98,7 @@ final class PreferenceStore: ObservableObject {
     private enum Keys {
         static let mascotEnabled = "mascotEnabled"
         static let permanence = "permanence"
+        static let welcomesOnWake = "welcomesOnWake"
         static let mascotSound = "mascotSoundEnabled"
         static let gazeFollowsPointer = "gazeFollowsPointer"
         static let didGreet = "didGreet"
@@ -100,7 +109,7 @@ final class PreferenceStore: ObservableObject {
         // Nuova chiave: la vecchia scala era relativa a un globo standard più grande.
         static let globeScale = "globySizeScale"
         static let lastWelcomeAt = "lastWelcomeAt"
-        static let all = [mascotEnabled, permanence, mascotSound, gazeFollowsPointer, didGreet, didOnboard,
+        static let all = [mascotEnabled, permanence, welcomesOnWake, mascotSound, gazeFollowsPointer, didGreet, didOnboard,
                           customSizes, textScale, buttonScale, globeScale, lastWelcomeAt]
     }
 }

@@ -115,8 +115,9 @@ presentazioni distinte: il saluto di primo avvio e il saluto di rientro (non son
 VOX) e la conferma di un nuovo VOX. Il coordinatore dell'interfaccia richiede una sola presentazione
 in basso a destra; una raffica viene aggregata invece di sovrapporre più globi.
 Terminata l'animazione, la finestra si nasconde e rilascia o sospende le risorse
-grafiche senza fermare l'app. Le preferenze piccole (mascotte, permanenza, suono,
-pausa notifiche, avvio al login, saluto già mostrato) restano in `UserDefaults`.
+grafiche senza fermare l'app. Le preferenze piccole (mascotte, permanenza, saluto al
+risveglio, suono, pausa notifiche, avvio al login, saluto già mostrato) restano in
+`UserDefaults`.
 
 Il posizionamento deve usare l'area visibile dello schermo scelto, non coordinate
 globali fisse: Dock, notch, ridimensionamento e più monitor cambiano l'angolo realmente

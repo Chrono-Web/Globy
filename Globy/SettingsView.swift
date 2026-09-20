@@ -26,6 +26,8 @@ struct SettingsView: View {
                 Toggle("Mostra sempre Globy", isOn: $preferences.permanence)
                     .disabled(!preferences.mascotEnabled)
                 Toggle("Apri Globy al login", isOn: launchAtLoginBinding)
+                Toggle("Mostra Globy al risveglio del Mac", isOn: $preferences.welcomesOnWake)
+                    .disabled(!preferences.mascotEnabled)
                 Toggle("Suono", isOn: $preferences.mascotSoundEnabled)
                     .disabled(!preferences.mascotEnabled)
                 Toggle("Gli occhi seguono il puntatore", isOn: $preferences.gazeFollowsPointer)
@@ -33,12 +35,15 @@ struct SettingsView: View {
             } header: {
                 Text("Globy")
             } footer: {
-                if !preferences.mascotEnabled {
-                    footnote("Globy è spento mentre sono attive le notifiche di sistema.")
-                } else if preferences.permanence {
-                    footnote(preferences.gazeFollowsPointer
-                        ? "Con Globy sempre visibile potrebbe aumentare il consumo della batteria, soprattutto se gli occhi seguono il puntatore: si ridisegnano a ogni movimento del mouse."
-                        : "Con Globy sempre visibile potrebbe aumentare un po' il consumo della batteria.")
+                VStack(alignment: .leading, spacing: 4) {
+                    footnote("Al risveglio Globy controlla sempre i VOX. L’opzione mostra anche il saluto quando riapri il Mac o riaccendi lo schermo; dopo un riavvio, macOS può avviare Globy soltanto al login.")
+                    if !preferences.mascotEnabled {
+                        footnote("Globy è spento mentre sono attive le notifiche di sistema.")
+                    } else if preferences.permanence {
+                        footnote(preferences.gazeFollowsPointer
+                            ? "Con Globy sempre visibile potrebbe aumentare il consumo della batteria, soprattutto se gli occhi seguono il puntatore: si ridisegnano a ogni movimento del mouse."
+                            : "Con Globy sempre visibile potrebbe aumentare un po' il consumo della batteria.")
+                    }
                 }
             }
             Section {

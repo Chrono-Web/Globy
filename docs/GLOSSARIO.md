@@ -14,7 +14,7 @@
 | **diretta** | Cambiamento confermato mentre Globy era connesso; non è sinonimo di evento SSE |
 | **hint** | Segnale non autorevole, per esempio SSE, che richiede un catch-up |
 | **saluto** | Prima apparizione della mascotte al primo avvio; non è un VOX. Può chiedere se mostrare gli ultimi 5 VOX come recenti |
-| **saluto di rientro** | Fumetto a ogni avvio o risveglio con l'esito della sincronizzazione; non è un VOX |
+| **saluto di rientro** | Fumetto a ogni avvio e, se abilitato, a ogni risveglio con l'esito della sincronizzazione; non è un VOX |
 | **onboarding** | Spiegazione al primo avvio dell'app: cosa legge, baseline, notifiche |
 | **non letto** | VOX arrivato dopo la baseline e mai aperto; l'archivio del primo avvio non lo è |
 | **letto** | Contenuto che la persona ha esplicitamente aperto o marcato come letto |

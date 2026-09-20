@@ -2,6 +2,17 @@
 
 Le modifiche rilevanti a Globy sono registrate qui.
 
+## 0.3.1 — 2026-09-20
+
+Miglioramento per Mac. DMG e installer non firmati.
+
+### Aggiunto
+
+- **Risveglio del Mac:** nelle Impostazioni si può scegliere se mostrare il saluto di
+  Globy quando si riapre il portatile o si riaccende lo schermo. La sincronizzazione
+  continua anche quando il saluto è disattivato. L'avvio dopo accensione o riavvio
+  resta distinto e avviene al login, come richiesto da macOS.
+
 ## 0.3.0 — 2026-09-18
 
 Aggiornamenti automatici su Mac, Windows e Linux. DMG e installer non firmati.

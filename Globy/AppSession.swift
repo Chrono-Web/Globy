@@ -138,7 +138,8 @@ final class AppSession: ObservableObject {
                 Task { @MainActor in
                     // Qualche secondo per lasciar tornare la rete.
                     try? await Task.sleep(for: .seconds(3))
-                    await self?.synchronize(cause: .wake, welcome: true)
+                    guard let self else { return }
+                    await self.synchronize(cause: .wake, welcome: self.preferences.welcomesOnWake)
                 }
             }
         }

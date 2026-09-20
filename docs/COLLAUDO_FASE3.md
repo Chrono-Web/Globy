@@ -116,6 +116,9 @@ periodico passa ogni 5 minuti circa.
       non compare. Permesso negato: Globy resta acceso e c'è una nota.
 - [x] Spento di nuovo: Globy e l'anteprima tornano.
 - [x] «Apri Globy al login» acceso, poi logout e login: Globy parte da solo e saluta.
+- [ ] «Mostra Globy al risveglio del Mac» acceso: chiudi e riapri il portatile oppure
+      spegni e riaccendi lo schermo; dopo la sincronizzazione compare il saluto. Spento:
+      la sincronizzazione avviene comunque, ma senza saluto se non ci sono nuovi VOX.
 - [x] «Azzera…» e conferma: menu vuoto, poi nuova baseline e presentazione da capo.
 
 ## Esito

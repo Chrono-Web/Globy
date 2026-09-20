@@ -18,7 +18,7 @@
   &nbsp;·&nbsp;
   <a href="https://github.com/Chrono-Web/Globy/releases/latest/download/Globy-Linux.AppImage"><b>⬇ Linux (AppImage, ~78&nbsp;MB)</b></a>
   <br>
-  <sub>Versione 0.2.1 · macOS 15+, Windows 10/11, Linux a 64 bit · gratuito e open source</sub>
+  <sub>Versione 0.3.1 · macOS 15+, Windows 10/11, Linux a 64 bit · gratuito e open source</sub>
   <br>
   <sub>Su Ubuntu, Debian e Mint preferisci il <b>.deb</b>. L'AppImage porta WebKit dentro e pesa di più.</sub>
   <br>

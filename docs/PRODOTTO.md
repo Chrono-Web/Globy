@@ -52,8 +52,9 @@ La mascotte è un avviso visivo transitorio, non il motore del prodotto.
   sono VOX e non aprono un permalink (occhi chiusi come a metà battito, verso chi
   guarda):
   - il saluto di primo avvio, una volta sola;
-  - il saluto di rientro, sempre, a ogni avvio successivo e a ogni risveglio del Mac
-    o dello schermo, dopo la sincronizzazione. Dice com'è andata: «non ti sei perso
+  - il saluto di rientro, sempre a ogni avvio successivo e, con «Mostra Globy al
+    risveglio del Mac» attivo (impostazione predefinita), a ogni risveglio del Mac o
+    dello schermo, dopo la sincronizzazione. Dice com'è andata: «non ti sei perso
     nulla» se non ci sono VOX nuovi, oppure quanti ne sono usciti con la freccia e
     il numerino per aprirli. Se la sincronizzazione fallisce non dice «nulla»: dice
     che non lo sa ancora. La X vuol dire «dopo»; se nessuno usa la freccia il globo
@@ -145,9 +146,11 @@ Prima versione:
 
 Nell'interfaccia il nome è sempre Globy: niente «mascotte» né «globo».
 
-- sezione Globy: «Mostra sempre Globy» (permanenza), «Apri Globy al login», «Suono»,
-  «Gli occhi seguono il puntatore»; con Globy sempre visibile, nota sul consumo della
-  batteria;
+- sezione Globy: «Mostra sempre Globy» (permanenza), «Apri Globy al login», «Mostra
+  Globy al risveglio del Mac», «Suono», «Gli occhi seguono il puntatore»; il risveglio
+  sincronizza sempre, mentre l'interruttore decide se mostrare anche il saluto. Dopo
+  un'accensione o un riavvio, macOS può avviare un'app grafica soltanto dopo il login;
+  con Globy sempre visibile, nota sul consumo della batteria;
 - dimensioni personalizzate: interruttore più tre cursori, Globy (75–250% di uno
   standard di 70 pt), testo
   del fumetto (85–150%) e pulsanti X e frecce (80–160%). Spento, valgono le

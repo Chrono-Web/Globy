@@ -67,8 +67,9 @@ schermo: globo e fumetto non escono dall'area visibile durante lo spostamento.
       e freccia verso i VOX nuovi.
 - [x] Controllo periodico a macchina accesa (5 min, jitter, backoff), pausa durante
       lo stop e sync al ritorno della rete.
-- [x] Impostazioni: Mostra sempre Globy, login, suono, dimensioni personalizzate (Globy,
-      testo, pulsanti) con anteprima dal vivo e aptica, azzera dati.
+- [~] Impostazioni: Mostra sempre Globy, login, saluto al risveglio, suono, dimensioni
+      personalizzate (Globy, testo, pulsanti) con anteprima dal vivo e aptica, azzera
+      dati. Il nuovo interruttore del saluto attende il collaudo su uno stop reale.
 - [x] Modalità «Notifiche di sistema» senza suono, al posto di Globy.
 - [x] Apertura del permalink nel browser.
 - [x] Globy transitorio, con menu contestuale, indipendente dalla sincronizzazione;
