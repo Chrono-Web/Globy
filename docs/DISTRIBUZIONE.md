@@ -84,6 +84,10 @@ I nomi sono fissi a ogni versione, come `Globy.dmg`: il README punta a
 
 Ogni push sui rami `main` e `desktop` che tocca `desktop/` produce gli installer come
 artifact dell'esecuzione: servono al collaudo (`docs/COLLAUDO_DESKTOP.md`).
+Gli installer firmati prodotti su `main` vengono conservati con una chiave basata sui
+sorgenti desktop e sul workflow. Se un tag punta allo stesso contenuto, la release li
+riusa e salta installazione delle dipendenze, test e seconda build Tauri; se la cache
+non coincide, il tag esegue automaticamente la pipeline completa.
 
 ## Requisiti comuni
 

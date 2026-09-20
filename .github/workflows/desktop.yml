@@ -54,24 +54,37 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@v5
+      - name: Riusa gli installer già verificati su main
+        id: installer-cache
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/cache/restore@v6
+        with:
+          path: desktop/out
+          key: globy-installers-${{ runner.os }}-${{ hashFiles('desktop/**', 'Packages/GlobyCore/Tests/GlobyCoreTests/Fixtures/**', '.github/workflows/desktop.yml') }}
       - name: Librerie di sistema (Linux)
-        if: runner.os == 'Linux'
+        if: runner.os == 'Linux' && steps.installer-cache.outputs.cache-hit != 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libssl-dev build-essential
       - uses: actions/setup-node@v5
+        if: steps.installer-cache.outputs.cache-hit != 'true'
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: desktop/package-lock.json
       - uses: dtolnay/rust-toolchain@stable
+        if: steps.installer-cache.outputs.cache-hit != 'true'
       - uses: Swatinem/rust-cache@v2
+        if: steps.installer-cache.outputs.cache-hit != 'true'
         with:
           workspaces: desktop
-      - run: npm ci
+      - if: steps.installer-cache.outputs.cache-hit != 'true'
+        run: npm ci
       - name: Test dell'app
+        if: steps.installer-cache.outputs.cache-hit != 'true'
         run: cargo test -p globy
       - name: Build
+        if: steps.installer-cache.outputs.cache-hit != 'true'
         # Con la chiave (secret del repository) la build firma gli installer per gli
         # aggiornamenti automatici; senza, per esempio da un fork, li crea senza firma.
         env:
@@ -84,6 +97,7 @@ jobs:
             npx tauri build --config '{"bundle":{"createUpdaterArtifacts":false}}'
           fi
       - name: Nomi fissi
+        if: steps.installer-cache.outputs.cache-hit != 'true'
         # Gli stessi a ogni versione: il README punta a /releases/latest/download/<nome>.
         run: |
           mkdir -p out
@@ -101,7 +115,13 @@ jobs:
             copy "target/release/bundle/deb/*.deb" Globy-Linux.deb
           fi
           ls -la out
-      - uses: actions/upload-artifact@v4
+      - name: Conserva gli installer verificati di main
+        if: github.ref == 'refs/heads/main' && success()
+        uses: actions/cache/save@v6
+        with:
+          path: desktop/out
+          key: globy-installers-${{ runner.os }}-${{ hashFiles('desktop/**', 'Packages/GlobyCore/Tests/GlobyCoreTests/Fixtures/**', '.github/workflows/desktop.yml') }}
+      - uses: actions/upload-artifact@v7
         with:
           name: Globy-${{ matrix.name }}
           path: desktop/out/*
@@ -124,7 +144,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           path: out
           merge-multiple: true
