@@ -19,6 +19,10 @@ MIN_OS=$(/usr/libexec/PlistBuddy -c "Print LSMinimumSystemVersion" "$PLIST")
 URL=${2:-https://github.com/Chrono-Web/GLOBY/releases/download/v$VERSION/Globy.dmg}
 NOTES=https://github.com/Chrono-Web/GLOBY/releases/tag/v$VERSION
 
+# Non firmare né pubblicizzare un archivio che Finder aprirebbe senza il layout
+# personalizzato o che contiene una versione diversa da quella dell'appcast.
+"./scripts/verifica-dmg.sh" "$ARCHIVE" "$VERSION" >&2
+
 # Gli strumenti di Sparkle arrivano con il pacchetto Swift risolto da Xcode.
 SIGN=$(find build ~/Library/Developer/Xcode/DerivedData -path "*artifacts/sparkle/Sparkle/bin/sign_update" -type f 2>/dev/null | head -1)
 if [ -z "$SIGN" ]; then

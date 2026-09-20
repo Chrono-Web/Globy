@@ -34,6 +34,13 @@ if [ -d "/Volumes/$VOLUME" ]; then hdiutil detach "/Volumes/$VOLUME" -quiet || t
 hdiutil create -volname "$VOLUME" -srcfolder "$STAGE" -fs HFS+ -format UDRW -ov "$RW" >/dev/null
 DEVICE=$(hdiutil attach "$RW" -readwrite -noverify -noautoopen | awk '/Apple_HFS/ {print $1}')
 
+cleanup_mount() {
+    if [ -n "${DEVICE:-}" ]; then
+        hdiutil detach "$DEVICE" -quiet >/dev/null 2>&1 || true
+    fi
+}
+trap cleanup_mount EXIT
+
 osascript <<APPLESCRIPT
 tell application "Finder"
     tell disk "$VOLUME"
@@ -53,16 +60,48 @@ tell application "Finder"
         set position of item "Applicazioni" of container window to {490, 200}
         set position of item "$GUIDE" of container window to {330, 360}
         update without registering applications
-        delay 1
+        delay 2
         close
+        delay 1
     end tell
 end tell
 APPLESCRIPT
 
+# Sfondo, dimensioni e posizioni vivono nel .DS_Store scritto dal Finder. La scrittura
+# è asincrona: senza questa attesa il DMG può riuscire ma aprirsi con il layout standard.
+LAYOUT="/Volumes/$VOLUME/.DS_Store"
+LAYOUT_SIZE=0
+STABLE_READS=0
+for _ in {1..40}; do
+    if [ -s "$LAYOUT" ]; then
+        CURRENT_SIZE=$(stat -f %z "$LAYOUT")
+        if [ "$CURRENT_SIZE" -eq "$LAYOUT_SIZE" ]; then
+            STABLE_READS=$((STABLE_READS + 1))
+        else
+            LAYOUT_SIZE=$CURRENT_SIZE
+            STABLE_READS=0
+        fi
+        if [ "$STABLE_READS" -ge 2 ]; then
+            break
+        fi
+    fi
+    sleep 0.25
+done
+
+if [ ! -s "$LAYOUT" ] || [ "$STABLE_READS" -lt 2 ]; then
+    echo "Errore: Finder non ha salvato il layout del DMG (.DS_Store)." >&2
+    echo "Controlla il permesso di controllare Finder e riprova." >&2
+    exit 1
+fi
+
 chmod -Rf go-w "/Volumes/$VOLUME" || true
 sync
 hdiutil detach "$DEVICE" -quiet
-hdiutil convert "$RW" -format UDZO -imagekey zlib-level=9 -o "$OUT" >/dev/null
+DEVICE=""
+CANDIDATE="$WORK/Globy-final.dmg"
+hdiutil convert "$RW" -format UDZO -imagekey zlib-level=9 -o "$CANDIDATE" >/dev/null
+"./scripts/verifica-dmg.sh" "$CANDIDATE" "$VERSION"
+mv "$CANDIDATE" "$OUT"
 rm -rf "$WORK"
 cp "$OUT" "$STABLE"
 echo "$OUT"

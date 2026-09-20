@@ -53,7 +53,10 @@ dalla repository.
 ne copia una con nome stabile `build/Globy.dmg`. La finestra ha sfondo con titolo
 e freccia (`scripts/dmg/sfondo.swift`), icone grandi e nessuna barra degli
 strumenti; la disposizione la scrive il Finder, quindi la prima volta macOS
-chiede il permesso di controllarlo. Contiene:
+chiede il permesso di controllarlo. Lo script aspetta e verifica il `.DS_Store` che
+conserva il layout: se Finder non lo scrive, la build fallisce invece di produrre un
+DMG con l'aspetto standard. Prima della firma, `crea-appcast.sh` ripete sul DMG finale
+la verifica di layout e versione tramite `scripts/verifica-dmg.sh`. Contiene:
 
 - `Globy.app`, firmata solo localmente, non notarizzata;
 - un collegamento «Applicazioni» per installare trascinando;
@@ -113,19 +116,22 @@ Dalla 0.2.0 una versione esce per i tre sistemi insieme:
    `desktop/src-tauri/tauri.conf.json`, `desktop/package.json` e `desktop/Cargo.toml`;
    in `Globy.xcodeproj` anche `CURRENT_PROJECT_VERSION` cresce di uno, perché Sparkle
    confronta il numero di build;
-2. tag e push: la CI crea la Release in bozza e allega Windows e Linux;
-3. DMG del Mac e appcast allegati a mano, poi la bozza si pubblica come ultima versione:
+2. crea e verifica DMG e appcast; la versione viene letta dall'app appena compilata;
+3. tag e push: la CI crea la Release in bozza e allega Windows e Linux;
+4. allega DMG e appcast, poi pubblica la bozza come ultima versione:
 
 ```bash
-git tag v0.3.0 && git push origin v0.3.0
 ./scripts/crea-dmg.sh
 ./scripts/crea-appcast.sh > build/appcast.xml
-gh release upload v0.3.0 build/Globy.dmg build/appcast.xml  # latest.json lo allega la CI
-gh release edit v0.3.0 --draft=false --latest --notes-file note.md
+VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" build/release/Build/Products/Release/Globy.app/Contents/Info.plist)
+git tag "v$VERSION" && git push origin "v$VERSION"
+gh release upload "v$VERSION" build/Globy.dmg build/appcast.xml  # latest.json lo allega la CI
+gh release edit "v$VERSION" --draft=false --latest --notes-file note.md
 ```
 
 `crea-appcast.sh` firma `build/Globy.dmg`: il DMG caricato deve essere esattamente
 quello, altrimenti la firma non corrisponde e gli utenti vedono un errore.
+La creazione e la firma falliscono se nel DMG manca il layout personalizzato del Finder.
 
 Il numero è `CFBundleShortVersionString`. Le note si copiano da `CHANGELOG.md`.
 
