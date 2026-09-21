@@ -24,7 +24,7 @@ NOTES=https://github.com/Chrono-Web/GLOBY/releases/tag/v$VERSION
 "./scripts/verifica-dmg.sh" "$ARCHIVE" "$VERSION" >&2
 
 # Gli strumenti di Sparkle arrivano con il pacchetto Swift risolto da Xcode.
-SIGN=$(find build ~/Library/Developer/Xcode/DerivedData -path "*artifacts/sparkle/Sparkle/bin/sign_update" -type f 2>/dev/null | head -1)
+SIGN=$(find build ~/Library/Developer/Xcode/DerivedData -path "*artifacts/sparkle/Sparkle/bin/sign_update" -type f -print -quit 2>/dev/null)
 if [ -z "$SIGN" ]; then
     echo "sign_update non trovato: compila prima Globy con Xcode" >&2
     exit 1

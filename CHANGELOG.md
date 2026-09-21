@@ -2,6 +2,18 @@
 
 Le modifiche rilevanti a Globy sono registrate qui.
 
+## 0.3.2 — 2026-09-21
+
+Correzione dell'avvio sul Mac. DMG e installer non firmati con Developer ID.
+
+### Corretto
+
+- **Mac:** Globy 0.3.1 si chiudeva subito dopo l'autorizzazione in Impostazioni di
+  Sistema: macOS bloccava il caricamento di Sparkle per la library validation della
+  firma locale. La 0.3.2 consente il framework dell'aggiornamento e si avvia
+  normalmente. Chi ha scaricato la 0.3.1 deve installare manualmente la 0.3.2,
+  perché la copia che non si avvia non può aggiornarsi da sola.
+
 ## 0.3.1 — 2026-09-20
 
 Miglioramento per Mac. DMG e installer non firmati.

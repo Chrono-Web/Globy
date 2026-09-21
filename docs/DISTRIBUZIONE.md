@@ -32,6 +32,11 @@ aggiornamenti. Tienine una copia di sicurezza fuori dalla repository:
 ```
 
 Chi ha la 0.2.1 o precedenti aggiorna a mano una volta.
+Anche chi ha installato la 0.3.1 sul Mac deve scaricare manualmente la 0.3.2:
+quella build si chiude all'avvio, quindi Sparkle non può aggiornare l'app. Finché
+la distribuzione resta firmata localmente e non con Developer ID, l'app richiede
+l'eccezione di library validation per caricare Sparkle; la firma EdDSA del DMG di
+aggiornamento resta obbligatoria.
 
 ## Aggiornamenti su Windows e Linux
 
