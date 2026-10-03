@@ -2,6 +2,18 @@
 
 Le modifiche rilevanti a Globy sono registrate qui.
 
+## 0.3.3 — 2026-10-03
+
+Correzione per Windows. DMG e installer non firmati con Developer ID.
+
+### Corretto
+
+- **Windows:** Globy compariva dentro un grande rettangolo grigio in basso a destra,
+  perché il vetro sfocato di Windows copriva tutta la finestra invece della sola forma
+  di globo e fumetto. Ora si vedono soltanto globo e fumetto, scuri come su Linux.
+  L'elenco dei VOX vicino all'orologio mantiene il vetro.
+- **Mac e Linux:** nessuna modifica.
+
 ## 0.3.2 — 2026-09-21
 
 Correzione dell'avvio sul Mac. DMG e installer non firmati con Developer ID.
