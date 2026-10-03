@@ -1,0 +1,84 @@
+# Foto dello schermo di Windows con Globy al primo avvio: chi sviluppa lavora su un Mac
+# e così vede globo, fumetto e vetro senza un PC Windows. Due server: 2022 prova la
+# strada del vetro di Windows 10, 2025 quella di Windows 11. Non sostituisce il collaudo
+# di docs/COLLAUDO_DESKTOP.md: i server non hanno scheda grafica.
+
+name: Foto su Windows
+
+on:
+  push:
+    branches: [ "desktop" ]
+    paths:
+      - "desktop/**"
+      - ".github/workflows/foto-windows.yml"
+  workflow_dispatch:
+
+jobs:
+  foto:
+    name: Foto ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ windows-2022, windows-2025 ]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: desktop
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: desktop
+      - run: npm ci
+      - name: Build senza installer
+        shell: bash
+        run: npx tauri build --no-bundle --config '{"bundle":{"createUpdaterArtifacts":false}}'
+      - name: Foto
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force foto | Out-Null
+          $os = Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
+          $transparency = (Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize' -ErrorAction SilentlyContinue).EnableTransparency
+          "$($os.ProductName) build $($os.CurrentBuild).$($os.UBR) - EnableTransparency=$transparency" | Tee-Object foto/sistema.txt
+
+          Add-Type -AssemblyName System.Windows.Forms, System.Drawing
+          function Foto($name) {
+            $b = [System.Windows.Forms.SystemInformation]::VirtualScreen
+            $bmp = New-Object System.Drawing.Bitmap $b.Width, $b.Height
+            $g = [System.Drawing.Graphics]::FromImage($bmp)
+            $op = [System.Drawing.CopyPixelOperation]::SourceCopy -bor [System.Drawing.CopyPixelOperation]::CaptureBlt
+            $g.CopyFromScreen($b.Left, $b.Top, 0, 0, $bmp.Size, $op)
+            $bmp.Save("$PWD/foto/$name.png")
+            $g.Dispose(); $bmp.Dispose()
+          }
+
+          # Uno sfondo chiaro dietro Globy: sul nero un vetro scuro non si vedrebbe.
+          Start-Process notepad -WindowStyle Maximized
+          Start-Sleep 3
+
+          foreach ($surface in @('vetro', 'scuro')) {
+            # Ogni giro è un primo avvio: onboarding e baseline da capo.
+            Remove-Item -Recurse -Force "$env:APPDATA\com.chronocol.globy", "$env:LOCALAPPDATA\com.chronocol.globy" -ErrorAction SilentlyContinue
+            if ($surface -eq 'scuro') { $env:GLOBY_SURFACE = 'dark' } else { Remove-Item Env:GLOBY_SURFACE -ErrorAction SilentlyContinue }
+            Start-Process "$PWD\target\release\globy.exe"
+            foreach ($s in 6, 12, 20, 30) {
+              Start-Sleep -Seconds ($s - $last)
+              $last = $s
+              Foto "$surface-$($s)s"
+            }
+            $last = 0
+            Stop-Process -Name globy -Force -ErrorAction SilentlyContinue
+            Start-Sleep 2
+          }
+          Get-ChildItem foto
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: foto-${{ matrix.os }}
+          path: desktop/foto/*
