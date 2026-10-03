@@ -3,6 +3,8 @@
 use tauri::WebviewWindow;
 
 /// Acrylic sotto la pagina, che lascia lo sfondo trasparente. Vero se il vetro è attivo.
+/// Solo per l'elenco: il vetro copre tutto il rettangolo della finestra e ignora la
+/// forma data da `set_region` (ADR 0007).
 #[cfg(windows)]
 pub fn apply_glass(window: &WebviewWindow) -> bool {
     window_vibrancy::apply_acrylic(window, Some((24, 24, 28, 110))).is_ok()
@@ -38,7 +40,7 @@ pub fn show_without_focus(window: &WebviewWindow) {
 }
 
 /// Forma della finestra = disco del globo più fumetto e pulsanti. Fuori dalla forma la
-/// finestra non esiste per Windows: niente vetro e i clic arrivano a ciò che sta sotto.
+/// finestra non esiste per Windows: niente pixel e i clic arrivano a ciò che sta sotto.
 #[cfg(windows)]
 pub fn set_region(window: &WebviewWindow, shapes: &crate::mascot::Shapes) {
     use windows_sys::Win32::Graphics::Gdi::{

@@ -90,6 +90,18 @@ App Tauri 2 (ADR 0005). Serve Rust (`rustup`, canale stable) e Node 22. Si svilu
 anche dal Mac: tray, finestre e globo girano, ma vetro Acrylic, forma della finestra e
 Wayland si vedono solo sui sistemi veri (collaudo in `docs/COLLAUDO_DESKTOP.md`).
 
+Per vedere Windows senza un PC Windows c'è il workflow «Foto su Windows»
+(`.github/workflows/foto-windows.yml`): parte a ogni push sul branch `desktop` che tocca
+`desktop/`, o a mano dalla scheda Actions. Su Windows Server 2022 e 2025 avvia Globy al
+primo avvio sopra un Blocco note bianco e allega quattro foto dello schermo:
+
+```bash
+gh run download <id> -D foto
+```
+
+Le foto bastano per forma, posizione e colori; non sostituiscono il collaudo, perché i
+server non hanno scheda grafica.
+
 ```text
 desktop/
 ├── globy-core/        # porting di GlobyCore, senza grafica; test con le fixture Swift
@@ -112,7 +124,7 @@ npx tauri build
 Il test `live` legge Chronocol pubblico ed è escluso di default. Il resto non usa la rete.
 
 In sviluppo l'app usa la fixture in processo, con dati in `content-fixture.json`.
-Variabili, solo nelle build di debug salvo `GLOBY_SURFACE`:
+Variabili e opzioni, solo nelle build di debug:
 
 | Variabile o opzione | Effetto |
 |---|---|
@@ -121,7 +133,6 @@ Variabili, solo nelle build di debug salvo `GLOBY_SURFACE`:
 | `GLOBY_SIMULATE_VOX=N` | pubblica N VOX sulla fixture 4 secondi dopo l'avvio |
 | `globy --simulate-vox N` | con Globy già aperto, pubblica N VOX sulla copia aperta |
 | `globy --open-settings` | con Globy già aperto, apre le Impostazioni |
-| `GLOBY_SURFACE=dark` | superficie scura anche dove c'è il vetro, per confrontare |
 
 Dati di sviluppo: sul Mac `~/Library/Application Support/com.chronocol.globy/`.
 Regole e testi comuni stanno in `globy-core`: una modifica a una politica va fatta in

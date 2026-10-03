@@ -141,7 +141,7 @@ fuori dalla finestra, comparsa senza fuoco. Il risveglio dallo stop si riconosce
 salto dell'orologio di sistema, perché non esiste un avviso comune ai due sistemi.
 
 Differenze volute: su Windows la finestra di Globy ha la forma di globo e fumetto
-(vetro solo lì, clic che passano fuori); su Linux X11 i clic che passano si calcolano
+(clic che passano fuori, nessun vetro: ADR 0007); su Linux X11 i clic che passano si calcolano
 dal puntatore; con Wayland la finestra la posiziona il sistema e gli occhi non seguono
 il puntatore. Su Linux l'icona di sistema apre solo un menu, con «Ultimi VOX» in cima.
 

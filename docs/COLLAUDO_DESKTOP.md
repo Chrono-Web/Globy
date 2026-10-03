@@ -48,8 +48,8 @@ Scrivi anche sistema e versione: Windows 10 o 11; per Linux distribuzione, ambie
 ## 3. Globy
 
 - [ ] Globo e fumetto sono nitidi, anche con lo schermo al 125% o 150%.
-- [ ] Windows: dietro globo e fumetto c'è il vetro sfocato; fuori dalle loro forme non
-      c'è nessun rettangolo.
+- [ ] Windows: globo e fumetto scuri, senza vetro; fuori dalle loro forme non c'è
+      nessun rettangolo (ADR 0007).
 - [ ] Fuori da globo, fumetto, X e frecce i clic passano alla finestra sotto.
 - [ ] Quando compare Globy, il cursore resta nell'app in cui stavi scrivendo.
 - [ ] Trascinando il globo, globo e fumetto non escono dallo schermo.

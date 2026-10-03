@@ -98,15 +98,6 @@ pub fn present(app: &AppHandle, request: MascotRequest) {
     let _ = app.emit_to(LABEL, "mascot-request", request);
 }
 
-/// Vetro di sistema dietro Globy: solo su Windows e solo se Acrylic è disponibile.
-/// `GLOBY_SURFACE=dark` forza la superficie scura, per confrontare.
-fn apply_surface(window: &WebviewWindow) -> bool {
-    if std::env::var("GLOBY_SURFACE").is_ok_and(|v| v == "dark") {
-        return false;
-    }
-    crate::platform::apply_glass(window)
-}
-
 /// Posizione del puntatore e clic che passano: un controllo ogni 33 ms mentre Globy è a
 /// schermo, fermo quando è nascosto. Con Wayland il puntatore fuori dalla finestra non si
 /// può leggere: non parte.
@@ -157,15 +148,14 @@ pub fn start_pointer_loop(app: AppHandle) {
 pub struct Screen {
     /// Area utile (senza barra delle applicazioni) dello schermo con il puntatore.
     pub work_area: Rect,
-    pub glass: bool,
     pub platform: Platform,
 }
 
-/// Prima chiamata della pagina: schermo, vetro e sistema.
+/// Prima chiamata della pagina: schermo e sistema. Niente vetro dietro Globy: Acrylic
+/// coprirebbe tutto il rettangolo della finestra, non solo la sua forma (ADR 0007).
 #[tauri::command]
 pub fn mascot_environment(app: AppHandle) -> Screen {
-    let glass = app.get_webview_window(LABEL).is_some_and(|w| apply_surface(&w));
-    Screen { work_area: work_area(&app), glass, platform: Platform::current() }
+    Screen { work_area: work_area(&app), platform: Platform::current() }
 }
 
 /// La pagina ascolta: consegna le richieste arrivate prima.

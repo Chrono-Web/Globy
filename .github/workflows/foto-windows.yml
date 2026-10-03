@@ -1,5 +1,5 @@
 # Foto dello schermo di Windows con Globy al primo avvio: chi sviluppa lavora su un Mac
-# e così vede globo, fumetto e vetro senza un PC Windows. Due server: 2022 prova la
+# e così vede globo e fumetto senza un PC Windows (docs/SVILUPPO.md). Due server: 2022 prova la
 # strada del vetro di Windows 10, 2025 quella di Windows 11. Non sostituisce il collaudo
 # di docs/COLLAUDO_DESKTOP.md: i server non hanno scheda grafica.
 
@@ -57,24 +57,18 @@ jobs:
             $g.Dispose(); $bmp.Dispose()
           }
 
-          # Uno sfondo chiaro dietro Globy: sul nero un vetro scuro non si vedrebbe.
+          # Uno sfondo chiaro dietro Globy: sul nero un rettangolo scuro di troppo non si vedrebbe.
           Start-Process notepad -WindowStyle Maximized
           Start-Sleep 3
 
-          foreach ($surface in @('vetro', 'scuro')) {
-            # Ogni giro è un primo avvio: onboarding e baseline da capo.
-            Remove-Item -Recurse -Force "$env:APPDATA\com.chronocol.globy", "$env:LOCALAPPDATA\com.chronocol.globy" -ErrorAction SilentlyContinue
-            if ($surface -eq 'scuro') { $env:GLOBY_SURFACE = 'dark' } else { Remove-Item Env:GLOBY_SURFACE -ErrorAction SilentlyContinue }
-            Start-Process "$PWD\target\release\globy.exe"
-            foreach ($s in 6, 12, 20, 30) {
-              Start-Sleep -Seconds ($s - $last)
-              $last = $s
-              Foto "$surface-$($s)s"
-            }
-            $last = 0
-            Stop-Process -Name globy -Force -ErrorAction SilentlyContinue
-            Start-Sleep 2
+          Start-Process "$PWD\target\release\globy.exe"
+          $last = 0
+          foreach ($s in 6, 12, 20, 30) {
+            Start-Sleep -Seconds ($s - $last)
+            $last = $s
+            Foto "globy-$($s)s"
           }
+          Stop-Process -Name globy -Force -ErrorAction SilentlyContinue
           Get-ChildItem foto
       - uses: actions/upload-artifact@v7
         if: always()

@@ -47,7 +47,7 @@ body {
     opacity 0.35s ease-in;
 }
 
-/* Fumetto: sempre scuro, come sul Mac. Sul vetro di Windows l'Acrylic sta dietro. */
+/* Fumetto: sempre scuro, come sul Mac. */
 .card {
   position: absolute;
   box-sizing: border-box;
@@ -60,11 +60,6 @@ body {
   transition:
     transform 0.45s cubic-bezier(0.34, 1.3, 0.64, 1),
     opacity 0.25s ease-out;
-}
-
-body.glass .card {
-  background: rgba(30, 30, 34, 0.35);
-  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .card.entering {
@@ -162,11 +157,6 @@ body.glass .card {
   cursor: pointer;
   display: grid;
   place-items: center;
-}
-
-body.glass .corner {
-  background: rgba(30, 30, 34, 0.55);
-  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .corner[hidden] {

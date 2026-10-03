@@ -31,7 +31,6 @@ const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matche
 
 export interface Environment {
   workArea: Rect;
-  glass: boolean;
   wayland: boolean;
 }
 
@@ -93,7 +92,6 @@ export class Mascot {
   private cardEl: HTMLElement | null = null;
 
   constructor(private env: Environment) {
-    document.body.classList.toggle("glass", env.glass);
     this.redrawStatic();
     this.bindPointer();
   }
@@ -638,7 +636,6 @@ export class Mascot {
     const ctx = this.featuresCanvas.getContext("2d")!;
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
     drawFeatures(ctx, size.globeDrawn, ratio, {
-      glass: this.env.glass,
       gaze,
       eyeOpen: blink * (1 - smile),
       eyeWidth: 1 + (GREETING_EYE_WIDTH - 1) * smile,
@@ -668,7 +665,7 @@ export class Mascot {
     }
     const body = this.bodyCanvas.getContext("2d")!;
     body.setTransform(ratio, 0, 0, ratio, 0, 0);
-    drawBody(body, drawn, this.env.glass);
+    drawBody(body, drawn);
     const sheen = this.sheenCanvas.getContext("2d")!;
     sheen.setTransform(ratio, 0, 0, ratio, 0, 0);
     drawSheen(sheen, drawn);

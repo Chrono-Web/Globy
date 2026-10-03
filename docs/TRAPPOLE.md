@@ -1,6 +1,6 @@
 # Trappole
 
-- Aggiornato: 2026-09-17
+- Aggiornato: 2026-10-03
 - Vale per: tutta la repository
 - Risponde a: che cosa sembra vero e non lo è
 
@@ -124,3 +124,10 @@ dalla sincronizzazione appena conclusa, mai da un segnale SSE; se la sincronizza
 fallisce, il saluto non può affermare che non c'è nulla di nuovo.
 Notificare l'archivio resterebbe un errore (punto 6). Il dettaglio di prodotto
 sta in `docs/PRODOTTO.md`.
+
+## 21. Su Windows il vetro non rispetta la forma della finestra
+
+Acrylic e i backdrop di sistema di Windows 11 si disegnano su tutto il rettangolo della
+finestra, anche quando `SetWindowRgn` la ritaglia. Una finestra sagomata con il vetro
+dietro diventa un rettangolo grigio. Per questo Globy su Windows non ha vetro (ADR
+0007). Prima di rimetterlo, guarda le foto del workflow «Foto su Windows».

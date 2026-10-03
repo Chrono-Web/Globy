@@ -16,7 +16,6 @@ type Request =
 
 interface Screen {
   workArea: Environment["workArea"];
-  glass: boolean;
   platform: AppState["platform"];
 }
 
@@ -104,7 +103,7 @@ async function start(): Promise<void> {
     const scales = `${metrics.textScale}|${metrics.buttonScale}|${metrics.globeScale}`;
     applyScaleVariables();
     if (!mascot) {
-      mascot = new Mascot({ workArea: screen.workArea, glass: screen.glass, wayland: screen.platform.wayland });
+      mascot = new Mascot({ workArea: screen.workArea, wayland: screen.platform.wayland });
       lastScales = scales;
     } else if (scales !== lastScales) {
       lastScales = scales;

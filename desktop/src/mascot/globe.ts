@@ -74,42 +74,25 @@ function blurred(ctx: CanvasRenderingContext2D, radius: number, draw: () => void
 
 // MARK: Corpo (statico)
 
-/** Ombra e corpo della sfera, luce dall'alto a sinistra. Sul vetro, una velatura leggera. */
-export function drawBody(ctx: CanvasRenderingContext2D, size: number, glass: boolean): void {
+/** Ombra e corpo della sfera, luce dall'alto a sinistra. */
+export function drawBody(ctx: CanvasRenderingContext2D, size: number): void {
   const r = globeRadius(size);
   const { x: cx, y: cy } = globeCenter(size);
   const light = { x: cx - r * 0.45, y: cy - r * 0.5 };
   ctx.clearRect(0, 0, size, size);
 
-  ctx.fillStyle = `rgba(0,0,0,${glass ? 0.22 : 0.35})`;
+  ctx.fillStyle = "rgba(0,0,0,0.35)";
   blurred(ctx, r * 0.08, () => {
     ctx.beginPath();
     ctx.ellipse(cx, cy + r * 1.0, r * 0.7, r * 0.08, 0, 0, Math.PI * 2);
     ctx.fill();
   });
 
-  if (!glass) {
-    const g = ctx.createRadialGradient(light.x, light.y, 0, light.x, light.y, r * 1.9);
-    g.addColorStop(0, "rgb(92,92,92)");
-    g.addColorStop(0.45, "rgb(36,36,36)");
-    g.addColorStop(1, "rgb(10,10,10)");
-    ctx.fillStyle = g;
-    disk(ctx, cx, cy, r);
-    ctx.fill();
-    return;
-  }
-  const veil = ctx.createRadialGradient(light.x, light.y, 0, light.x, light.y, r * 1.9);
-  veil.addColorStop(0, "rgba(255,255,255,0.10)");
-  veil.addColorStop(0.5, "rgba(0,0,0,0)");
-  veil.addColorStop(1, "rgba(0,0,0,0.14)");
-  ctx.fillStyle = veil;
-  disk(ctx, cx, cy, r);
-  ctx.fill();
-  const rim = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-  rim.addColorStop(0.7, "rgba(255,255,255,0)");
-  rim.addColorStop(0.95, "rgba(255,255,255,0.18)");
-  rim.addColorStop(1, "rgba(255,255,255,0.05)");
-  ctx.fillStyle = rim;
+  const g = ctx.createRadialGradient(light.x, light.y, 0, light.x, light.y, r * 1.9);
+  g.addColorStop(0, "rgb(92,92,92)");
+  g.addColorStop(0.45, "rgb(36,36,36)");
+  g.addColorStop(1, "rgb(10,10,10)");
+  ctx.fillStyle = g;
   disk(ctx, cx, cy, r);
   ctx.fill();
 }
@@ -142,7 +125,6 @@ export function drawSheen(ctx: CanvasRenderingContext2D, size: number): void {
 // MARK: Griglia e occhi (animati)
 
 export interface FeatureState {
-  glass: boolean;
   gaze: Gaze;
   eyeOpen: number;
   eyeWidth: number;
@@ -241,21 +223,20 @@ function drawGrid(
   ctx.save();
   disk(ctx, cx, cy, r);
   ctx.clip();
-  const glass = s.glass;
-  ctx.fillStyle = glass ? "rgb(158,158,158)" : "rgb(41,41,41)";
+  ctx.fillStyle = "rgb(41,41,41)";
   ctx.fill(edge);
-  ctx.fillStyle = glass ? "rgb(217,217,217)" : "rgb(77,77,77)";
+  ctx.fillStyle = "rgb(77,77,77)";
   ctx.fill(core);
   // Niente sfocatura sul riflesso: a questa scala sarebbe sotto il pixel.
-  ctx.fillStyle = glass ? "rgb(255,255,255)" : "rgb(158,158,158)";
+  ctx.fillStyle = "rgb(158,158,158)";
   ctx.fill(shine);
   // Stessa luce della sfera: i tubicini si scuriscono lontano dalla luce.
   ctx.globalCompositeOperation = "source-atop";
   const lx = cx - r * 0.45, ly = cy - r * 0.5;
   const shade = ctx.createRadialGradient(lx, ly, 0, lx, ly, r * 1.9);
   shade.addColorStop(0, "rgba(0,0,0,0)");
-  shade.addColorStop(0.55, `rgba(0,0,0,${glass ? 0.1 : 0.25})`);
-  shade.addColorStop(1, `rgba(0,0,0,${glass ? 0.35 : 0.7})`);
+  shade.addColorStop(0.55, "rgba(0,0,0,0.25)");
+  shade.addColorStop(1, "rgba(0,0,0,0.7)");
   ctx.fillStyle = shade;
   ctx.fillRect(0, 0, size, size);
   ctx.restore();
@@ -303,11 +284,6 @@ function drawEyes(ctx: CanvasRenderingContext2D, s: FeatureState, cx: number, cy
   ctx.save();
   if (supportsFilter) {
     ctx.filter = `blur(${r * 0.13}px)`;
-    if (s.glass) {
-      // Alone scuro morbido: gli occhi restano leggibili anche su sfondi chiari.
-      ctx.fillStyle = "rgba(0,0,0,0.35)";
-      ctx.fill(eyes);
-    }
     ctx.fillStyle = "rgba(255,255,255,0.55)";
     ctx.fill(eyes);
   } else {

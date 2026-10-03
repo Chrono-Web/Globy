@@ -7,6 +7,7 @@
 - Vincolante per: `desktop/`, distribuzione, README
 - Nasce da: persone reali su Windows e Linux che vogliono usare Globy
 - Sostituisce: nulla. Estende l'ADR 0001, che per il Mac resta valido
+- Modificato da: ADR 0007 (niente vetro dietro Globy su Windows)
 
 ## Contesto
 
