@@ -52,8 +52,7 @@ jobs:
             $b = [System.Windows.Forms.SystemInformation]::VirtualScreen
             $bmp = New-Object System.Drawing.Bitmap $b.Width, $b.Height
             $g = [System.Drawing.Graphics]::FromImage($bmp)
-            $op = [System.Drawing.CopyPixelOperation]::SourceCopy -bor [System.Drawing.CopyPixelOperation]::CaptureBlt
-            $g.CopyFromScreen($b.Left, $b.Top, 0, 0, $bmp.Size, $op)
+            $g.CopyFromScreen($b.Left, $b.Top, 0, 0, $bmp.Size)
             $bmp.Save("$PWD/foto/$name.png")
             $g.Dispose(); $bmp.Dispose()
           }
