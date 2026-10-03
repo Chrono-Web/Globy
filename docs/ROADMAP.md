@@ -1,6 +1,6 @@
 # Roadmap
 
-- Aggiornato: 2026-09-18
+- Aggiornato: 2026-10-03
 - Risponde a: che cosa viene prima, quale prova chiude ogni fase e qual è lo stato reale
 
 ## Legenda
@@ -116,7 +116,8 @@ ufficiale e completa un aggiornamento dalla versione precedente.
 - [x] Porting del nucleo in Rust (`desktop/globy-core`) con i 39 test sulle fixture Swift.
 - [x] App Tauri: icona di sistema, elenco, Impostazioni, sincronizzazione e notifiche.
 - [~] Globy: globo, fumetto, coda, onboarding, trascinamento e anteprima; provato sul Mac
-      in sviluppo, non ancora su Windows e Linux.
+      in sviluppo. Su Windows visto solo nelle foto della CI (2026-10-03: forma corretta
+      dopo l'ADR 0007); nessun collaudo su un PC Windows o Linux.
 - [~] CI con installer Windows (NSIS) e Linux (AppImage, `.deb`).
 - [ ] Collaudo umano su Windows 11 (`docs/COLLAUDO_DESKTOP.md`).
 - [ ] Collaudo umano su Linux con X11 e con Wayland.
